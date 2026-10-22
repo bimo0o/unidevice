@@ -21,3 +21,16 @@
 
 Toolchain is isolated in ignored `.tools/`. Network is used for development downloads only;
 the application has no network code. Git metadata changes require sandbox escalation.
+
+## Change 3 — HID++ DPI protocol (phase 3)
+
+- Files: `src/hidpp.rs`, `src/lib.rs`, `Cargo.toml`, `Cargo.lock`, this report.
+- Check: `cargo test --offline`: 11 passed, 0 failed.
+- Requirement: runtime feature discovery, capability validation, bounded replies, status
+  correlation, malformed packets, short write, timeout/disconnect and readback mismatch.
+- Risk: no wired Superlight available; all hardware operations remain unverified.
+  Initial DPI policy is conservatively limited to 100..25600, further constrained by device data.
+- Transport: use bundled open-source hidapi C backend on Windows. The optional Rust-native
+  backend reports padded write lengths; strict short-write validation uses the C backend instead.
+- Commit: the commit containing this section (`git log --oneline -- src/hidpp.rs`).
+- Next: model routing, safe RGB preview, profiles and usable interactive CLI.
