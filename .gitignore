@@ -1,0 +1,7 @@
+/target/
+/.tools/
+/dist/
+*.pcap
+*.pcapng
+*.etl
+/local/
