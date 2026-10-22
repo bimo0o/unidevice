@@ -63,3 +63,13 @@ Official references:
 - https://encyclopedia.kaspersky.com/knowledge/heuristic-and-proactive-detections/
 - https://opentip.kaspersky.com/howto/
 - https://osv.dev/
+
+## User-authorized inspection rebuild
+
+On 2026-10-23 the user requested another build to inspect through VirusTotal themselves.
+Rebuilt source `f039087` with the same release settings using offline locked dependencies.
+The 412,672-byte EXE remained readable when checked; it was not executed or uploaded.
+SHA-256: `e4d9b42caeed1850f3f2e0010c946b0e902eb3a47452473e56b13eefad39f88e`.
+MD5: `193fc7645db46ec393d31a7a90561a3c`.
+This is a new sample, not the deleted object with reported MD5 64892bc36f16d52c502dd4d53c713db9.
+The distribution hold and unresolved security status remain in force.

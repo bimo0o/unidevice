@@ -129,3 +129,18 @@ The code/test product exists; a ready distributable Windows product is **not com
 - Next: vendor reanalysis and independent review of the exact intended release artifact.
 
 Private source repository: https://github.com/bimo0o/unidevice . No release published.
+
+## Change 9 — user-requested rebuild for external inspection
+
+- Date: 2026-10-23. User explicitly requested rebuilding for their VirusTotal inspection.
+- Source: `f03908730bccc47f7793ccfe4acdb741f8c15b42`; no application code or build flags changed.
+- Check: `cargo build --offline --locked --release`: success, 9.19 s.
+- Artifact: `target/release/unidevice.exe`, 412,672 bytes; present and readable after build.
+- SHA-256: `e4d9b42caeed1850f3f2e0010c946b0e902eb3a47452473e56b13eefad39f88e`.
+- MD5: `193fc7645db46ec393d31a7a90561a3c`.
+- Execution: NOT RUN. Tests not repeated because application source did not change.
+- Requirement: provide an inspection sample at the user's request, not an approved release.
+- Risk: original antivirus detection remains unresolved; this sample has a different hash.
+  No protection settings changed and no sample was uploaded by the agent.
+- Commit: the commit containing this section. Distribution hold remains active.
+- Next: user inspects the exact artifact and supplies the external analysis result.
