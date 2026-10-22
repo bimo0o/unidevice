@@ -1,0 +1,24 @@
+[package]
+name = "unidevice"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.82"
+description = "Experimental lightweight peripheral configurator"
+license = "MIT"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[target.'cfg(windows)'.dependencies]
+hidapi = { version = "=2.6.7", default-features = false, features = ["windows-native"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+hidapi = { version = "=2.6.7", default-features = false, features = ["linux-native-basic-udev"] }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"
