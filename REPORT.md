@@ -34,3 +34,23 @@ the application has no network code. Git metadata changes require sandbox escala
   backend reports padded write lengths; strict short-write validation uses the C backend instead.
 - Commit: the commit containing this section (`git log --oneline -- src/hidpp.rs`).
 - Next: model routing, safe RGB preview, profiles and usable interactive CLI.
+
+## Change 4 — adaptive specification (phase 1 amendment)
+
+- File: `specs/adaptive-discovery.md`: +39 lines.
+- Check: `git diff --cached --stat`: one specification, no code.
+- Requirement: user clarified that new models must adapt without a model table.
+- Risk: vendor-specific semantics cannot be inferred from an HID descriptor alone.
+- Commit: `251b323 docs: specify model-independent capability discovery`.
+- Next: descriptor-based adapter selection and dynamic capabilities.
+
+## Change 5 — adaptive test product (phase 4)
+
+- Files: `src/{descriptor,controller,profile,device,main,hidpp,lib}.rs`, `profiles/`, `tests/cli.rs`.
+- Check: `cargo test --offline`: 25 tests pass; `cargo clippy --offline --all-targets -- -D warnings`: pass.
+- Requirement: default auto adapter uses no PID whitelist, parses descriptor layouts,
+  queries runtime DPI capabilities; JSON profiles, CLI menu, offline simulation.
+- Risk: hardware unverified; arbitrary new protocols, Corsair writes and Gembird control
+  are explicitly unsupported. Third fully operational model cannot be claimed.
+- Commit: the commit containing this section (`git log --oneline -- src/descriptor.rs`).
+- Next: portable builds, resource measurements, packaging and final support matrix.

@@ -121,7 +121,7 @@ impl<T: Transport> Session<T> {
     pub fn set_dpi(&mut self, dpi: u16) -> Result<u16> {
         if !(100..=25600).contains(&dpi) {
             return Err(Error::Invalid(
-                "experimental Superlight DPI safety range is 100..25600".into(),
+                "experimental DPI safety range is 100..25600".into(),
             ));
         }
         if !self.supported_dpi()?.contains(&dpi) {
@@ -368,5 +368,25 @@ mod tests {
         assert_eq!(normalized(&report).unwrap().len(), 7);
         report[19] = 1;
         assert!(normalized(&report).is_err());
+    }
+
+    #[test]
+    fn previously_unlisted_device_can_report_a_different_feature_index() {
+        let transport = ScriptedTransport {
+            replies: vec![
+                Ok(vec![0x10, DEVICE, 0, 0x11, 2, 0, 0x5a]),
+                Ok(vec![0x10, DEVICE, 0, 2, 42, 0, 1]),
+                Ok(vec![0x10, DEVICE, 42, 3, 1, 0, 0]),
+                Ok(vec![0x10, DEVICE, 42, 0x24, 0, 3, 0x20]),
+            ]
+            .into(),
+            ..Default::default()
+        };
+        let mut session = Session::connect(transport).unwrap();
+        assert_eq!(session.read_dpi(), Ok(800));
+        assert_eq!(
+            session.into_transport().writes[3],
+            [0x10, DEVICE, 42, 0x24, 0, 0, 0]
+        );
     }
 }
