@@ -113,6 +113,9 @@ cargo build --locked --release
 `scripts/Build.ps1` поддерживает изолированный toolchain в `.tools/` и кросс-сборку MUSL
 из Windows. `scripts/Package.ps1` создаёт portable ZIP и SHA256SUMS. Команды разработки
 загружают зависимости; приложение во время работы не обращается к сети.
-GitHub CI проверяет сборку/тесты на Windows и Linux; наличие workflow не означает успешный прогон.
+Первый [прогон GitHub CI](https://github.com/bimo0o/unidevice/actions/runs/39873451484)
+успешен на Windows и Ubuntu: тесты, Clippy, release-сборка и offline demo.
+Это не отменяет антивирусный детект. Сгенерированные CI-бинарники удалены;
+новые прогоны не публикуют исполняемые артефакты.
 
 Замеры и честная матрица поддержки: [REPORT.md](REPORT.md).

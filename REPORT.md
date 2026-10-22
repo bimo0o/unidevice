@@ -114,3 +114,18 @@ Excluded: unknown vendor protocol synthesis, receiver slot discovery, firmware/r
 macros/remap/polling, decorative RGB on Superlight, Gembird control before identification,
 GUI and startup daemon. Scope avoids inventing undocumented commands and background load.
 The code/test product exists; a ready distributable Windows product is **not complete**.
+
+## Change 8 — hosted verification and removal of generated CI binaries
+
+- Files: this report and `SECURITY_REVIEW.md`.
+- Check: [CI run 39873451484](https://github.com/bimo0o/unidevice/actions/runs/39873451484),
+  commit `ad4f127`: Windows and Ubuntu jobs both succeeded (tests, fmt, Clippy,
+  release compilation, offline demo). This verifies native Linux execution in CI,
+  not local Linux RAM/CPU or physical-device behavior.
+- Check: removed the two generated binary artifacts from that run; API artifact count = 0.
+- Requirement: preserve reproducible source verification while holding distribution.
+- Risk: antivirus detection unresolved; successful CI is not an antivirus verdict.
+- Commit: the commit containing this section (`git log --oneline -- REPORT.md`).
+- Next: vendor reanalysis and independent review of the exact intended release artifact.
+
+Private source repository: https://github.com/bimo0o/unidevice . No release published.

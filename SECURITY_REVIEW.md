@@ -30,7 +30,9 @@ Release execution attempts failed with sharing violations before the file disapp
 - Reviewed process invocations in dependency build scripts: compiler version/probe operations;
   proc-macro2 removes its generated probe directory under OUT_DIR. This was a targeted
   review, not a complete independent audit of all transitive dependency code.
-- CI independently builds/tests on hosted Windows/Linux runners. A successful run cannot
+- CI independently built/tested on hosted Windows/Linux runners; both jobs passed at
+  source commit `ad4f127` (run https://github.com/bimo0o/unidevice/actions/runs/39873451484).
+  Tests, Clippy, release build and offline demo succeeded. A successful run cannot
   overturn the antivirus verdict and must not be used to bypass local protection.
 
 No binary, source sample or message was submitted to Kaspersky or another analysis service.
@@ -47,7 +49,8 @@ Linux MUSL SHA-256:
 
 Neither different hashes nor a lack of an alert for these files establishes safety.
 Packaging now fails explicitly while `packaging/DISTRIBUTION_HOLD` exists. No GitHub release
-was published; executable artifact upload was removed from future CI runs.
+was published; executable artifact upload was removed from future CI runs. The two initial
+private CI binary artifacts were deleted; listing that run's artifacts returned zero.
 
 ## Unresolved work
 
