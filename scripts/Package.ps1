@@ -1,6 +1,9 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $projectRoot
+if (Test-Path -LiteralPath 'packaging\DISTRIBUTION_HOLD') {
+    throw 'Distribution suspended: unresolved antivirus detection. See SECURITY_REVIEW.md.'
+}
 $packages = @(
     @{ Name = 'windows-x64'; Source = 'target\release\unidevice.exe'; Binary = 'unidevice.exe' },
     @{ Name = 'linux-x64-musl'; Source = 'target\x86_64-unknown-linux-musl\release\unidevice'; Binary = 'unidevice' }

@@ -19,9 +19,3 @@ jobs:
       - run: cargo +stable clippy --locked --all-targets -- -D warnings
       - run: cargo +stable build --locked --release
       - run: cargo +stable run --locked --release -- demo
-      - uses: actions/upload-artifact@v4
-        with:
-          name: unidevice-${{ matrix.os }}
-          path: |
-            target/release/unidevice
-            target/release/unidevice.exe

@@ -1,0 +1,3 @@
+Unresolved Kaspersky heuristic detection of local Windows GNU release binary.
+Do not distribute or restore the flagged executable, disable antivirus, or treat another
+build as proof of safety. See SECURITY_REVIEW.md. No release has been published.

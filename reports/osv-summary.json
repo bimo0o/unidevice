@@ -1,0 +1,7 @@
+{
+  "date": "2026-10-23",
+  "service": "https://api.osv.dev/v1/querybatch",
+  "checked_package_versions": 24,
+  "published_vulnerability_matches": 0,
+  "limitation": "Known vulnerability lookup only; not a malware scan or safety verdict"
+}

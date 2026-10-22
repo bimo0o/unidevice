@@ -1,0 +1,98 @@
+[
+  {
+    "package": "basic-udev@0.1.2",
+    "checksum_matches": true
+  },
+  {
+    "package": "bitflags@2.13.2",
+    "checksum_matches": true
+  },
+  {
+    "package": "cc@1.9.0",
+    "checksum_matches": true
+  },
+  {
+    "package": "cfg-if@1.0.5",
+    "checksum_matches": true
+  },
+  {
+    "package": "cfg_aliases@0.2.2",
+    "checksum_matches": true
+  },
+  {
+    "package": "find-msvc-tools@0.1.15",
+    "checksum_matches": true
+  },
+  {
+    "package": "hidapi@2.6.7",
+    "checksum_matches": true
+  },
+  {
+    "package": "itoa@1.0.18",
+    "checksum_matches": true
+  },
+  {
+    "package": "libc@0.2.191",
+    "checksum_matches": true
+  },
+  {
+    "package": "memchr@2.8.3",
+    "checksum_matches": true
+  },
+  {
+    "package": "nix@0.30.1",
+    "checksum_matches": true
+  },
+  {
+    "package": "pkg-config@0.3.34",
+    "checksum_matches": true
+  },
+  {
+    "package": "proc-macro2@1.0.107",
+    "checksum_matches": true
+  },
+  {
+    "package": "quote@1.0.47",
+    "checksum_matches": true
+  },
+  {
+    "package": "serde@1.0.229",
+    "checksum_matches": true
+  },
+  {
+    "package": "serde_core@1.0.229",
+    "checksum_matches": true
+  },
+  {
+    "package": "serde_derive@1.0.229",
+    "checksum_matches": true
+  },
+  {
+    "package": "serde_json@1.0.154",
+    "checksum_matches": true
+  },
+  {
+    "package": "shlex@2.0.1",
+    "checksum_matches": true
+  },
+  {
+    "package": "syn@3.0.9",
+    "checksum_matches": true
+  },
+  {
+    "package": "unicode-ident@1.0.27",
+    "checksum_matches": true
+  },
+  {
+    "package": "windows-link@0.2.1",
+    "checksum_matches": true
+  },
+  {
+    "package": "windows-sys@0.61.2",
+    "checksum_matches": true
+  },
+  {
+    "package": "zmij@1.0.23",
+    "checksum_matches": true
+  }
+]

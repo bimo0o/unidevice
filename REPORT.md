@@ -68,3 +68,49 @@ the application has no network code. Git metadata changes require sandbox escala
   uses static CRT configuration, distinct from the local GNU toolchain.
 - Commit: the commit containing this section (`git log --oneline -- scripts/Build.ps1`).
 - Next: run CI, validate downloadable binaries, measure and package the tested artifact.
+
+## Change 7 — measurements, final status and distribution hold (phase 5/6)
+
+- Files: `SECURITY_REVIEW.md`, `reports/`, packaging hold, workflow and README updates.
+- Check: before receiving the antivirus details, `scripts/Measure.ps1` on Windows debug:
+  10.104 s sampling after 2 s warmup, 8 logical CPUs, menu blocked on stdin, no HID opened.
+  Max working set 5,238,784 bytes (~5.00 MiB), private bytes 847,872 (~0.81 MiB).
+  Measured CPU delta 0 ms (0% at measurement resolution); binary 10,728,922 bytes (~10.23 MiB).
+- Windows release compilation succeeded; observed file size before deletion: 412,672 bytes.
+  This is NOT a usable/approved release artifact. User confirmed Kaspersky heuristic deletion.
+- Linux x64 MUSL cross-build: 546,944 bytes (~0.52 MiB); local Linux execution/RAM/CPU:
+  NOT RUN. Linux runtime cannot be inferred from cross-compilation.
+- Integrity: 24 crate archives match Cargo.lock checksums. OSV: 0 published matches in
+  24 version queries; not a malware scan. Details and limitations in SECURITY_REVIEW.md.
+- Requirement: transparent limits, actual measurements, no antivirus bypass or unsafe release.
+- Risk: antivirus verdict unresolved. Packaging suspended. No physical-device verification.
+- Commit: the commit containing this section (`git log --oneline -- SECURITY_REVIEW.md`).
+- Next: vendor reanalysis and independent build-chain review; then hardware validation.
+
+## Final capability matrix
+
+| Adapter/model | Function | Software check | Hardware status |
+|---|---|---|---|
+| Previously unlisted Logitech HID++ model | Descriptor/runtime DPI discovery | mock-tested without PID whitelist | unverified; wired target FF only |
+| Superlight 1 | DPI set/read and supported list | mock-tested; opt-in guarded | unverified; no onboard/receiver fallback |
+| Harpoon RGB PRO | RGB payload preview | fixture-tested | writes disabled; report ID/init/zones missing |
+| Harpoon RGB PRO | DPI | not implemented | requires protocol evidence |
+| Unknown Gembird | Descriptor inspection | parser-tested | actual device unavailable; control disabled |
+| Arbitrary new proprietary protocol | Automatic configuration | unsupported | descriptor alone cannot reveal semantics |
+
+## Clean-room checklist
+
+- [x] Model specs and adaptive spec committed before their protocol implementations.
+- [x] Public references attributed; all hardware claims marked unverified.
+- [x] No manufacturer SDK, copied community driver implementation or proprietary binary in Git.
+- [x] No serial numbers/device paths in application output or saved profiles.
+- [x] No application network, telemetry, account or service.
+- [x] Development downloads and package vulnerability queries recorded separately.
+- [ ] Physical captures, report/zone verification and measured device behavior.
+- [ ] Independent clean-room team separation (one agent performed both stages).
+- [ ] Security verdict resolved and portable release validated/distributed.
+
+Excluded: unknown vendor protocol synthesis, receiver slot discovery, firmware/reset/flash,
+macros/remap/polling, decorative RGB on Superlight, Gembird control before identification,
+GUI and startup daemon. Scope avoids inventing undocumented commands and background load.
+The code/test product exists; a ready distributable Windows product is **not complete**.
