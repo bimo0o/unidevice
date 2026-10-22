@@ -54,3 +54,17 @@ the application has no network code. Git metadata changes require sandbox escala
   are explicitly unsupported. Third fully operational model cannot be claimed.
 - Commit: the commit containing this section (`git log --oneline -- src/descriptor.rs`).
 - Next: portable builds, resource measurements, packaging and final support matrix.
+
+## Change 6 — build and distribution tooling (phase 5)
+
+- Files: `scripts/`, `.github/workflows/ci.yml`, `.cargo/config.toml`, `packaging/`,
+  `licenses/`, `THIRD_PARTY.md`, README updates.
+- Check: local Windows GNU release and static Linux MUSL cross-compilation succeeded.
+  Windows release EXE subsequently disappeared after a sharing violation; cause not established.
+  Debug Windows binary remains runnable. Antivirus settings were not changed.
+- Requirement: portable binaries, reproducible builds, dependency notices, CI on both OSes,
+  external idle measurement script; no application network code.
+- Risk: Linux runtime not available locally; CI will perform native validation. MSVC CI
+  uses static CRT configuration, distinct from the local GNU toolchain.
+- Commit: the commit containing this section (`git log --oneline -- scripts/Build.ps1`).
+- Next: run CI, validate downloadable binaries, measure and package the tested artifact.

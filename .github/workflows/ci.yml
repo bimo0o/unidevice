@@ -1,0 +1,27 @@
+name: Rust validation
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: rustup toolchain install stable --profile minimal --component clippy --component rustfmt
+      - run: cargo +stable fmt --check
+      - run: cargo +stable test --locked
+      - run: cargo +stable clippy --locked --all-targets -- -D warnings
+      - run: cargo +stable build --locked --release
+      - run: cargo +stable run --locked --release -- demo
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unidevice-${{ matrix.os }}
+          path: |
+            target/release/unidevice
+            target/release/unidevice.exe

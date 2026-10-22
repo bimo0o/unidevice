@@ -1,0 +1,3 @@
+# Optional example for desktop users using systemd-logind; review before installing.
+# Matches a protocol vendor, not one product ID. No world-writable permissions.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", TAG+="uaccess"
