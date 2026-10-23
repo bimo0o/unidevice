@@ -1,5 +1,12 @@
 # Device safety policy for interactive control
 
+RGB8070 addition: dynamic feature/zone/effect discovery after the DPI handshake.
+Native long input/output descriptor required. Only RAM (persistence byte 0) zone
+effects with known parameter layouts are writable; current state and complete
+zone metadata must be read first. One outstanding setter across DPI/RGB, per-zone
+full readback, no mode/NV/calibration/bin commands. Preserve original per-zone
+effects before mutation and restore only explicitly. See hidpp8070.md.
+
 Extended DPI addition: a correlated absent-2201 reply may select 2202 version 0.
 Native descriptor must include long input/output reports before this lookup.
 Only sensor count/capabilities/ranges/current and one explicit sensor-zero DPI

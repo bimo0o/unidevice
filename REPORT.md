@@ -392,3 +392,39 @@ with software-ID wrap, split range words, optional fields, bad replies and timeo
 All new protocol fixtures are synthetic. No real HID operation was performed.
 Previous 0.3.2 source 30dbaf9 passed Windows/Linux CI run 39969830139; this milestone's
 CI result is tracked separately. No added physical support count or 99% claim.
+
+## Change 22 — Conditional multi-zone RGB8070, Studio 0.3.4
+
+The common Logitech session/transport now discovers RGB8070 dynamically after DPI.
+Direct USB only, descriptor long input/output gate, feature versions 0–7 common
+functions, 1–8 zones, 1–32 effects per zone. Runtime indexes and GET_ZONE_EFFECT
+capability are required; no PID/effect-index guesses. Implemented static color,
+existing host effects/scene/compatible transfer, per-zone RAM readback and explicit
+restoration of safe original off/fixed/cycle/breathing settings. Unrepresentable
+original patterns disable RGB rather than erase them; DPI can remain available.
+
+Native firewall permits exactly known query/set forms and RAM persistence 0;
+EEPROM selectors, reserved bytes, NV/config/mode/bin commands and concurrent DPI/RGB
+setters are blocked. One setter plus full readback per zone; no retry or automatic
+rollback. Check DPI before/after RGB without writing it. A late-zone failure can
+leave earlier zones changed. Errors suspend the session and scene channels stop.
+
+Studio captures all original zone effects before first mutation, saving a create-new,
+synced settings snapshot. Same-session Restore preserves original patterns rather
+than flattening mixed zones. Snapshot files are retained, but disk import of this
+specific format is not yet implemented. They contain settings, not command packets,
+serials/paths or firmware. A physical USB brick cannot be recovered from this file.
+
+Explicit adapter identity in capability passports prevents a Logitech with RGB from
+inheriting Corsair firmware 3.13 or hardware evidence. Recognition/physical counts
+remain unchanged. The implementation is experimental; no real HID was opened.
+Sources: OpenLogi b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511 and static RAM-selector
+cross-check in OpenRGB 817834cfab034c97927451e31c4a2deb60a44725; no upstream driver
+was installed, executed or linked. Detailed constraints: specs/hidpp8070.md.
+
+Validation: 83 library/GUI + 7 CLI tests passed, strict Clippy and release build.
+New synthetic fixtures cover two differently indexed zones, animated baseline,
+explicit restore, both DPI protocols, persistence/reserved byte mutations, forbidden
+functions, malformed readback, timeout/no retry and exclusive full-state backup.
+No physical RGB color, frame rate, power-cycle persistence or market coverage is
+claimed. Previous 0.3.3 passed Windows/Linux CI run 40012027844, source 3420493.

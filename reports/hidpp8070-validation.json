@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "protocol": "HID++ RGB8070",
+  "status": "experimental_implemented_not_physically_verified",
+  "source": {
+    "project": "AprilNEA/OpenLogi",
+    "commit": "b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511",
+    "files": [
+      {
+        "path": "crates/openlogi-hidpp/src/feature/color_led_effects.rs",
+        "sha256": "7c76f729383aaa17c210d61abe9fb642c733cf078716c55d0f7656e3202e7c28",
+        "url": "https://github.com/AprilNEA/OpenLogi/blob/b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511/crates/openlogi-hidpp/src/feature/color_led_effects.rs"
+      },
+      {
+        "path": "crates/openlogi-hidpp/src/feature/color_led_effects/types.rs",
+        "sha256": "ca570a8404732c495d7a0082680df33b8b7d0ddac0cfcfcd9650c9a3f85319cd",
+        "url": "https://github.com/AprilNEA/OpenLogi/blob/b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511/crates/openlogi-hidpp/src/feature/color_led_effects/types.rs"
+      }
+    ]
+  },
+  "test_fixture_kind": "synthetic_not_usb_capture",
+  "library_gui_tests_passed": 83,
+  "cli_tests_passed": 7,
+  "physical_models_verified_with_this_adapter": 0,
+  "market_coverage_probability": null,
+  "persistence_selector": 0,
+  "persistence_after_power_cycle": "unmeasured",
+  "settings_backup": "full_safe_per_zone_effects_create_new_and_sync",
+  "restore": "explicit_same_live_session",
+  "disk_snapshot_import": false,
+  "receiver_routing": false,
+  "rgb8071": false,
+  "nv_firmware_reset_commands": false
+}

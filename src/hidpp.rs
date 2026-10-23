@@ -34,6 +34,9 @@ pub struct Session<T> {
     software: u8,
     feature: u8,
     extended_flags: Option<u8>,
+    rgb_checked: bool,
+    rgb_layout: Option<crate::rgb8070::Layout>,
+    faulted: bool,
 }
 
 impl<T: Transport> Session<T> {
@@ -43,6 +46,9 @@ impl<T: Transport> Session<T> {
             software: 0,
             feature: 0,
             extended_flags: None,
+            rgb_checked: false,
+            rgb_layout: None,
+            faulted: false,
         };
         let ping = session.exchange(0, 1, [0, 0, 0x5a])?;
         if ping[0] < 2 || ping[2] != 0x5a {
@@ -84,6 +90,11 @@ impl<T: Transport> Session<T> {
     }
 
     fn exchange_payload(&mut self, feature: u8, function: u8, params: &[u8]) -> Result<Vec<u8>> {
+        if self.faulted {
+            return Err(Error::Safety(
+                "session faulted; probe again explicitly".into(),
+            ));
+        }
         self.software = self.software % 15 + 1;
         let mut request = vec![
             if params.len() == 16 { 0x11 } else { 0x10 },
@@ -233,6 +244,126 @@ impl<T: Transport> Session<T> {
         } else {
             0x2201
         }
+    }
+
+    pub fn discover_rgb(&mut self) -> Result<bool> {
+        if self.rgb_checked {
+            return Ok(self.rgb_layout.is_some());
+        }
+        self.rgb_checked = true;
+        if !self.transport.supports_long() {
+            return Ok(false);
+        }
+        let feature = self.exchange(0, 0, [0x80, 0x70, 0])?;
+        if feature[0] == 0 || feature[1] & 0xc0 != 0 || feature[2] > 7 {
+            return Ok(false);
+        }
+        if feature[0] >= 0xf0 || feature[0] == 0x8f || feature[0] == self.feature {
+            return Err(Error::Protocol(
+                "invalid or overlapping RGB feature index".into(),
+            ));
+        }
+        let index = feature[0];
+        let info = self.exchange(index, 0, [0, 0, 0])?;
+        let count = match crate::rgb8070::zone_count(&info) {
+            Ok(n) => n,
+            Err(Error::Unsupported(_)) => return Ok(false),
+            Err(e) => return Err(e),
+        };
+        let mut zones = Vec::new();
+        for zone in 0..count {
+            let data = self.exchange(index, 1, [zone, 0, 0])?;
+            let mut z = crate::rgb8070::Zone::info(zone, &data)?;
+            for effect in 0..z.effects.len() as u8 {
+                let data = self.exchange(index, 2, [zone, effect, 0])?;
+                z.effect_info(effect, &data)?;
+            }
+            zones.push(z);
+        }
+        let layout = crate::rgb8070::Layout { index, zones };
+        if let Err(Error::Unsupported(_)) = layout.validate() {
+            return Ok(false);
+        }
+        layout.validate()?;
+        self.rgb_layout = Some(layout);
+        Ok(true)
+    }
+    pub fn disable_rgb(&mut self) {
+        self.rgb_layout = None;
+    }
+    pub fn rgb_snapshot(&mut self) -> Result<crate::rgb8070::Snapshot> {
+        let layout = self
+            .rgb_layout
+            .clone()
+            .ok_or_else(|| Error::Unsupported("no restorable RGB8070 layout".into()))?;
+        let mut settings = Vec::new();
+        for zone in &layout.zones {
+            let reply = self.exchange(layout.index, 14, [zone.index, 0, 0])?;
+            settings.push(zone.read(&reply)?);
+        }
+        Ok(crate::rgb8070::Snapshot { settings })
+    }
+    pub fn set_rgb(&mut self, color: [u8; 3]) -> Result<crate::rgb8070::Snapshot> {
+        let layout = self
+            .rgb_layout
+            .as_ref()
+            .ok_or_else(|| Error::Unsupported("no RGB8070 layout".into()))?;
+        let settings = layout
+            .zones
+            .iter()
+            .map(|zone| zone.fixed(color))
+            .collect::<Result<Vec<_>>>()?;
+        self.restore_rgb(&crate::rgb8070::Snapshot { settings })
+    }
+    pub fn restore_rgb(
+        &mut self,
+        target: &crate::rgb8070::Snapshot,
+    ) -> Result<crate::rgb8070::Snapshot> {
+        let result = self.restore_rgb_inner(target);
+        if result.is_err() {
+            self.faulted = true;
+        }
+        result
+    }
+    fn restore_rgb_inner(
+        &mut self,
+        target: &crate::rgb8070::Snapshot,
+    ) -> Result<crate::rgb8070::Snapshot> {
+        let layout = self
+            .rgb_layout
+            .clone()
+            .ok_or_else(|| Error::Unsupported("no RGB8070 layout".into()))?;
+        if target.settings.len() != layout.zones.len() {
+            return Err(Error::Safety("RGB snapshot layout changed".into()));
+        }
+        // Validate all targets before the first setter; imported files cannot construct these settings.
+        for (zone, setting) in layout.zones.iter().zip(&target.settings) {
+            if setting.zone_index() != zone.index {
+                return Err(Error::Safety("RGB snapshot zone order changed".into()));
+            }
+            layout.payload(setting)?;
+        }
+        let dpi = self.read_dpi()?;
+        let before = self.rgb_snapshot()?;
+        for (setting, previous) in target.settings.iter().zip(&before.settings) {
+            if setting == previous {
+                continue;
+            }
+            let payload = layout.payload(setting)?;
+            self.exchange_payload(layout.index, 3, &payload)?;
+            let actual = self.exchange(layout.index, 14, [setting.zone_index(), 0, 0])?;
+            if layout.zones[usize::from(setting.zone_index())].read(&actual)? != *setting {
+                return Err(Error::Protocol(
+                    "RGB8070 readback mismatch; no rollback or retry".into(),
+                ));
+            }
+        }
+        if self.read_dpi()? != dpi {
+            return Err(Error::Safety(
+                "DPI changed during RGB update; stop control".into(),
+            ));
+        }
+        Ok(target.clone())
     }
     fn extended_capabilities(&mut self) -> Result<u8> {
         let data = self.exchange(self.feature, 1, [0, 0, 0])?;

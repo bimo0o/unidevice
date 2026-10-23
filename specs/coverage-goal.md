@@ -1,5 +1,10 @@
 # Mouse protocol coverage goal
 
+RGB8070 implementation now conditionally enables wired Logitech DPI + RGB from
+runtime capabilities, including original per-zone effects and RAM-only writes.
+Hardware verification is still absent for this adapter; do not award market
+coverage based on synthetic conformance tests. Receivers and RGB8071 remain open.
+
 Implemented extension: HID++ 2202 v0 live DPI, conditional wired discovery with
 capability/range/state validation, preserved lift-off/defaults and readback.
 No physical test or market coverage credit yet. RGB and receiver routes remain

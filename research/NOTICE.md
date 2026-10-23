@@ -1,5 +1,11 @@
 # Research provenance and licensing
 
+RGB8070 wire facts additionally use OpenLogi's color_led_effects.rs and
+color_led_effects/types.rs at b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511.
+The independent implementation's RAM persistence selector was cross-checked against
+OpenRGB LogitechProtocolCommon.cpp at 817834cfab034c97927451e31c4a2deb60a44725.
+No OpenRGB driver code is copied/linked. Existing upstream license notices remain.
+
 HID++ 2202 wire facts were additionally checked against AprilNEA/OpenLogi commit
 b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511, crates/openlogi-hidpp/src/feature/extended_dpi.rs
 and extended_dpi/types.rs. These are the project's own primary implementation,

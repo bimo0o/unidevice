@@ -28,6 +28,7 @@ pub struct DeviceRow {
 
 #[derive(Clone, Debug)]
 pub struct Capabilities {
+    pub adapter: crate::passport::Adapter,
     pub current_dpi: u16,
     pub values: Vec<u16>,
     pub demo: bool,
@@ -55,7 +56,7 @@ impl DeviceRow {
 }
 impl Capabilities {
     pub fn passport(&self) -> crate::passport::Passport {
-        crate::passport::Passport::for_caps(self.demo, self.rgb_control, &self.dpi_source)
+        crate::passport::Passport::for_caps(self.adapter, self.rgb_control, &self.dpi_source)
     }
     fn narrow(&mut self, row: &DeviceRow) {
         if let Some(max) = row.package.as_ref().and_then(|p| p.max_dpi) {
@@ -448,15 +449,21 @@ struct Checkpoint {
     caps: Capabilities,
     harpoon: Option<crate::corsair::State>,
     file: Option<String>,
+    logitech_rgb: Option<crate::rgb8070::Snapshot>,
 }
 impl Backend {
     fn recovery_info(&self) -> Option<crate::recovery::RecoveryInfo> {
         let checkpoint = self.checkpoint.as_ref()?;
         Some(crate::recovery::RecoveryInfo {
             dpi: checkpoint.caps.current_dpi,
-            rgb: checkpoint.caps.rgb_control.then_some(checkpoint.caps.rgb),
+            rgb: if let Some(snapshot) = &checkpoint.logitech_rgb {
+                snapshot.portable_color()
+            } else {
+                checkpoint.caps.rgb_control.then_some(checkpoint.caps.rgb)
+            },
             file: checkpoint.file.clone(),
             can_restore: self.active.is_some(),
+            zone_effects: checkpoint.logitech_rgb.as_ref().map(|s| s.zones()),
         })
     }
     fn ensure_checkpoint(&mut self) -> Result<()> {
@@ -471,22 +478,33 @@ impl Backend {
         if self.checkpoint.is_some() {
             return Ok(());
         }
-        let (caps, harpoon, portable_dpi) = match self.active.as_mut().ok_or(Error::NotFound)? {
-            Active::Harpoon { session, caps } => {
-                let state = session.state()?;
-                caps.current_dpi = state.x;
-                caps.rgb = state.rgb;
-                let dpi = (state.x == state.y && state.linked_axes()).then_some(state.x);
-                (caps.clone(), Some(state), dpi)
-            }
-            Active::Real { session, caps } => {
-                caps.current_dpi = session.read_dpi()?;
-                (caps.clone(), None, Some(caps.current_dpi))
-            }
-            Active::Demo(caps) => (caps.clone(), None, Some(caps.current_dpi)),
-        };
+        let (caps, harpoon, portable_dpi, logitech_rgb) =
+            match self.active.as_mut().ok_or(Error::NotFound)? {
+                Active::Harpoon { session, caps } => {
+                    let state = session.state()?;
+                    caps.current_dpi = state.x;
+                    caps.rgb = state.rgb;
+                    let dpi = (state.x == state.y && state.linked_axes()).then_some(state.x);
+                    (caps.clone(), Some(state), dpi, None)
+                }
+                Active::Real { session, caps } => {
+                    caps.current_dpi = session.read_dpi()?;
+                    let rgb = if caps.rgb_control {
+                        Some(session.rgb_snapshot()?)
+                    } else {
+                        None
+                    };
+                    (caps.clone(), None, Some(caps.current_dpi), rgb)
+                }
+                Active::Demo(caps) => (caps.clone(), None, Some(caps.current_dpi), None),
+            };
         let file = if caps.demo {
             None
+        } else if let Some(snapshot) = &logitech_rgb {
+            Some(crate::recovery::save_logitech_settings(
+                caps.current_dpi,
+                snapshot,
+            )?)
         } else {
             Some(crate::recovery::save_settings(
                 portable_dpi,
@@ -497,6 +515,7 @@ impl Backend {
             caps,
             harpoon,
             file,
+            logitech_rgb,
         });
         Ok(())
     }
@@ -523,12 +542,22 @@ impl Backend {
                     Ok(caps.clone())
                 }
                 Active::Real { session, caps } => {
-                    if checkpoint.harpoon.is_some()
-                        || !caps.values.contains(&checkpoint.caps.current_dpi)
-                    {
+                    if checkpoint.harpoon.is_some() {
                         return Err(Error::Safety("checkpoint no longer inside policy".into()));
                     }
-                    caps.current_dpi = session.set_dpi(checkpoint.caps.current_dpi)?;
+                    caps.current_dpi = session.read_dpi()?;
+                    if caps.current_dpi != checkpoint.caps.current_dpi {
+                        if !caps.values.contains(&checkpoint.caps.current_dpi) {
+                            return Err(Error::Safety(
+                                "original DPI no longer inside policy".into(),
+                            ));
+                        }
+                        caps.current_dpi = session.set_dpi(checkpoint.caps.current_dpi)?;
+                    }
+                    if let Some(snapshot) = &checkpoint.logitech_rgb {
+                        session.restore_rgb(snapshot)?;
+                        caps.rgb = snapshot.color_hint();
+                    }
                     Ok(caps.clone())
                 }
                 Active::Demo(caps) => {
@@ -561,6 +590,7 @@ impl Backend {
         let stage = match self.active.as_mut() {
             Some(Active::Harpoon { session, .. }) => session.state()?.stage,
             Some(Active::Demo(_)) => 0,
+            Some(Active::Real { caps, .. }) if caps.rgb_control => 0,
             _ => {
                 return Err(Error::Unsupported(
                     "RGB animation requires a supported RGB device".into(),
@@ -593,6 +623,11 @@ impl Backend {
                     caps.current_dpi = state.x;
                 }
                 Some(Active::Demo(caps)) => caps.rgb = color,
+                Some(Active::Real { session, caps }) if caps.rgb_control => {
+                    session.set_rgb(color)?;
+                    caps.current_dpi = session.read_dpi()?;
+                    caps.rgb = color;
+                }
                 _ => return Err(Error::Safety("RGB session unavailable".into())),
             }
             Ok(color)
@@ -610,6 +645,7 @@ impl Backend {
         self.animation = None;
         if row.demo {
             let mut caps = Capabilities {
+                adapter: crate::passport::Adapter::Simulation,
                 current_dpi: 800,
                 values: vec![400, 800, 1000, 1200, 1600, 2000, 2400, 3200, 6400],
                 demo: true,
@@ -645,6 +681,7 @@ impl Backend {
                 )?)?;
             let state = session.state()?;
             let mut caps = Capabilities {
+                adapter: crate::passport::Adapter::Harpoon,
                 current_dpi: state.x,
                 values: (100..=12000).step_by(100).collect(),
                 demo: false,
@@ -672,6 +709,7 @@ impl Backend {
             ));
         }
         let mut caps = Capabilities {
+            adapter: crate::passport::Adapter::Logitech,
             current_dpi: session.read_dpi()?,
             values,
             demo: false,
@@ -683,6 +721,16 @@ impl Backend {
             ),
         };
         caps.narrow(row);
+        if session.discover_rgb()? {
+            match session.rgb_snapshot() {
+                Ok(snapshot) => {
+                    caps.rgb_control = true;
+                    caps.rgb = snapshot.color_hint();
+                }
+                Err(Error::Unsupported(_)) => session.disable_rgb(),
+                Err(error) => return Err(error),
+            }
+        }
         if caps.values.is_empty() {
             return Err(Error::Unsupported(
                 "package excluded every advertised DPI".into(),
@@ -740,6 +788,13 @@ impl Backend {
     fn rgb(&mut self, value: [u8; 3]) -> Result<Capabilities> {
         self.ensure_checkpoint()?;
         let result = match self.active.as_mut() {
+            Some(Active::Real { session, caps }) if caps.rgb_control => {
+                session.set_rgb(value).and_then(|_| {
+                    caps.rgb = value;
+                    caps.current_dpi = session.read_dpi()?;
+                    Ok(caps.clone())
+                })
+            }
             Some(Active::Harpoon { session, caps }) => session.set_stage_rgb(value).map(|s| {
                 caps.current_dpi = s.x;
                 caps.rgb = s.rgb;

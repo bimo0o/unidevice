@@ -16,6 +16,7 @@ pub mod profile;
 pub mod protocols;
 pub mod razer;
 pub mod recovery;
+pub mod rgb8070;
 pub mod safety;
 pub mod sensitivity;
 pub mod storage;

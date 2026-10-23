@@ -1,0 +1,55 @@
+{
+  "model_from_user": "Gembird KBW-G660-1",
+  "status": "descriptor_only_no_vendor_commands",
+  "usb_candidate": {
+    "vid": "05AC",
+    "pid": "024F",
+    "identity_is_not_protocol_authorization": true,
+    "collections": [
+      {
+        "interface": 0,
+        "usage_page": "0001",
+        "usage": "0006",
+        "reports": {
+          "input_0_bytes": 8,
+          "output_0_bytes": 1
+        }
+      },
+      {
+        "interface": 2,
+        "usage_page": "FFFF",
+        "usage": "0001",
+        "reports": {
+          "input_5_bytes": 4
+        }
+      },
+      {
+        "interface": 3,
+        "usage_page": "FF60",
+        "usage": "0061",
+        "reports": {
+          "input_0_bytes": 32,
+          "output_0_bytes": 32
+        }
+      },
+      {
+        "interface": 4,
+        "usage_page": "FF60",
+        "usage": "0061",
+        "reports": {
+          "input_0_bytes": 64,
+          "output_0_bytes": 64
+        }
+      }
+    ]
+  },
+  "windows_device_status": "OK",
+  "firmware_revision": null,
+  "vendor_queries_sent": 0,
+  "setting_writes_sent": 0,
+  "firmware_operations": 0,
+  "input_logging": false,
+  "primary_keyboard": true,
+  "control_enabled": false,
+  "source": "https://gembird.ru/catalog/keyboards/gaming-keyboards/kbw-g660-1/"
+}

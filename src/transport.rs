@@ -5,9 +5,12 @@ use std::collections::VecDeque;
 pub trait Transport {
     fn write(&mut self, report: &[u8]) -> Result<()>;
     fn read(&mut self, timeout_ms: i32) -> Result<Vec<u8>>;
+    fn supports_long(&self) -> bool {
+        false
+    }
 }
 
-pub struct NativeTransport(crate::safety::GuardedTransport<NativeIo>);
+pub struct NativeTransport(crate::safety::GuardedTransport<NativeIo>, bool);
 
 impl NativeTransport {
     pub fn new(device: HidDevice) -> Result<Self> {
@@ -16,14 +19,17 @@ impl NativeTransport {
             return Err(Error::Safety("HID++ descriptor framing required".into()));
         }
         let extended = descriptor.hidpp_extended_framing();
-        Ok(Self(crate::safety::GuardedTransport::new(NativeIo {
-            device,
+        Ok(Self(
+            crate::safety::GuardedTransport::new(NativeIo { device, extended }),
             extended,
-        })))
+        ))
     }
 }
 
 impl Transport for NativeTransport {
+    fn supports_long(&self) -> bool {
+        self.1
+    }
     fn write(&mut self, report: &[u8]) -> Result<()> {
         self.0.write(report)
     }
@@ -40,7 +46,9 @@ struct NativeIo {
 impl Transport for NativeIo {
     fn write(&mut self, report: &[u8]) -> Result<()> {
         if !self.extended
-            && (report.first() == Some(&0x11) || report.get(4..) == Some(&[0x22, 2, 0]))
+            && (report.first() == Some(&0x11)
+                || report.get(4..) == Some(&[0x22, 2, 0])
+                || report.get(4..) == Some(&[0x80, 0x70, 0]))
         {
             return Err(Error::Safety(
                 "extended DPI needs descriptor input/output long reports".into(),
@@ -75,6 +83,9 @@ pub struct ScriptedTransport {
 }
 
 impl Transport for ScriptedTransport {
+    fn supports_long(&self) -> bool {
+        true
+    }
     fn write(&mut self, report: &[u8]) -> Result<()> {
         if let Some(e) = &self.write_error {
             return Err(e.clone());

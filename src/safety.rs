@@ -14,6 +14,9 @@ struct Firewall {
     basic_absent: bool,
     extended: bool,
     extended_guard: crate::dpi2202::Guard,
+    rgb_lookup_done: bool,
+    rgb_feature: Option<u8>,
+    rgb_guard: crate::rgb8070::Guard,
 }
 
 impl Firewall {
@@ -37,9 +40,18 @@ impl Firewall {
         }
         let function = bytes[3] >> 4;
         let params = &bytes[4..];
+        if (self.rgb_guard.awaits_readback() && Some(bytes[2]) != self.rgb_feature)
+            || ((self.extended_guard.awaits_readback() || self.setter_used)
+                && Some(bytes[2]) != self.feature)
+        {
+            return Err(Self::blocked());
+        }
         let allowed = if bytes[2] == 0 && bytes.len() == 7 {
             match function {
                 1 => !self.pinged && params == [0, 0, 0x5a],
+                0 if params == [0x80, 0x70, 0] => {
+                    self.pinged && self.feature.is_some() && !self.rgb_lookup_done
+                }
                 0 => {
                     self.pinged
                         && self.feature.is_none()
@@ -51,6 +63,10 @@ impl Firewall {
                 }
                 _ => false,
             }
+        } else if Some(bytes[2]) == self.rgb_feature {
+            self.rgb_guard
+                .authorize(function, params, bytes.len() == 20)
+                .is_ok()
         } else if Some(bytes[2]) == self.feature && self.extended {
             self.extended_guard
                 .authorize(function, params, bytes.len() == 20)
@@ -74,7 +90,7 @@ impl Firewall {
         if !allowed {
             return Err(Self::blocked());
         }
-        if !self.extended && bytes[2] != 0 && function == 3 {
+        if !self.extended && Some(bytes[2]) == self.feature && function == 3 {
             self.setter_used = true;
             self.setter_target = Some(u16::from_be_bytes([bytes[5], bytes[6]]));
         }
@@ -90,6 +106,9 @@ impl Firewall {
             return Ok(());
         }
         let report = crate::hidpp::normalized(bytes)?;
+        if Some(report[2]) == self.rgb_feature && report[3] & 15 == 0 {
+            return Err(Self::blocked());
+        }
         if self.extended && Some(report[2]) == self.feature && matches!(report[3], 0 | 0x10) {
             return Err(Error::Safety(
                 "extended DPI changed during transaction; reprobe explicitly".into(),
@@ -107,6 +126,20 @@ impl Firewall {
         }
         self.pending = None;
         let data = &report[4..];
+        if request[2] == 0 && request[3] >> 4 == 0 && request[4..] == [0x80, 0x70, 0] {
+            self.rgb_lookup_done = true;
+            if data[0] == 0 || data[1] & 0xc0 != 0 || data[2] > 7 {
+                return Ok(());
+            }
+            if !(1..0xf0).contains(&data[0]) || data[0] == 0x8f || Some(data[0]) == self.feature {
+                return Err(Self::blocked());
+            }
+            self.rgb_feature = Some(data[0]);
+            return Ok(());
+        }
+        if Some(request[2]) == self.rgb_feature {
+            return self.rgb_guard.observe(request[3] >> 4, &request[4..], data);
+        }
         if self.extended && Some(request[2]) == self.feature {
             return self
                 .extended_guard
@@ -165,6 +198,9 @@ impl<T> GuardedTransport<T> {
     }
 }
 impl<T: Transport> Transport for GuardedTransport<T> {
+    fn supports_long(&self) -> bool {
+        self.inner.supports_long()
+    }
     fn write(&mut self, report: &[u8]) -> Result<()> {
         if let Err(error) = self.firewall.authorize(report) {
             self.firewall.faulted = true;

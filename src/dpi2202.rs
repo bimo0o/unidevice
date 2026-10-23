@@ -453,6 +453,9 @@ pub(crate) struct Guard {
     awaiting_readback: bool,
 }
 impl Guard {
+    pub fn awaits_readback(&self) -> bool {
+        self.target.is_some()
+    }
     pub fn authorize(&mut self, function: u8, data: &[u8], long: bool) -> Result<()> {
         let allowed = if self.target.is_some() {
             self.awaiting_readback && !long && function == 5 && data == [0, 0, 0]

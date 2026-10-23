@@ -571,6 +571,7 @@ impl DesktopApp {
                         if ui.add_enabled(!self.busy && !self.tools.scene_running && checkpoint.can_restore, egui::Button::new("Восстановить настройки").small()).clicked() { action=Some(Action::RestoreCheckpoint); }
                     });
                     if let Some(file) = &checkpoint.file { ui.label(RichText::new(file).small().color(MUTED)); }
+                    if let Some(zones) = checkpoint.zone_effects { ui.label(RichText::new(format!("Исходные эффекты RGB сохранены: зон {zones}. Возврат — в текущем сеансе.")).small().color(MUTED)); }
                 }
                 let caps=self.caps.clone();
                 ui.columns(2,|columns| {
