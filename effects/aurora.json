@@ -1,0 +1,12 @@
+{
+  "pattern": "timeline",
+  "first": [106, 205, 181],
+  "second": [197, 143, 239],
+  "seconds": 10.0,
+  "easing": "smooth",
+  "keyframes": [
+    {"at": 0.0, "color": [106, 205, 181]},
+    {"at": 0.33, "color": [83, 129, 255]},
+    {"at": 0.66, "color": [197, 143, 239]}
+  ]
+}

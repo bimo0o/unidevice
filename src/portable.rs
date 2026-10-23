@@ -13,6 +13,23 @@ pub struct PortableProfile {
     pub feel: Option<Feel>,
 }
 impl PortableProfile {
+    pub fn from_any_json(text: &str) -> Result<Self> {
+        Self::from_json(text).or_else(|_| {
+            let legacy = crate::profile::Profile::from_json(text)?;
+            if legacy.rgb.is_some() || legacy.zone.is_some() {
+                return Err(Error::Unsupported(
+                    "legacy RGB zone cannot be silently mapped to a Studio stage color".into(),
+                ));
+            }
+            Ok(Self {
+                version: 2,
+                dpi: legacy.dpi,
+                rgb: None,
+                effect: None,
+                feel: None,
+            })
+        })
+    }
     pub fn validate(&self) -> Result<()> {
         if self.version != 2
             || self.dpi.is_some_and(|v| !(100..=25600).contains(&v))
@@ -58,6 +75,14 @@ mod tests {
     use super::*;
     #[test]
     fn portable_profiles_reject_commands_and_do_not_silently_quantize() {
+        PortableProfile::from_json(include_str!("../profiles/studio-starter.json")).unwrap();
+        assert!(
+            PortableProfile::from_any_json(r#"{"version":1,"model":"auto","dpi":800}"#).is_ok()
+        );
+        assert!(PortableProfile::from_any_json(
+            r#"{"version":1,"model":"harpoon","rgb":[1,2,3],"zone":2}"#
+        )
+        .is_err());
         let text = r#"{"version":2,"dpi":1100,"rgb":[1,2,3],"effect":null,"feel":null}"#;
         assert_eq!(PortableProfile::from_json(text).unwrap().dpi, Some(1100));
         assert_eq!(nearest(&[800, 1200], 1100.0), Some(1200));

@@ -10,6 +10,7 @@ use crate::{
 pub(super) enum Page {
     #[default]
     Device,
+    Effects,
     Scene,
     Profiles,
     Sensitivity,
@@ -19,8 +20,9 @@ impl Page {
     pub(super) fn label(self) -> &'static str {
         match self {
             Self::Device => "Устройство",
-            Self::Scene => "Общая сцена",
-            Self::Profiles => "Перенос профиля",
+            Self::Effects => "Эффекты",
+            Self::Scene => "Сцена",
+            Self::Profiles => "Профили",
             Self::Sensitivity => "Чувствительность",
             Self::Compatibility => "Совместимость",
         }
@@ -128,21 +130,14 @@ impl DesktopApp {
                     .into(),
             )
         } else {
+            self.tools.loaded = None;
             let path = if self.tools.import_path.trim().is_empty() {
                 profile_path(&self.profile_name)?
             } else {
                 PathBuf::from(self.tools.import_path.trim())
             };
             let text = crate::storage::read(&path)?;
-            let p = PortableProfile::from_json(&text).or_else(|_| {
-                crate::profile::Profile::from_json(&text).map(|legacy| PortableProfile {
-                    version: 2,
-                    dpi: legacy.dpi,
-                    rgb: legacy.rgb,
-                    effect: None,
-                    feel: None,
-                })
-            })?;
+            let p = PortableProfile::from_any_json(&text)?;
             if let Some(dpi) = p.dpi {
                 self.requested = dpi;
             }
@@ -348,6 +343,7 @@ impl DesktopApp {
     }
     pub(super) fn workbench_ui(&mut self, ui: &mut egui::Ui, action: &mut Option<Action>) {
         match self.tools.page {
+            Page::Effects => self.effects_ui(ui, action),
             Page::Scene => self.scene_ui(ui, action),
             Page::Profiles => self.profiles_ui(ui, action),
             Page::Sensitivity => self.sensitivity_ui(ui),
@@ -364,6 +360,58 @@ impl DesktopApp {
         } else {
             MUTED
         }));
+    }
+    fn effects_ui(&mut self, ui: &mut egui::Ui, action: &mut Option<Action>) {
+        ui.heading("Конструктор эффектов");
+        ui.label("Редактирование и предпросмотр не меняют устройство. Эффект применяется отдельной кнопкой.");
+        ui.horizontal_wrapped(|ui| {
+            if ui
+                .add_enabled(
+                    self.caps.as_ref().is_some_and(|c| c.rgb_control)
+                        && !self.busy
+                        && self.effect_draft().valid(),
+                    egui::Button::new(if self.effect_running {
+                        "Обновить запущенный эффект"
+                    } else {
+                        "Запустить на выбранном устройстве"
+                    }),
+                )
+                .clicked()
+            {
+                *action = Some(Action::StartEffect);
+            }
+            if ui
+                .add_enabled(
+                    self.effect_running && !self.busy,
+                    egui::Button::new("Остановить"),
+                )
+                .clicked()
+            {
+                *action = Some(Action::StopEffect);
+            }
+        });
+        ui.horizontal_wrapped(|ui| {
+            for pattern in [
+                crate::effects::Pattern::Gradient,
+                crate::effects::Pattern::Breathing,
+                crate::effects::Pattern::Rainbow,
+                crate::effects::Pattern::Timeline,
+            ] {
+                ui.selectable_value(&mut self.pattern, pattern, pattern.label());
+            }
+        });
+        ui.horizontal(|ui| {
+            ui.label("Основные цвета:");
+            ui.color_edit_button_srgb(&mut self.color);
+            ui.color_edit_button_srgb(&mut self.second_color);
+        });
+        ui.add(egui::Slider::new(&mut self.effect_seconds, 4.0..=30.0).suffix(" секунд / цикл"));
+        self.timeline_ui(ui);
+        ui.label(
+            RichText::new("Для нескольких устройств используйте вкладку «Общая сцена».")
+                .small()
+                .color(MUTED),
+        );
     }
     fn scene_ui(&mut self, ui: &mut egui::Ui, action: &mut Option<Action>) {
         ui.heading("Одна сцена для нескольких устройств");
@@ -419,7 +467,7 @@ impl DesktopApp {
                 ui.label(format!("{} · {} DPI", status.name, status.dpi));
             });
         }
-        ui.label(RichText::new("Физически разные устройства получают команды последовательно. Компенсация фазы помогает настроить визуальное совпадение; аппаратной атомарности нет.").small().color(MUTED));
+        ui.label(RichText::new("Каждое устройство получает кадры в отдельном последовательном канале, чтобы сохранить плавность. Часы общие; фазой можно компенсировать задержку. Аппаратной атомарности нет.").small().color(MUTED));
         egui::CollapsingHeader::new("Редактор общей сцены")
             .default_open(true)
             .show(ui, |ui| {
@@ -669,7 +717,7 @@ impl DesktopApp {
                 .button("Подготовить пакет для выбранной модели")
                 .clicked()
             {
-                self.tools.message=match row.identity(){Some((vid,pid))if vid==0x046d||(vid,pid)==(0x1b1c,0x1b75)=>{self.tools.draft_pack=Some(Pack{version:1,id:"my-device".into(),name:row.title.clone(),adapter:if vid==0x046d{Adapter::Hidpp2}else{Adapter::Harpoon313},vid,pids:vec![pid],max_dpi:None,evidence:"Local user description; hardware support must be checked by the compiled adapter".into(),sources:vec![]});"Шаблон готов. Пакет не расширяет список аппаратных команд.".into()},_=>"Неизвестный протокол: сначала экспортируйте диагностику и проведите захват трафика. Пакет не может изобрести безопасный адаптер.".into()};
+                self.tools.message=match row.identity(){Some((vid,pid))if vid==0x046d||(vid,pid)==(0x1b1c,0x1b75)=>{self.tools.draft_pack=Some(Pack{version:1,revision:row.package.as_ref().map_or(1,|p|p.revision.saturating_add(1)),id:"my-device".into(),name:row.title.clone(),adapter:if vid==0x046d{Adapter::Hidpp2}else{Adapter::Harpoon313},vid,pids:vec![pid],max_dpi:None,evidence:"Local user description; hardware support must be checked by the compiled adapter".into(),sources:vec![]});"Шаблон готов. Пакет не расширяет список аппаратных команд.".into()},_=>"Неизвестный протокол: сначала экспортируйте диагностику и проведите захват трафика. Пакет не может изобрести безопасный адаптер.".into()};
             }
         } else {
             ui.label("Выберите устройство слева, чтобы открыть паспорт и мастер диагностики.");
@@ -678,6 +726,10 @@ impl DesktopApp {
             ui.separator();
             ui.label("ID файла:");
             ui.text_edit_singleline(&mut pack.id);
+            ui.horizontal(|ui| {
+                ui.label("Ревизия пакета:");
+                ui.add(egui::DragValue::new(&mut pack.revision).range(1..=u32::MAX));
+            });
             ui.label("Название:");
             ui.text_edit_singleline(&mut pack.name);
             ui.label("Источник и результаты проверки:");

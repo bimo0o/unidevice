@@ -266,3 +266,23 @@ Limits: physical multi-device/multi-brand sync not yet verified; raw-motion unit
 are OS/driver-dependent estimates. Compatibility publisher signatures/network
 updates are not implemented; imports are explicitly untrusted local metadata.
 Next: full UI visual QA, bounded Studio hardware regression and portable release.
+## Change 17 — Studio 0.3 release verification
+
+Completes Studio packaging and UI navigation, independent scene channels with a
+common epoch/fail-stop flag, explicit transfer workflow, safe legacy DPI migration,
+revisioned package replacement with previous-file backups, shipped Aurora timeline
+and starter portable profile. Main device page remains compact; effect start/stop
+is above the editor. No per-application automation. No new dependency or HID command.
+Checks: 53 library + 4 CLI tests passed; all-target GUI Clippy -D warnings passed.
+Six own-window demo previews captured and inspected; final previews refreshed below.
+Physical Studio regression: old controller windows were confirmed absent. Shared
+scene with one real Harpoon 3.13 and one simulated device: 120 real verified frames,
+144 virtual frames in 4.163s (real 28.82fps), three-keyframe timeline, 4s cycle.
+Stop left no event for 300ms. Original 1000 DPI / RGB [255,0,0] restored using
+explicit RGB-only compatible-field transfer. No DPI setter used in this scene test.
+Details: reports/studio-v03-hardware.json. Real two-device/multi-brand sync and raw
+movement physical-distance accuracy remain unverified; no signed online registry.
+Final six-page demo previews passed visual inspection. Windows GUI idle demo
+measurement (10.144s after 3s warmup): 0.0578% whole-machine CPU, peak working
+set 106819584 bytes, private memory 53260288 bytes; executable 3750912 bytes.
+This measurement excludes active HID animation; report: gui-resources-windows-v03.json.

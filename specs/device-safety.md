@@ -34,7 +34,10 @@ close the handle and require an explicit refresh/probe before another apply.
 GUI uses opaque in-memory device paths to bind a selection; never persistent numeric indexes.
 Revalidate VID/PID/usage and descriptor on the selected handle before use. Disconnect/replug
 must not silently retarget a different device. Unique paths and serials are never printed
-or persisted. GUI worker serializes all operations; only one apply can be pending.
+or persisted. Each device channel serializes its own operations; only one manual
+apply can be pending. Scene channels share a fail-stop flag and are joined before
+manual control resumes. Local compatibility packs cannot extend the compiled
+command allowlists, VID families or firmware gates. Import/preview never applies.
 
 Tests must demonstrate that unknown, reset/bootloader-like, long, wrong-route, out-of-range,
 unadvertised and out-of-sequence packets never reach a fake device. Invalid readback must

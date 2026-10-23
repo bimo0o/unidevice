@@ -150,7 +150,9 @@ impl<T: Transport> Session<T> {
 
 pub fn parse_dpi_list(data: &[u8]) -> Result<Vec<u16>> {
     let words: Vec<u16> = data
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|b| u16::from_be_bytes([b[0], b[1]]))
         .collect();
     let mut result = Vec::new();
@@ -168,7 +170,7 @@ pub fn parse_dpi_list(data: &[u8]) -> Result<Vec<u16>> {
             let end = *words
                 .get(i + 2)
                 .ok_or_else(|| Error::Protocol("truncated DPI range".into()))?;
-            if step == 0 || end >= 0xe000 || end < value || (end - value) % step != 0 {
+            if step == 0 || end >= 0xe000 || end < value || !(end - value).is_multiple_of(step) {
                 return Err(Error::Protocol("invalid DPI range bounds or step".into()));
             }
             result.extend((value..=end).step_by(step as usize));

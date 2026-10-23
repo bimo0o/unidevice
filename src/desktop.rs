@@ -97,9 +97,37 @@ pub struct SceneStatus {
     pub name: String,
     pub color: [u8; 3],
     pub dpi: u16,
+    pub frames: u64,
+}
+struct SceneChannel {
+    epoch: std::time::Instant,
+    status: Arc<std::sync::Mutex<SceneStatus>>,
+    stop: Arc<std::sync::atomic::AtomicBool>,
+    handle: Option<std::thread::JoinHandle<()>>,
+}
+impl Drop for SceneChannel {
+    fn drop(&mut self) {
+        self.stop.store(true, std::sync::atomic::Ordering::Release);
+        if let Some(handle) = self.handle.take() {
+            handle.thread().unpark();
+            let _ = handle.join();
+        }
+    }
 }
 struct SceneController {
-    members: Vec<(SceneSelection, Backend)>,
+    members: Vec<SceneChannel>,
+    stop: Arc<std::sync::atomic::AtomicBool>,
+    failure: Arc<std::sync::Mutex<Option<Error>>>,
+}
+impl Drop for SceneController {
+    fn drop(&mut self) {
+        self.stop.store(true, std::sync::atomic::Ordering::Release);
+        for channel in &self.members {
+            if let Some(handle) = &channel.handle {
+                handle.thread().unpark();
+            }
+        }
+    }
 }
 impl SceneController {
     fn start(selections: Vec<SceneSelection>, effect: crate::effects::Effect) -> Result<Self> {
@@ -108,68 +136,131 @@ impl SceneController {
                 "select 1..8 RGB targets and a valid effect".into(),
             ));
         }
-        let mut members: Vec<(SceneSelection, Backend)> = Vec::new();
+        let mut ready: Vec<(SceneSelection, Backend)> = Vec::new();
         for s in selections {
             if !s.brightness.is_finite()
                 || !(0.0..=1.0).contains(&s.brightness)
                 || !(-500..=500).contains(&s.phase_ms)
-                || members
-                    .iter()
-                    .any(|(other, _)| s.row.same_device(&other.row))
+                || ready.iter().any(|(other, _)| s.row.same_device(&other.row))
             {
                 return Err(Error::Invalid(
-                    "scene contains duplicate device or invalid compensation".into(),
+                    "duplicate target or invalid scene compensation".into(),
                 ));
             }
-            let mut b = Backend::default();
-            let caps = b.probe(&s.row)?;
+            let mut backend = Backend::default();
+            let caps = backend.probe(&s.row)?;
             if !caps.rgb_control {
                 return Err(Error::Unsupported(format!(
                     "{} has no verified RGB adapter",
                     s.row.title
                 )));
             }
-            b.effect(Some(effect.clone()))?;
-            members.push((s, b));
+            backend.effect(Some(effect.clone()))?;
+            ready.push((s, backend));
         }
-        let epoch = std::time::Instant::now();
-        for (_, b) in &mut members {
-            b.animation.as_mut().unwrap().1 = epoch;
+        let epoch = std::time::Instant::now() + std::time::Duration::from_millis(20);
+        let stop = Arc::new(std::sync::atomic::AtomicBool::new(false));
+        let failure = Arc::new(std::sync::Mutex::new(None));
+        let mut members = Vec::new();
+        for (selection, mut backend) in ready {
+            let caps = backend.caps().unwrap();
+            let status = Arc::new(std::sync::Mutex::new(SceneStatus {
+                name: selection.row.title.clone(),
+                color: caps.rgb,
+                dpi: caps.current_dpi,
+                frames: 0,
+            }));
+            backend.animation.as_mut().unwrap().1 = epoch;
+            let thread_status = status.clone();
+            let thread_stop = stop.clone();
+            let thread_failure = failure.clone();
+            let thread_effect = effect.clone();
+            let handle = std::thread::Builder::new()
+                .name("unidevice-scene-device".into())
+                .spawn(move || {
+                    let mut next_frame = epoch;
+                    while !thread_stop.load(std::sync::atomic::Ordering::Acquire) {
+                        let started = std::time::Instant::now();
+                        if started < next_frame {
+                            std::thread::park_timeout(next_frame - started);
+                            continue;
+                        }
+                        let seconds = (started.saturating_duration_since(epoch).as_secs_f64()
+                            + f64::from(selection.phase_ms) / 1000.0)
+                            .rem_euclid(f64::from(thread_effect.seconds));
+                        let color = thread_effect
+                            .color(std::time::Duration::from_secs_f64(seconds))
+                            .map(|v| (f32::from(v) * selection.brightness).round() as u8);
+                        match backend.render_frame(color) {
+                            Ok(color) => {
+                                if let Ok(mut state) = thread_status.lock() {
+                                    state.color = color;
+                                    state.dpi = backend.caps().unwrap().current_dpi;
+                                    state.frames += 1;
+                                }
+                            }
+                            Err(error) => {
+                                if let Ok(mut state) = thread_failure.lock() {
+                                    if state.is_none() {
+                                        *state = Some(error);
+                                    }
+                                }
+                                thread_stop.store(true, std::sync::atomic::Ordering::Release);
+                                break;
+                            }
+                        }
+                        let wait = std::time::Duration::from_millis(16)
+                            .saturating_sub(started.elapsed())
+                            .max(std::time::Duration::from_millis(4));
+                        if thread_stop.load(std::sync::atomic::Ordering::Acquire) {
+                            break;
+                        }
+                        next_frame = std::time::Instant::now() + wait;
+                    }
+                })
+                .map_err(|_| Error::Io("cannot start scene device channel".into()))?;
+            members.push(SceneChannel {
+                epoch,
+                status,
+                stop: stop.clone(),
+                handle: Some(handle),
+            });
         }
-        Ok(Self { members })
+        Ok(Self {
+            members,
+            stop,
+            failure,
+        })
     }
     fn statuses(&self) -> Vec<SceneStatus> {
         self.members
             .iter()
-            .filter_map(|(s, b)| {
-                b.caps().map(|c| SceneStatus {
-                    name: s.row.title.clone(),
-                    color: c.rgb,
-                    dpi: c.current_dpi,
-                })
-            })
+            .filter_map(|c| c.status.lock().ok().map(|s| s.clone()))
             .collect()
     }
     fn frame(&mut self) -> Result<Vec<SceneStatus>> {
-        let (effect, epoch, _) = self.members[0]
-            .1
-            .animation
-            .as_ref()
-            .ok_or(Error::Safety("scene stopped".into()))?;
-        let effect = effect.clone();
-        let epoch = *epoch;
-        for (s, b) in &mut self.members {
-            let seconds = (epoch.elapsed().as_secs_f64() + f64::from(s.phase_ms) / 1000.0)
-                .rem_euclid(f64::from(effect.seconds));
-            let color = effect
-                .color(std::time::Duration::from_secs_f64(seconds))
-                .map(|v| (f32::from(v) * s.brightness).round() as u8);
-            b.render_frame(color)?;
+        if self.members.windows(2).any(|w| w[0].epoch != w[1].epoch)
+            || self
+                .members
+                .iter()
+                .any(|m| m.handle.as_ref().is_some_and(|h| h.is_finished()))
+                && !self.stop.load(std::sync::atomic::Ordering::Acquire)
+        {
+            return Err(Error::Safety(
+                "scene channel clock or lifecycle mismatch".into(),
+            ));
+        }
+        if self.stop.load(std::sync::atomic::Ordering::Acquire) {
+            return Err(self
+                .failure
+                .lock()
+                .ok()
+                .and_then(|f| f.clone())
+                .unwrap_or(Error::Safety("scene channel stopped".into())));
         }
         Ok(self.statuses())
     }
 }
-
 fn open_token(token: &DeviceToken) -> Result<NativeTransport> {
     let api = device::enumerate()?;
     let d = api
@@ -219,7 +310,8 @@ fn scan() -> Result<Vec<DeviceRow>> {
         let known = device::label(d.vendor_id(), d.product_id());
         let package = packages
             .iter()
-            .find(|p| p.matches(d.vendor_id(), d.product_id()))
+            .filter(|p| p.matches(d.vendor_id(), d.product_id()))
+            .max_by_key(|p| p.revision)
             .cloned();
         let title = if let Some(pack) = &package {
             pack.name.clone()
@@ -403,7 +495,7 @@ impl Backend {
         if row.demo {
             let mut caps = Capabilities {
                 current_dpi: 800,
-                values: vec![400, 800, 1200, 1600, 2400, 3200, 6400],
+                values: vec![400, 800, 1000, 1200, 1600, 2000, 2400, 3200, 6400],
                 demo: true,
                 rgb: [83, 129, 255],
                 rgb_control: true,
@@ -643,9 +735,13 @@ impl Worker {
                                         Err(e) => Event::Effect(Err(e)),
                                     }
                                 };
-                                frame_wait = std::time::Duration::from_millis(16)
-                                    .saturating_sub(started.elapsed())
-                                    .max(std::time::Duration::from_millis(4));
+                                frame_wait = std::time::Duration::from_millis(if scene.is_some() {
+                                    33
+                                } else {
+                                    16
+                                })
+                                .saturating_sub(started.elapsed())
+                                .max(std::time::Duration::from_millis(4));
                                 if sender.send(event).is_err() {
                                     break;
                                 }
@@ -767,10 +863,7 @@ mod tests {
             .collect();
         let mut scene =
             SceneController::start(selections, crate::effects::Effect::default()).unwrap();
-        assert_eq!(
-            scene.members[0].1.animation.as_ref().unwrap().1,
-            scene.members[1].1.animation.as_ref().unwrap().1
-        );
+        assert_eq!(scene.members[0].epoch, scene.members[1].epoch);
         let statuses = scene.frame().unwrap();
         assert_eq!(statuses.len(), 2);
         assert_eq!(statuses[0].dpi, 800);
@@ -785,7 +878,8 @@ mod tests {
             crate::effects::Effect::default()
         )
         .is_err());
-        scene.members[1].1.active = None;
+        *scene.failure.lock().unwrap() = Some(Error::Disconnected);
+        scene.stop.store(true, std::sync::atomic::Ordering::Release);
         assert!(scene.frame().is_err());
     }
     #[test]
@@ -793,6 +887,7 @@ mod tests {
         let mut row = demo_rows().remove(0);
         row.package = Some(crate::compatibility::Pack {
             version: 1,
+            revision: 1,
             id: "limit".into(),
             name: "Limited mouse".into(),
             adapter: crate::compatibility::Adapter::Hidpp2,
@@ -804,7 +899,7 @@ mod tests {
         });
         let mut backend = Backend::default();
         let caps = backend.probe(&row).unwrap();
-        assert_eq!(caps.values, vec![400, 800, 1200]);
+        assert_eq!(caps.values, vec![400, 800, 1000, 1200]);
         assert!(backend.apply(1600).is_err());
     }
     #[test]
@@ -868,6 +963,38 @@ mod tests {
             w.events.recv_timeout(Duration::from_millis(600)),
             Err(mpsc::RecvTimeoutError::Timeout)
         ));
+    }
+    #[test]
+    fn shared_scene_stop_prevents_frames_for_every_member() {
+        use std::time::Duration;
+        let w = Worker::start(Arc::new(|| {})).unwrap();
+        let targets = demo_rows()
+            .into_iter()
+            .map(|row| SceneSelection {
+                row,
+                brightness: 1.0,
+                phase_ms: 0,
+            })
+            .collect();
+        w.send(Command::SceneStart(
+            targets,
+            crate::effects::Effect::default(),
+        ))
+        .unwrap();
+        assert!(
+            matches!(w.events.recv_timeout(Duration::from_secs(1)).unwrap(),Event::Scene(Ok(status)) if status.len()==2)
+        );
+        assert!(
+            matches!(w.events.recv_timeout(Duration::from_secs(1)).unwrap(),Event::SceneFrame(status) if status.len()==2)
+        );
+        w.send(Command::SceneStop).unwrap();
+        loop {
+            if matches!(w.events.recv_timeout(Duration::from_secs(1)).unwrap(),Event::Scene(Ok(status)) if status.is_empty())
+            {
+                break;
+            }
+        }
+        assert!(w.events.recv_timeout(Duration::from_millis(100)).is_err());
     }
     #[test]
     fn no_apply_without_probe_and_no_unknown_rgb_transport() {

@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-23",
+  "version": "0.3.0",
+  "mode": "debug build, desktop worker, shared scene with one real Harpoon and one simulated device",
+  "physical_device": "Corsair Harpoon RGB PRO 1B1C:1B75 firmware 3.13",
+  "effect": "cyclic three-keyframe timeline, 4-second cycle",
+  "real_verified_frames": 120,
+  "virtual_verified_frames": 144,
+  "elapsed_seconds": 4.163,
+  "real_fps": 28.82,
+  "dpi_unchanged": true,
+  "restored_dpi": 1000,
+  "restored_rgb": [255, 0, 0],
+  "restoration_method": "explicit compatible-field transfer, RGB only",
+  "stop_silence_verified_ms": 300,
+  "physical_multibrand_sync_verified": false
+}

@@ -1,8 +1,8 @@
 [package]
 name = "unidevice"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-rust-version = "1.82"
+rust-version = "1.88"
 description = "Experimental lightweight peripheral configurator"
 license = "MIT"
 default-run = "unidevice"

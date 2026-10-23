@@ -9,6 +9,8 @@ pub enum Adapter {
 #[serde(deny_unknown_fields)]
 pub struct Pack {
     pub version: u8,
+    #[serde(default = "first_revision")]
+    pub revision: u32,
     pub id: String,
     pub name: String,
     pub adapter: Adapter,
@@ -18,6 +20,9 @@ pub struct Pack {
     pub evidence: String,
     pub sources: Vec<String>,
 }
+fn first_revision() -> u32 {
+    1
+}
 impl Pack {
     pub fn validate(&self) -> Result<()> {
         let identity = match self.adapter {
@@ -25,6 +30,7 @@ impl Pack {
             Adapter::Harpoon313 => self.vid == 0x1b1c && self.pids == [0x1b75],
         };
         if self.version != 1
+            || self.revision == 0
             || !identity
             || self.id.is_empty()
             || self.id.len() > 48
@@ -47,7 +53,10 @@ impl Pack {
                     .contains(&d)
             })
             || self.evidence.len() > 1024
-            || self.evidence.chars().any(char::is_control)
+            || self
+                .evidence
+                .chars()
+                .any(|c| c.is_control() && !matches!(c, '\n' | '\t'))
             || self.sources.len() > 8
             || self.sources.iter().any(|s| {
                 s.len() > 240 || !s.starts_with("https://") || s.chars().any(char::is_control)
@@ -77,11 +86,47 @@ impl Pack {
     }
     pub fn install(text: &str) -> Result<String> {
         let pack = Self::from_json(text)?;
-        crate::storage::save_new(
-            &crate::storage::path("compatibility", &pack.id)?,
-            &pack.json()?,
-        )?;
+        pack.install_at(&crate::storage::path("compatibility", &pack.id)?)?;
         Ok(pack.name)
+    }
+    fn install_at(&self, path: &std::path::Path) -> Result<()> {
+        use std::io::Write;
+        self.validate()?;
+        let json = self.json()?;
+        if !path.exists() {
+            return crate::storage::save_new(path, &json);
+        }
+        if std::fs::symlink_metadata(path)
+            .map_err(|_| Error::Io("pack metadata".into()))?
+            .file_type()
+            .is_symlink()
+        {
+            return Err(Error::Safety("package symlink replacement blocked".into()));
+        }
+        let previous = crate::storage::read(path)?;
+        let old = Self::from_json(&previous)?;
+        if old.id != self.id || self.revision <= old.revision {
+            return Err(Error::Invalid(
+                "package update needs the same ID and a higher revision".into(),
+            ));
+        }
+        let backup = path.with_extension(format!("r{}.json.backup", old.revision));
+        crate::storage::save_new(&backup, &previous)?;
+        let result = (|| {
+            let mut file = std::fs::OpenOptions::new()
+                .write(true)
+                .truncate(true)
+                .open(path)?;
+            file.write_all(json.as_bytes())?;
+            file.sync_all()
+        })();
+        if result.is_err() {
+            let _ = std::fs::write(path, previous);
+            return Err(Error::Io(
+                "package update failed; previous revision backed up".into(),
+            ));
+        }
+        Ok(())
     }
 }
 pub fn installed() -> Vec<Pack> {
@@ -114,6 +159,7 @@ mod tests {
     fn sample() -> Pack {
         Pack {
             version: 1,
+            revision: 1,
             id: "custom-logitech".into(),
             name: "My mouse".into(),
             adapter: Adapter::Hidpp2,
@@ -123,6 +169,40 @@ mod tests {
             evidence: "User observation; unverified".into(),
             sources: vec![],
         }
+    }
+    #[test]
+    fn shipped_pack_and_updates_keep_previous_revision_recoverable() {
+        Pack::from_json(include_str!("../compatibility/harpoon-rgb-pro.json")).unwrap();
+        let root = std::env::temp_dir().join(format!(
+            "unidevice-pack-test-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let path = root.join("custom-logitech.json");
+        let mut p = sample();
+        p.install_at(&path).unwrap();
+        assert!(p.install_at(&path).is_err());
+        p.revision = 2;
+        p.name = "Updated mouse".into();
+        p.install_at(&path).unwrap();
+        assert_eq!(
+            Pack::from_json(&crate::storage::read(&path).unwrap())
+                .unwrap()
+                .revision,
+            2
+        );
+        let backup = path.with_extension("r1.json.backup");
+        assert_eq!(
+            Pack::from_json(&crate::storage::read(&backup).unwrap())
+                .unwrap()
+                .revision,
+            1
+        );
+        std::fs::remove_file(path).unwrap();
+        std::fs::remove_file(backup).unwrap();
+        std::fs::remove_dir(root).unwrap();
     }
     #[test]
     fn packages_label_known_families_without_unlocking_commands() {

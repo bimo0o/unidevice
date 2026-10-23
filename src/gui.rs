@@ -95,7 +95,7 @@ impl DesktopApp {
         let wake_ctx = ctx.clone();
         let worker = Worker::start(Arc::new(move || wake_ctx.request_repaint()))?;
         worker.send(if demo { Command::Demo } else { Command::Scan })?;
-        Ok(Self {
+        let mut app = Self {
             tools: workbench::Workbench::default(),
             worker,
             rows: Vec::new(),
@@ -114,7 +114,28 @@ impl DesktopApp {
             profile_name: "my-profile".into(),
             capture,
             capture_requested: false,
-        })
+        };
+        if demo && app.capture.is_some() {
+            let args: Vec<_> = std::env::args().collect();
+            if let Some(page) = args
+                .windows(2)
+                .find(|a| a[0] == "--capture-page")
+                .map(|a| a[1].as_str())
+            {
+                app.tools.page = match page {
+                    "scene" => workbench::Page::Scene,
+                    "effects" => {
+                        app.pattern = crate::effects::Pattern::Timeline;
+                        workbench::Page::Effects
+                    }
+                    "profiles" => workbench::Page::Profiles,
+                    "sensitivity" => workbench::Page::Sensitivity,
+                    "compatibility" => workbench::Page::Compatibility,
+                    _ => workbench::Page::Device,
+                };
+            }
+        }
+        Ok(app)
     }
 
     fn send(&mut self, command: Command) {
@@ -136,7 +157,9 @@ impl DesktopApp {
 
     fn poll(&mut self) {
         while let Ok(event) = self.worker.events.try_recv() {
-            self.busy = false;
+            if !matches!(&event, Event::Frame(_) | Event::SceneFrame(_)) {
+                self.busy = false;
+            }
             match event {
                 Event::Scene(result) => {
                     self.effect_running = false;
@@ -492,7 +515,7 @@ impl DesktopApp {
             ui.add_space(5.0);
             ui.label(RichText::new(if self.demo {"ДЕМО · никакие команды устройствам не отправляются"} else {"Изменения — только по вашему действию"}).size(12.0).color(if self.demo {ACCENT}else{MUTED}));
             ui.add_space(18.0);
-            ui.horizontal_wrapped(|ui|{for page in [workbench::Page::Device,workbench::Page::Scene,workbench::Page::Profiles,workbench::Page::Sensitivity,workbench::Page::Compatibility]{ui.selectable_value(&mut self.tools.page,page,page.label());}});
+            ui.horizontal_wrapped(|ui|{for page in [workbench::Page::Device,workbench::Page::Effects,workbench::Page::Scene,workbench::Page::Profiles,workbench::Page::Sensitivity,workbench::Page::Compatibility]{ui.selectable_value(&mut self.tools.page,page,page.label());}});
             ui.add_space(12.0);
             egui::ScrollArea::vertical().show(ui,|ui| {
                 if self.tools.page!=workbench::Page::Device {self.workbench_ui(ui,&mut action);return;}
@@ -577,17 +600,9 @@ impl DesktopApp {
                     if ui.add_enabled(enabled,egui::Button::new("Применить подсветку")).clicked(){action=Some(Action::Rgb);}
                     ui.label(RichText::new(if caps.as_ref().is_some_and(|c|c.demo) {"Изменяется только демонстрационная мышь."} else if caps.as_ref().is_some_and(|c|c.rgb_control) {"Цвет активной ступени DPI. Без команды сохранения во встроенную память."} else {"Управление цветом для этого устройства недоступно."}).size(12.0).color(MUTED));
                     ui.add_space(6.0);
-                    egui::ComboBox::from_id_salt("effect-pattern").selected_text(self.pattern.label()).show_ui(ui,|ui| {
-                        for pattern in [crate::effects::Pattern::Gradient,crate::effects::Pattern::Breathing,crate::effects::Pattern::Rainbow,crate::effects::Pattern::Timeline] {ui.selectable_value(&mut self.pattern,pattern,pattern.label());}
-                    });
-                    if self.pattern==crate::effects::Pattern::Gradient {
-                        ui.horizontal(|ui|{ui.label("Второй цвет:");ui.color_edit_button_srgb(&mut self.second_color);});
-                    }
-                    ui.add(egui::Slider::new(&mut self.effect_seconds,4.0..=30.0).suffix(" с / цикл"));
-                    self.timeline_ui(ui);
-                    ui.horizontal(|ui| {
-                        if ui.add_enabled(enabled&&!self.effect_running,egui::Button::new("Запустить эффект")).clicked(){action=Some(Action::StartEffect);}
-                        if ui.add_enabled(self.effect_running&&!self.busy,egui::Button::new("Остановить")).clicked(){action=Some(Action::StopEffect);}
+                    ui.horizontal_wrapped(|ui| {
+                        if ui.button("Эффекты и конструктор").clicked(){self.tools.page=workbench::Page::Effects;}
+                        if self.effect_running && ui.add_enabled(!self.busy,egui::Button::new("Остановить")).clicked(){action=Some(Action::StopEffect);}
                     });
                     if self.effect_running {ui.label(RichText::new("Эффект работает · ограниченная частота команд").size(11.0).color(ACCENT));}
                 });
@@ -761,5 +776,42 @@ mod tests {
         app.action(Action::Dpi);
         ready(&mut app);
         assert_eq!(app.caps.as_ref().unwrap().current_dpi, 1600);
+    }
+    #[test]
+    fn profile_transfer_skips_unsupported_dpi_and_requires_explicit_action() {
+        let ctx = egui::Context::default();
+        let mut app = DesktopApp::new(&ctx, true, None).unwrap();
+        ready(&mut app);
+        app.tools.page = workbench::Page::Profiles;
+        app.tools.loaded = Some(crate::portable::PortableProfile {
+            version: 2,
+            dpi: Some(1100),
+            rgb: Some([1, 2, 3]),
+            effect: Some(crate::effects::Effect::default()),
+            feel: None,
+        });
+        app.requested = 1100;
+        let _ = ctx.run(egui::RawInput::default(), |ctx| app.ui(ctx));
+        assert_eq!(app.caps.as_ref().unwrap().current_dpi, 800);
+        assert_ne!(app.caps.as_ref().unwrap().rgb, [1, 2, 3]);
+        assert!(!app.effect_running);
+        app.action(Action::Transfer);
+        ready(&mut app);
+        assert_eq!(app.caps.as_ref().unwrap().current_dpi, 800);
+        assert_eq!(app.caps.as_ref().unwrap().rgb, [1, 2, 3]);
+        assert!(!app.effect_running);
+    }
+    #[test]
+    fn animation_progress_does_not_unlock_a_pending_command() {
+        let ctx = egui::Context::default();
+        let mut app = DesktopApp::new(&ctx, true, None).unwrap();
+        ready(&mut app);
+        app.action(Action::StartEffect);
+        ready(&mut app);
+        assert!(app.effect_running);
+        app.busy = true;
+        std::thread::sleep(std::time::Duration::from_millis(50));
+        app.poll();
+        assert!(app.busy);
     }
 }

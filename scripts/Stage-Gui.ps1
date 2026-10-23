@@ -9,10 +9,10 @@ foreach ($name in @("unidevice$suffix","unidevice-gui$suffix")) {
     if (-not (Test-Path -LiteralPath $source)) {throw "Missing binary: $name"}
     Copy-Item -LiteralPath $source -Destination (Join-Path $Destination $name) -Force
 }
-foreach ($name in @('README.md','REPORT.md','LICENSE','THIRD_PARTY.md','SECURITY_REVIEW.md')) {
+foreach ($name in @('README.md','REPORT.md','ROADMAP.md','LICENSE','THIRD_PARTY.md','SECURITY_REVIEW.md')) {
     Copy-Item -LiteralPath (Join-Path $projectRoot $name) -Destination $Destination -Force
 }
-foreach ($name in @('profiles','specs','licenses','assets')) {
+foreach ($name in @('profiles','effects','compatibility','reports','specs','licenses','assets')) {
     $sourceFolder=Join-Path $projectRoot $name
     if (-not (Test-Path -LiteralPath $sourceFolder)) {continue}
     foreach ($file in (Get-ChildItem -LiteralPath $sourceFolder -File -Recurse)) {

@@ -177,7 +177,7 @@ impl<T: FeatureIo> Session<T> {
     }
 
     pub fn set_dpi(&mut self, dpi: u16) -> Result<State> {
-        if !(100..=12000).contains(&dpi) || dpi % 100 != 0 {
+        if !(100..=12000).contains(&dpi) || !dpi.is_multiple_of(100) {
             return Err(Error::Invalid(
                 "Harpoon application policy: 100..12000, step 100".into(),
             ));
