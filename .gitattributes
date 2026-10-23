@@ -1,0 +1,6 @@
+# Keep research exports stable across Windows/Linux. Archived source CSV is byte-exact.
+research/*.json text eol=lf
+research/*.html text eol=lf
+research/*.csv text eol=lf
+research/licenses/*.txt text eol=lf
+research/source-data/*.csv -text -diff

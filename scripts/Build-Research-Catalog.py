@@ -256,9 +256,9 @@ def write_outputs():
     catalog = {"schema_version": 1, "checked_on": DATE, "purpose": "research_only_no_runtime_authorization",
                "count_semantics": "source records; model/connection variants and overlaps are NOT deduplicated",
                "sources": manifest, "records": records}
-    (OUT / "device-catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (OUT / "device-catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     with (OUT / "device-catalog.csv").open("w", encoding="utf-8-sig", newline="") as stream:
-        writer = csv.writer(stream)
+        writer = csv.writer(stream, lineterminator="\n")
         writer.writerow(["record_id", "manufacturer", "model_or_variant", "category", "identifiers", "upstream", "driver", "parameters", "notes", "source_url", "runtime_authorized"])
         for row in records:
             values = [row["record_id"], row["manufacturer"], row["name"], row["category"], flatten(row["identifiers"]), row["upstream"], row["driver_or_controller"], flatten(row["parameters"]), flatten(row["notes"]), row["source_url"], "false"]
@@ -268,7 +268,7 @@ def write_outputs():
              "by_upstream": dict(sorted(Counter(r["upstream"] for r in records).items())),
              "by_manufacturer": dict(sorted(Counter(r["manufacturer"] for r in records).items())),
              "physical_tests_in_this_research": 0, "runtime_permissions_added": 0}
-    (OUT / "coverage.json").write_text(json.dumps(stats, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (OUT / "coverage.json").write_text(json.dumps(stats, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     # No fetch, dependencies, scripts from upstream or device calls. All imported text escaped.
     rows = []
     for row in records:
@@ -290,7 +290,7 @@ table{border-collapse:collapse;width:100%;background:white;font-size:13px}th,td{
 <input id="q" placeholder="Модель, VID/PID, параметр: Superlight, 1B75, dpi, set_poll_rate…"><select id="src"><option value="">Все источники</option><option>manufacturer_docs</option><option>libratbag</option><option>openrazer</option><option>ckb-next</option><option>OpenRGB</option></select>
 <p id="count" class="muted"></p><div class="scroll"><table><thead><tr><th>Производитель</th><th>Модель / вариант</th><th>Источник</th><th>ID</th><th>Параметры</th><th>Оговорки и исходные поля</th><th>Ссылка</th></tr></thead><tbody>__ROWS__</tbody></table></div>
 <script>const rows=[...document.querySelectorAll('tbody tr')];const data=rows.map(r=>r.textContent.toLowerCase());function filter(){const q=document.getElementById('q').value.toLowerCase().trim();const s=document.getElementById('src').value;let n=0;rows.forEach((r,i)=>{const show=(!q||data[i].includes(q))&&(!s||r.cells[2].textContent===s);r.hidden=!show;if(show)n++});document.getElementById('count').textContent=`Показано ${n} из ${rows.length} записей источников`;}document.getElementById('q').addEventListener('input',filter);document.getElementById('src').addEventListener('change',filter);filter();</script></html>'''
-    (OUT / "catalog.html").write_text(page.replace("__ROWS__", "\n".join(rows)), encoding="utf-8")
+    (OUT / "catalog.html").write_text(page.replace("__ROWS__", "\n".join(rows)), encoding="utf-8", newline="\n")
     print(json.dumps(stats, ensure_ascii=False, indent=2))
 
 
