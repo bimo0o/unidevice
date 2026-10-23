@@ -3,7 +3,7 @@ use crate::transport::Transport;
 
 #[derive(Default)]
 struct Firewall {
-    pending: Option<[u8; 7]>,
+    pending: Option<Vec<u8>>,
     pinged: bool,
     feature: Option<u8>,
     values: Vec<u16>,
@@ -11,6 +11,9 @@ struct Firewall {
     setter_used: bool,
     setter_target: Option<u16>,
     faulted: bool,
+    basic_absent: bool,
+    extended: bool,
+    extended_guard: crate::dpi2202::Guard,
 }
 
 impl Firewall {
@@ -23,8 +26,10 @@ impl Firewall {
     fn authorize(&mut self, bytes: &[u8]) -> Result<()> {
         if self.faulted
             || self.pending.is_some()
-            || bytes.len() != 7
-            || bytes[0] != 0x10
+            || !matches!(
+                (bytes.first(), bytes.len()),
+                (Some(0x10), 7) | (Some(0x11), 20)
+            )
             || bytes[1] != 0xff
             || bytes[3] & 15 == 0
         {
@@ -32,13 +37,25 @@ impl Firewall {
         }
         let function = bytes[3] >> 4;
         let params = &bytes[4..];
-        let allowed = if bytes[2] == 0 {
+        let allowed = if bytes[2] == 0 && bytes.len() == 7 {
             match function {
                 1 => !self.pinged && params == [0, 0, 0x5a],
-                0 => self.pinged && self.feature.is_none() && params == [0x22, 1, 0],
+                0 => {
+                    self.pinged
+                        && self.feature.is_none()
+                        && if self.basic_absent {
+                            params == [0x22, 2, 0]
+                        } else {
+                            params == [0x22, 1, 0]
+                        }
+                }
                 _ => false,
             }
-        } else if Some(bytes[2]) == self.feature {
+        } else if Some(bytes[2]) == self.feature && self.extended {
+            self.extended_guard
+                .authorize(function, params, bytes.len() == 20)
+                .is_ok()
+        } else if Some(bytes[2]) == self.feature && bytes.len() == 7 {
             match function {
                 0..=2 => params == [0, 0, 0] && (!self.setter_used || function == 2),
                 3 => {
@@ -57,24 +74,27 @@ impl Firewall {
         if !allowed {
             return Err(Self::blocked());
         }
-        if bytes[2] != 0 && function == 3 {
+        if !self.extended && bytes[2] != 0 && function == 3 {
             self.setter_used = true;
             self.setter_target = Some(u16::from_be_bytes([bytes[5], bytes[6]]));
         }
-        let mut request = [0; 7];
-        request.copy_from_slice(bytes);
-        self.pending = Some(request);
+        self.pending = Some(bytes.to_vec());
         Ok(())
     }
 
     fn observe(&mut self, bytes: &[u8]) -> Result<()> {
-        let Some(request) = self.pending else {
+        let Some(request) = self.pending.clone() else {
             return Err(Self::blocked());
         };
         if bytes.len() < 2 || bytes[1] != 0xff || !matches!(bytes[0], 0x10 | 0x11) {
             return Ok(());
         }
         let report = crate::hidpp::normalized(bytes)?;
+        if self.extended && Some(report[2]) == self.feature && matches!(report[3], 0 | 0x10) {
+            return Err(Error::Safety(
+                "extended DPI changed during transaction; reprobe explicitly".into(),
+            ));
+        }
         if matches!(report[2], 0xff | 0x8f) {
             if report[3] == request[2] && report[4] == request[3] {
                 self.faulted = true;
@@ -87,10 +107,20 @@ impl Firewall {
         }
         self.pending = None;
         let data = &report[4..];
+        if self.extended && Some(request[2]) == self.feature {
+            return self
+                .extended_guard
+                .observe(request[3] >> 4, &request[4..], data);
+        }
         match (request[2], request[3] >> 4) {
             (0, 1) if data[0] >= 2 && data[2] == 0x5a => self.pinged = true,
+            (0, 0) if data[0] == 0 && request[4..] == [0x22, 1, 0] => self.basic_absent = true,
             (0, 0) if (1..0xf0).contains(&data[0]) && data[0] != 0x8f && data[1] & 0xc0 == 0 => {
-                self.feature = Some(data[0])
+                self.extended = request[4..] == [0x22, 2, 0];
+                if self.extended && data[2] != 0 {
+                    return Err(Self::blocked());
+                }
+                self.feature = Some(data[0]);
             }
             (feature, 1) if Some(feature) == self.feature && data.len() == 16 && data[0] == 0 => {
                 self.values = crate::hidpp::parse_dpi_list(&data[1..])?;
@@ -120,23 +150,26 @@ impl Firewall {
 
 pub struct GuardedTransport<T> {
     inner: T,
-    firewall: Firewall,
+    firewall: Box<Firewall>,
 }
 impl<T> GuardedTransport<T> {
     pub fn new(inner: T) -> Self {
         Self {
             inner,
-            firewall: Firewall::default(),
+            firewall: Box::default(),
         }
     }
     #[cfg(test)]
-    fn inner(&self) -> &T {
+    pub(crate) fn inner(&self) -> &T {
         &self.inner
     }
 }
 impl<T: Transport> Transport for GuardedTransport<T> {
     fn write(&mut self, report: &[u8]) -> Result<()> {
-        self.firewall.authorize(report)?;
+        if let Err(error) = self.firewall.authorize(report) {
+            self.firewall.faulted = true;
+            return Err(error);
+        }
         if let Err(error) = self.inner.write(report) {
             self.firewall.faulted = true;
             return Err(error);

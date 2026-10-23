@@ -1,5 +1,9 @@
 # Adaptive capability discovery
 
+Update: 2202 version 0 is also implemented when 2201 is explicitly absent, with
+stricter descriptor/axis/state checks. See hidpp2202.md. Both remain physically
+unverified in UniDevice; receiver routing and RGB are not granted by this update.
+
 Requirement update from user, 2026-10-23: previously unknown models must be handled
 through capability discovery, not a per-model whitelist.
 

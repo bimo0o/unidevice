@@ -1,5 +1,12 @@
 # Device safety policy for interactive control
 
+Extended DPI addition: a correlated absent-2201 reply may select 2202 version 0.
+Native descriptor must include long input/output reports before this lookup.
+Only sensor count/capabilities/ranges/current and one explicit sensor-zero DPI
+setter are permitted. Independent fields and defaults are checked; calibration,
+profile, LED and NV commands stay forbidden. See hidpp2202.md for the additional
+firewall, readback, restoration and asymmetric-axis restrictions.
+
 User priority, 2026-10-23: minimize device-bricking risk. An absolute zero-risk guarantee
 is impossible without device/firmware validation; firmware may itself have defects.
 VirusTotal results reported clean by the user concern malware, not HID command safety.

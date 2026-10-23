@@ -1,5 +1,10 @@
 # Mouse protocol coverage goal
 
+Implemented extension: HID++ 2202 v0 live DPI, conditional wired discovery with
+capability/range/state validation, preserved lift-off/defaults and readback.
+No physical test or market coverage credit yet. RGB and receiver routes remain
+open; unequal independent X/Y needs an axis-aware UI. See hidpp2202.md.
+
 Accepted 2026-10-23: target 99% of gaming mice configurable in their manufacturer's
 software; success means DPI plus lighting
 where lighting is present. Initial platform scope: Windows/Linux, USB cable and USB

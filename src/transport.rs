@@ -10,8 +10,16 @@ pub trait Transport {
 pub struct NativeTransport(crate::safety::GuardedTransport<NativeIo>);
 
 impl NativeTransport {
-    pub fn new(device: HidDevice) -> Self {
-        Self(crate::safety::GuardedTransport::new(NativeIo(device)))
+    pub fn new(device: HidDevice) -> Result<Self> {
+        let descriptor = crate::device::read_descriptor(&device)?;
+        if !descriptor.hidpp_framing() {
+            return Err(Error::Safety("HID++ descriptor framing required".into()));
+        }
+        let extended = descriptor.hidpp_extended_framing();
+        Ok(Self(crate::safety::GuardedTransport::new(NativeIo {
+            device,
+            extended,
+        })))
     }
 }
 
@@ -24,11 +32,21 @@ impl Transport for NativeTransport {
     }
 }
 
-struct NativeIo(HidDevice);
+struct NativeIo {
+    device: HidDevice,
+    extended: bool,
+}
 
 impl Transport for NativeIo {
     fn write(&mut self, report: &[u8]) -> Result<()> {
-        let len = self.0.write(report).map_err(|_| Error::Disconnected)?;
+        if !self.extended
+            && (report.first() == Some(&0x11) || report.get(4..) == Some(&[0x22, 2, 0]))
+        {
+            return Err(Error::Safety(
+                "extended DPI needs descriptor input/output long reports".into(),
+            ));
+        }
+        let len = self.device.write(report).map_err(|_| Error::Disconnected)?;
         if len != report.len() {
             return Err(Error::ShortWrite);
         }
@@ -38,7 +56,7 @@ impl Transport for NativeIo {
     fn read(&mut self, timeout_ms: i32) -> Result<Vec<u8>> {
         let mut buffer = [0; 64];
         let len = self
-            .0
+            .device
             .read_timeout(&mut buffer, timeout_ms)
             .map_err(|_| Error::Disconnected)?;
         if len == 0 {

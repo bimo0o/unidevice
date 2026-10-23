@@ -16,6 +16,17 @@ fn protocol_inventory_does_not_report_inventory_as_probability() {
 }
 
 #[test]
+fn model_summary_separates_experimental_protocols_from_hardware_evidence() {
+    let output = run(&["models"]);
+    assert!(output.status.success());
+    let text = String::from_utf8_lossy(&output.stdout);
+    assert!(text.contains("0x2202 v0"));
+    assert!(text.contains("1B1C:1B75 firmware 3.13"));
+    assert!(text.contains("no DPI/RGB setters"));
+    assert!(!text.contains("All hardware adapters remain UNVERIFIED"));
+}
+
+#[test]
 fn razer_simulation_is_explicit_and_rejects_mixed_hardware_flags() {
     let output = run(&["razer-probe", "--demo"]);
     assert!(output.status.success());

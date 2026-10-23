@@ -117,7 +117,7 @@ impl Options {
 }
 
 fn models() {
-    println!("ADAPTER / MODEL     FUNCTION  STATUS\nauto (HID++2)      DPI       descriptor + dynamic feature discovery; no PID whitelist\nsuperlight         DPI       optional restriction to wired 046D:C094\nharpoon            RGB       offline preview; report ID/zones/init need capture\nharpoon            DPI       not implemented; write semantics need capture\nunknown/Gembird    inspect   descriptors and adapter candidates; control blocked\n\nAll hardware adapters remain UNVERIFIED. Unknown vendor payload semantics are not guessed.");
+    println!("ADAPTER / MODEL     FUNCTION  STATUS\nauto (HID++2)      DPI       wired 0x2201 or experimental 0x2202 v0; runtime discovery, physically UNVERIFIED\nsuperlight         DPI       optional restriction to wired 046D:C094; same discovery\nharpoon            DPI/RGB   Studio: 1B1C:1B75 firmware 3.13, active-stage DPI/color physically tested\nharpoon CLI        RGB       offline preview only; use Studio for validated control\nRazer              read      experimental firmware/XY DPI reads; no DPI/RGB setters\nunknown/Gembird    inspect   descriptors and adapter candidates; control blocked\n\nReceiver routes and arbitrary unknown vendor commands remain disabled. Protocol replies do not establish physical model verification.");
 }
 
 fn preview_rgb(model: Model, color: [u8; 3], zone: u8) -> Result<()> {
@@ -153,7 +153,7 @@ fn dpi(model: Model, value: u16, o: &Options) -> Result<()> {
             ));
         }
         println!("OFFLINE PLAN | {} | DPI {value}", model.name());
-        println!("Descriptor -> ping -> discover 2201 -> sensor count -> supported DPI -> set -> readback.");
+        println!("Descriptor -> ping -> discover 2201/2202 -> sensor capabilities -> supported DPI -> set -> readback.");
         let [hi, lo] = value.to_be_bytes();
         println!("Set parameters: 00 {hi:02X} {lo:02X}. Feature index/range come from the device.");
         println!("No device opened. Review specs before using --apply --experimental.");
@@ -162,7 +162,7 @@ fn dpi(model: Model, value: u16, o: &Options) -> Result<()> {
     require_hardware(o.flag("experimental"))?;
     let mut controller = Logitech(Session::connect(NativeTransport::new(device::open(
         model, index,
-    )?))?);
+    )?)?)?);
     let original = controller.0.read_dpi()?;
     let backup = unidevice::recovery::save_settings(Some(original), None)?;
     println!("Original DPI saved to {backup}; no automatic rollback.");
@@ -344,10 +344,13 @@ fn run(args: &[String]) -> Result<()> {
             let o = Options::parse(&args[1..], &["model", "device"], &["experimental"])?;
             require_hardware(o.flag("experimental"))?;
             let mut session =
-                Session::connect(NativeTransport::new(device::open(o.model()?, o.index()?)?))?;
+                Session::connect(NativeTransport::new(device::open(o.model()?, o.index()?)?)?)?;
             let dpi = session.read_dpi()?;
             let supported = session.supported_dpi()?;
-            println!("HID++ 2201 discovered dynamically. Device reports {dpi} DPI.");
+            println!(
+                "HID++ 0x{:04X} discovered dynamically. Device reports {dpi} DPI.",
+                session.protocol_id()
+            );
             println!("Supported DPI: {supported:?}\nPhysical behavior remains UNVERIFIED.");
             Ok(())
         }

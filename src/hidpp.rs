@@ -33,6 +33,7 @@ pub struct Session<T> {
     transport: T,
     software: u8,
     feature: u8,
+    extended_flags: Option<u8>,
 }
 
 impl<T: Transport> Session<T> {
@@ -41,15 +42,25 @@ impl<T: Transport> Session<T> {
             transport,
             software: 0,
             feature: 0,
+            extended_flags: None,
         };
         let ping = session.exchange(0, 1, [0, 0, 0x5a])?;
         if ping[0] < 2 || ping[2] != 0x5a {
             return Err(Error::Protocol("HID++2 ping version or echo".into()));
         }
-        let feature = session.exchange(0, 0, [0x22, 0x01, 0])?;
+        let mut feature = session.exchange(0, 0, [0x22, 0x01, 0])?;
+        if feature[0] == 0 {
+            feature = session.exchange(0, 0, [0x22, 0x02, 0])?;
+            if feature[2] != 0 {
+                return Err(Error::Unsupported(
+                    "unreviewed extended DPI feature version".into(),
+                ));
+            }
+            session.extended_flags = Some(0);
+        }
         if feature[0] == 0 || feature[0] >= 0xf0 || feature[0] == 0x8f {
             return Err(Error::Unsupported(
-                "device has no Adjustable DPI (0x2201); no fallback writes".into(),
+                "device has no reviewed Adjustable DPI (0x2201/0x2202); no fallback writes".into(),
             ));
         }
         if feature[1] & 0xc0 != 0 {
@@ -62,12 +73,25 @@ impl<T: Transport> Session<T> {
         if sensors[0] == 0 {
             return Err(Error::Protocol("device reports no sensors".into()));
         }
+        if session.extended_flags.is_some() {
+            session.extended_capabilities()?;
+        }
         Ok(session)
     }
 
     fn exchange(&mut self, feature: u8, function: u8, params: [u8; 3]) -> Result<Vec<u8>> {
+        self.exchange_payload(feature, function, &params)
+    }
+
+    fn exchange_payload(&mut self, feature: u8, function: u8, params: &[u8]) -> Result<Vec<u8>> {
         self.software = self.software % 15 + 1;
-        let request = short_request(feature, function, self.software, params);
+        let mut request = vec![
+            if params.len() == 16 { 0x11 } else { 0x10 },
+            DEVICE,
+            feature,
+            (function << 4) | self.software,
+        ];
+        request.extend_from_slice(params);
         self.transport.write(&request)?;
         let start = Instant::now();
         for _ in 0..64 {
@@ -97,6 +121,30 @@ impl<T: Transport> Session<T> {
     }
 
     pub fn supported_dpi(&mut self) -> Result<Vec<u16>> {
+        if self.extended_flags.is_some() {
+            let flags = self.extended_capabilities()?;
+            let mut axes = Vec::new();
+            for direction in 0..=u8::from(flags & 1 != 0) {
+                let mut pages = crate::dpi2202::Pages::default();
+                while let Some(page) = pages.next() {
+                    let reply = self.exchange(self.feature, 2, [0, direction, page])?;
+                    pages.accept(direction, page, &reply)?;
+                }
+                axes.push(
+                    pages.values.ok_or_else(|| {
+                        Error::Protocol("unterminated extended DPI ranges".into())
+                    })?,
+                );
+            }
+            let mut values = axes.remove(0);
+            if let Some(y) = axes.first() {
+                values.retain(|v| y.binary_search(v).is_ok());
+            }
+            if values.is_empty() {
+                return Err(Error::Unsupported("no shared X/Y DPI capabilities".into()));
+            }
+            return Ok(values);
+        }
         let data = self.exchange(self.feature, 1, [0, 0, 0])?;
         if data.len() != 16 || data[0] != 0 {
             return Err(Error::Protocol(
@@ -107,6 +155,9 @@ impl<T: Transport> Session<T> {
     }
 
     pub fn read_dpi(&mut self) -> Result<u16> {
+        if self.extended_flags.is_some() {
+            return self.extended_parameters()?.scalar();
+        }
         let data = self.exchange(self.feature, 2, [0, 0, 0])?;
         if data[0] != 0 {
             return Err(Error::Protocol("DPI response sensor mismatch".into()));
@@ -124,10 +175,39 @@ impl<T: Transport> Session<T> {
                 "experimental DPI safety range is 100..25600".into(),
             ));
         }
-        if !self.supported_dpi()?.contains(&dpi) {
+        let supported = self.supported_dpi()?;
+        if !supported.contains(&dpi) {
             return Err(Error::Unsupported(
                 "requested DPI is not in device capabilities".into(),
             ));
+        }
+        if self.extended_flags.is_some() {
+            let before = self.extended_parameters()?;
+            if !supported.contains(&before.scalar()?) || !(100..=25600).contains(&before.x) {
+                return Err(Error::Safety(
+                    "current extended DPI is outside restorable capabilities".into(),
+                ));
+            }
+            let payload = before.setter(dpi)?;
+            if before.scalar()? == dpi {
+                return Ok(dpi);
+            }
+            let ack = self.exchange_payload(self.feature, 6, &payload)?;
+            if ack.first() != Some(&0) {
+                return Err(Error::Protocol(
+                    "extended DPI setter sensor mismatch".into(),
+                ));
+            }
+            let after = self.extended_parameters()?;
+            if after.setter(dpi)? != payload
+                || after.scalar()? != dpi
+                || !before.same_defaults(after)
+            {
+                return Err(Error::Protocol(
+                    "extended DPI readback changed DPI, LOD or defaults; no retry".into(),
+                ));
+            }
+            return Ok(dpi);
         }
         if self.read_dpi()? == dpi {
             return Ok(dpi);
@@ -145,6 +225,28 @@ impl<T: Transport> Session<T> {
 
     pub fn into_transport(self) -> T {
         self.transport
+    }
+
+    pub fn protocol_id(&self) -> u16 {
+        if self.extended_flags.is_some() {
+            0x2202
+        } else {
+            0x2201
+        }
+    }
+    fn extended_capabilities(&mut self) -> Result<u8> {
+        let data = self.exchange(self.feature, 1, [0, 0, 0])?;
+        if data[0] != 0 || data[2] & !15 != 0 {
+            return Err(Error::Protocol(
+                "extended DPI capability sensor or flags".into(),
+            ));
+        }
+        self.extended_flags = Some(data[2]);
+        Ok(data[2])
+    }
+    fn extended_parameters(&mut self) -> Result<crate::dpi2202::Parameters> {
+        let data = self.exchange(self.feature, 5, [0, 0, 0])?;
+        crate::dpi2202::Parameters::parse(&data, self.extended_flags.ok_or(Error::NotFound)?)
     }
 }
 
@@ -337,6 +439,7 @@ mod tests {
         transport.replies = vec![
             Ok(vec![0x10, DEVICE, 0, 0x11, 2, 0, 0x5a]),
             Ok(vec![0x10, DEVICE, 0, 2, 0, 0, 0]),
+            Ok(vec![0x10, DEVICE, 0, 3, 0, 0, 0]),
         ]
         .into();
         assert!(matches!(

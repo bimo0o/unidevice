@@ -298,7 +298,7 @@ fn open_token(token: &DeviceToken) -> Result<NativeTransport> {
             "descriptor does not match the documented HID++ framing".into(),
         ));
     }
-    Ok(NativeTransport::new(handle))
+    NativeTransport::new(handle)
 }
 
 fn scan() -> Result<Vec<DeviceRow>> {
@@ -677,7 +677,10 @@ impl Backend {
             demo: false,
             rgb: [83, 129, 255],
             rgb_control: false,
-            dpi_source: "значения получены от устройства".into(),
+            dpi_source: format!(
+                "HID++ 0x{:04X}: значения получены от устройства",
+                session.protocol_id()
+            ),
         };
         caps.narrow(row);
         if caps.values.is_empty() {

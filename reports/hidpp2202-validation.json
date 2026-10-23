@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "protocol": "HID++ 0x2202 version 0",
+  "status": "experimental_implemented_not_physically_verified",
+  "source": {
+    "project": "AprilNEA/OpenLogi",
+    "commit": "b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511",
+    "license_option": "MIT",
+    "files": [
+      {
+        "path": "crates/openlogi-hidpp/src/feature/extended_dpi.rs",
+        "sha256": "de02ec2f2b47efd27329a364b278b2f7c1bbbf49b3c6a66b2ff97837d0c0e3cb",
+        "url": "https://github.com/AprilNEA/OpenLogi/blob/b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511/crates/openlogi-hidpp/src/feature/extended_dpi.rs"
+      },
+      {
+        "path": "crates/openlogi-hidpp/src/feature/extended_dpi/types.rs",
+        "sha256": "7863e5ea6a71740785164d72942421fe87623da9ec4f720dde2f78aabb12614b",
+        "url": "https://github.com/AprilNEA/OpenLogi/blob/b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511/crates/openlogi-hidpp/src/feature/extended_dpi/types.rs"
+      }
+    ]
+  },
+  "implemented": [
+    "direct USB DPI discovery",
+    "advertised X/Y ranges",
+    "current/default DPI and lift-off checks",
+    "explicit DPI apply and full readback",
+    "shared baseline and manual restore path"
+  ],
+  "excluded": [
+    "receiver routing",
+    "RGB",
+    "unequal X/Y UI",
+    "calibration",
+    "profile saves",
+    "firmware/reset"
+  ],
+  "test_fixture_kind": "synthetic_not_usb_capture",
+  "library_gui_tests_passed": 73,
+  "cli_tests_passed": 7,
+  "physical_models_verified_with_this_adapter": 0,
+  "market_coverage_probability": null,
+  "persistence_after_power_cycle": "unmeasured"
+}

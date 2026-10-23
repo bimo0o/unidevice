@@ -366,3 +366,29 @@ formatting, offline release build and catalog/provenance checks passed. Fixtures
 are synthetic, not physical captures. Studio 0.3.1 source f3fc75a passed Windows
 and Linux CI in run 39966486968. The new 0.3.2 CI result is tracked separately.
 The 99% configuration goal remains active and is not achieved by this milestone.
+
+## Change 21 — Adaptive extended DPI, Studio 0.3.3
+
+The shared HID++ session now selects 0x2202 version 0 only after a correlated
+absent-2201 reply. No PID whitelist or receiver-slot guess. Native transport checks
+its own descriptor and blocks extended discovery/long writes without exact long
+input/output framing. Independent codec and native firewall validate sensor-zero
+capabilities, both axis ranges with bounded paging, current/default DPI and lift-off.
+Source: pinned OpenLogi b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511, statically inspected.
+
+Explicit DPI changes use one long sensor setter and full readback. Equal independent
+axes change together; absent Y stays zero; unequal existing axes are refused until
+an axis-aware UI exists. Lift-off/defaults must stay unchanged. Current and requested
+DPI must be restorable and inside the advertised set/policy. Common Studio/CLI
+checkpoint path is reused. Calibration/profile/LED/NV commands remain blocked.
+Errors, ambiguous writes and parameter events stop control with no automatic retry
+or rollback. Rejected outgoing packets now also latch native transport. Successful
+readback clears prerequisites; a subsequent apply needs all fresh reads.
+
+Offline checks: 73 library/GUI tests and 7 CLI tests passed, formatting, all-target
+Clippy -D warnings and Windows release build passed. New tests include every changed
+setter byte, missing prerequisites, variable runtime feature index, repeated apply
+with software-ID wrap, split range words, optional fields, bad replies and timeouts.
+All new protocol fixtures are synthetic. No real HID operation was performed.
+Previous 0.3.2 source 30dbaf9 passed Windows/Linux CI run 39969830139; this milestone's
+CI result is tracked separately. No added physical support count or 99% claim.

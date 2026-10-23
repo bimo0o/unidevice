@@ -161,11 +161,36 @@ impl Descriptor {
         };
         has(Kind::Output, 0x10, 7) && (has(Kind::Input, 0x10, 7) || has(Kind::Input, 0x11, 20))
     }
+
+    pub fn hidpp_extended_framing(&self) -> bool {
+        self.hidpp_framing()
+            && [Kind::Input, Kind::Output].iter().all(|kind| {
+                self.reports
+                    .iter()
+                    .any(|r| r.kind == *kind && r.id == 0x11 && r.bits == 152)
+            })
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn extended_dpi_requires_exact_long_input_and_output() {
+        let mut d = Descriptor::parse(&[
+            0x06, 0, 0xff, 0x09, 1, 0xa1, 1, 0x85, 0x10, 0x75, 8, 0x95, 6, 0x81, 2, 0x91, 2, 0x85,
+            0x11, 0x95, 19, 0x81, 2, 0x91, 2, 0xc0,
+        ])
+        .unwrap();
+        assert!(d.hidpp_extended_framing());
+        d.reports
+            .iter_mut()
+            .find(|r| r.kind == Kind::Output && r.id == 0x11)
+            .unwrap()
+            .bits = 151;
+        assert!(d.hidpp_framing());
+        assert!(!d.hidpp_extended_framing());
+    }
     #[test]
     fn unknown_model_is_adapted_by_framing_not_pid() {
         let d = Descriptor::parse(&[
@@ -174,6 +199,7 @@ mod tests {
         ])
         .unwrap();
         assert!(d.hidpp_framing());
+        assert!(!d.hidpp_extended_framing());
         assert!(d.usage_pages.contains(&0xff00));
         assert_eq!(d.reports.len(), 3);
     }

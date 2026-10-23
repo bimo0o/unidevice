@@ -1,5 +1,12 @@
 # Research provenance and licensing
 
+HID++ 2202 wire facts were additionally checked against AprilNEA/OpenLogi commit
+b2a4dbba3594f8dbcd9fe20cb5c56a40baa33511, crates/openlogi-hidpp/src/feature/extended_dpi.rs
+and extended_dpi/types.rs. These are the project's own primary implementation,
+not a manufacturer certification. MIT option notice is preserved in
+licenses/OpenLogi-MIT.txt. No upstream crate is linked or executed. UniDevice's
+protocol codec, bounded parser and safety state machine are independent.
+
 This directory contains factual model/parameter inventories extracted from public
 sources, attribution links, an archived OpenRGB public device table, and original
 UniDevice analysis. It is not an implementation of those projects' drivers.

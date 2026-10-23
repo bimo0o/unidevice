@@ -187,7 +187,7 @@ pub fn scan(experimental: bool) -> Result<()> {
                     );
                 } else {
                     let mut session = crate::hidpp::Session::connect(
-                        crate::transport::NativeTransport::new(device),
+                        crate::transport::NativeTransport::new(device)?,
                     )?;
                     let current = session.read_dpi()?;
                     let values = session.supported_dpi()?;
