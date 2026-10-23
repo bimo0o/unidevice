@@ -1,6 +1,10 @@
 # Corsair Harpoon RGB PRO (wired)
 
-Status: **unverified**, public descriptions only. Retrieved 2026-10-23.
+Current status: live DPI and active-stage RGB verified on the user's firmware 3.13.
+Authoritative measured specification: [corsair-live-probe.md](corsair-live-probe.md).
+The remaining text is the historical recon note; its general zone RGB preview is
+not the active-stage RGB implementation. Other firmware and persistence unverified.
+Retrieved 2026-10-23.
 Identity: 1B1C:1B75; https://github.com/ckb-next/ckb-next/wiki/Supported-Mice
 Do not confuse with original Harpoon or wireless variants.
 

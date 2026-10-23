@@ -183,3 +183,29 @@ Private source repository: https://github.com/bimo0o/unidevice . No release publ
   result is not independently checked and does not certify newly compiled binaries.
 - Commit: the commit containing this section (`git log --oneline -- src/gui.rs`).
 - Next: user connects a target mouse, tests discovered DPI, and exports diagnostics if blocked.
+
+## Change 12 — Harpoon RGB PRO live adapter
+
+Pet project, entirely AI-written under human supervision. On 2026-10-23 the user
+connected USB 1B1C:1B75 and authorized testing. Spec recorded first (f96853b).
+Read-only identification: firmware 3.13, bootloader 3.05; FFC2:0004, feature64.
+DPI GET is LE on this firmware. Current-stage trailing bytes are stale and ignored.
+Live test: 1000 -> 800 -> 1000 DPI with successful readbacks, RGB/stage retained.
+Color: red -> blue for eight seconds -> red; readbacks matched and user confirmed
+visible blue/restoration. No firmware/reset/flash/hardware-profile save commands.
+Implementation restricts hardware route, firmware, report length, subcommands,
+active enabled stage and DPI policy. Single setter then readback, fault latches,
+no retries. GUI holds the selected handle and applies only on explicit buttons.
+Checks: cargo test --offline --locked --features gui: 38 library + 4 CLI passed.
+cargo clippy --offline --locked --features gui --all-targets -- -D warnings: passed.
+Risk/limits: physical tests cover this mouse/fw and values 800/1000; replug
+persistence, other firmware and remaining DPI values are not verified. Logitech
+remains unverified. Universal decoding of arbitrary unknown protocols is not claimed.
+Next: portable GUI launch for user testing; effects and cross-device sync later.
+Portable Windows GUI built successfully and launched for user testing from
+C:/UniDevice/dist/unidevice-windows-x64/unidevice-gui.exe. Process 12460,
+MainWindowTitle UniDevice, Responding=True; working set at spot check 110559232 B.
+Own-window demo screenshot captured successfully to assets/gui-demo.png.
+Archive size 2910533 bytes; GUI SHA256
+00cc8650c90e3d4245f0871727d3b9410a41ddbd8b44f69fbf81b399302c0b51.
+This new executable has not been submitted by the agent to VirusTotal.

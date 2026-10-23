@@ -1,4 +1,5 @@
 pub mod controller;
+pub mod corsair;
 pub mod descriptor;
 pub mod desktop;
 pub mod device;

@@ -13,7 +13,16 @@ remains as specified in logitech-superlight.md. No arbitrary report/feature/IOCT
 Restrictions: wired target FF only; descriptor verified; no receiver slot guesses; no
 onboard profiles, flash, firmware, reset, pairing, bootloader, hardware-profile save or
 vendor-mode changes. RGB protocols without complete transport/init/zone specifications
-remain read-only, including Harpoon. Do not assume a generic HID output is RGB.
+remain read-only. Do not assume a generic HID output is RGB.
+
+Harpoon exception, physically measured 2026-10-23: USB 1B1C:1B75 firmware 3.13,
+FFC2:0004, unnumbered feature64. Allow identify, live stage/mask/stage reads and
+one live active-stage rewrite (07 13 dN 00), retaining untouched fields. DPI policy
+100..12000 step100; RGB edits preserve X/Y and XY flag. No stage/mask changes,
+hardware profile flag, mode switches or inferred logo zone IDs. Readback required.
+800/1000 DPI round-trip passed; blue stage RGB readback and user visual check passed.
+Original 1000 DPI/red restored explicitly in the lab; GUI never auto-restores.
+Persistence across reconnect is not verified. See corsair-live-probe.md.
 
 Every apply validates fresh capabilities and reads current state before a single setter;
 the value must belong to the device's list and conservative application policy. Never write

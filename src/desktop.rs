@@ -31,13 +31,15 @@ pub struct Capabilities {
     pub values: Vec<u16>,
     pub demo: bool,
     pub rgb: [u8; 3],
+    pub rgb_control: bool,
+    pub dpi_source: String,
 }
 
 pub enum Command {
     Scan,
     Probe(DeviceRow),
     SetDpi(u16),
-    SetDemoRgb([u8; 3]),
+    SetRgb([u8; 3]),
     Demo,
     Diagnostic(DeviceRow),
 }
@@ -83,6 +85,11 @@ fn scan() -> Result<Vec<DeviceRow>> {
     let api = device::enumerate()?;
     let mut rows = Vec::new();
     for d in api.device_list() {
+        if (d.vendor_id(), d.product_id()) == (0x1b1c, 0x1b75)
+            && (d.usage_page(), d.usage()) != (0xffc2, 4)
+        {
+            continue;
+        }
         if !(d.usage_page() >= 0xff00
             || d.usage_page() == 1 && matches!(d.usage(), 2 | 6)
             || matches!(d.vendor_id(), 0x046d | 0x1b1c))
@@ -102,8 +109,9 @@ fn scan() -> Result<Vec<DeviceRow>> {
         };
         let mut reason =
             "Протокол управления пока не определён. Неизвестные команды заблокированы.".to_string();
-        let eligible = if d.vendor_id() == 0x046d
-            && d.usage_page() == 0xff00
+        let corsair = (d.vendor_id(), d.product_id(), d.usage_page(), d.usage())
+            == (0x1b1c, 0x1b75, 0xffc2, 4);
+        let eligible = if (d.vendor_id() == 0x046d && d.usage_page() == 0xff00 || corsair)
             && matches!(d.bus_type(), hidapi::BusType::Usb)
         {
             match d
@@ -111,8 +119,16 @@ fn scan() -> Result<Vec<DeviceRow>> {
                 .map_err(|_| Error::Access)
                 .and_then(|h| device::read_descriptor(&h))
             {
-                Ok(descriptor) if descriptor.hidpp_framing() => {
-                    reason = "Можно проверить доступные настройки DPI.".into();
+                Ok(descriptor)
+                    if (!corsair && descriptor.hidpp_framing())
+                        || (corsair
+                            && descriptor.reports.iter().any(|r| {
+                                r.kind == crate::descriptor::Kind::Feature
+                                    && r.id == 0
+                                    && r.bytes() == 64
+                            })) =>
+                {
+                    reason = "Можно прочитать настройки устройства.".into();
                     true
                 }
                 Ok(_) => {
@@ -130,7 +146,7 @@ fn scan() -> Result<Vec<DeviceRow>> {
         } else {
             false
         };
-        if d.vendor_id() == 0x1b1c {
+        if d.vendor_id() == 0x1b1c && !eligible {
             reason =
                 "Управление Corsair отключено: ещё не подтверждены безопасные команды этой модели."
                     .into();
@@ -172,6 +188,10 @@ pub fn demo_rows() -> Vec<DeviceRow> {
 }
 
 enum Active {
+    Harpoon {
+        session: crate::corsair::Session<crate::corsair::NativeFeature>,
+        caps: Capabilities,
+    },
     Real {
         session: Session<NativeTransport>,
         caps: Capabilities,
@@ -192,12 +212,48 @@ impl Backend {
                 values: vec![400, 800, 1200, 1600, 2400, 3200, 6400],
                 demo: true,
                 rgb: [83, 129, 255],
+                rgb_control: true,
+                dpi_source: "значения симулятора".into(),
             };
             self.active = Some(Active::Demo(caps.clone()));
             return Ok(caps);
         }
         if !row.eligible {
             return Err(Error::Unsupported(row.reason.clone()));
+        }
+        let token = row.token.as_ref().ok_or(Error::NotFound)?;
+        if (token.vid, token.pid, token.usage_page, token.usage) == (0x1b1c, 0x1b75, 0xffc2, 4) {
+            let api = device::enumerate()?;
+            let d = api
+                .device_list()
+                .find(|d| {
+                    d.path() == token.path.as_c_str()
+                        && d.vendor_id() == token.vid
+                        && d.product_id() == token.pid
+                        && d.usage_page() == token.usage_page
+                        && d.usage() == token.usage
+                        && d.interface_number() == token.interface
+                        && matches!(d.bus_type(), hidapi::BusType::Usb)
+                })
+                .ok_or(Error::NotFound)?;
+            let mut session =
+                crate::corsair::Session::connect(crate::corsair::NativeFeature::new(
+                    d.open_device(&api).map_err(|_| Error::Access)?,
+                )?)?;
+            let state = session.state()?;
+            let caps = Capabilities {
+                current_dpi: state.x,
+                values: (100..=12000).step_by(100).collect(),
+                demo: false,
+                rgb: state.rgb,
+                rgb_control: true,
+                dpi_source: "диапазон приложения: 100–12000, шаг 100".into(),
+            };
+            self.active = Some(Active::Harpoon {
+                session,
+                caps: caps.clone(),
+            });
+            return Ok(caps);
         }
         let mut session =
             Session::connect(open_token(row.token.as_ref().ok_or(Error::NotFound)?)?)?;
@@ -216,6 +272,8 @@ impl Backend {
             values,
             demo: false,
             rgb: [83, 129, 255],
+            rgb_control: false,
+            dpi_source: "значения получены от устройства".into(),
         };
         self.active = Some(Active::Real {
             session,
@@ -230,6 +288,15 @@ impl Backend {
                 "refresh and check the device before applying".into(),
             ))?;
             match active {
+                Active::Harpoon { session, caps } => {
+                    if !caps.values.contains(&value) {
+                        return Err(Error::Invalid("DPI outside application policy".into()));
+                    }
+                    let state = session.set_dpi(value)?;
+                    caps.current_dpi = state.x;
+                    caps.rgb = state.rgb;
+                    Ok(caps.clone())
+                }
                 Active::Real { session, caps } => {
                     if !caps.values.contains(&value) {
                         return Err(Error::Unsupported(
@@ -257,7 +324,12 @@ impl Backend {
     }
 
     fn rgb(&mut self, value: [u8; 3]) -> Result<Capabilities> {
-        match self.active.as_mut() {
+        let result = match self.active.as_mut() {
+            Some(Active::Harpoon { session, caps }) => session.set_stage_rgb(value).map(|s| {
+                caps.current_dpi = s.x;
+                caps.rgb = s.rgb;
+                caps.clone()
+            }),
             Some(Active::Demo(caps)) => {
                 caps.rgb = value;
                 Ok(caps.clone())
@@ -265,7 +337,11 @@ impl Backend {
             _ => Err(Error::Safety(
                 "no verified RGB hardware transport; no packets sent".into(),
             )),
+        };
+        if result.is_err() {
+            self.active = None;
         }
+        result
     }
 }
 
@@ -354,7 +430,7 @@ impl Worker {
                         }
                         Command::Probe(row) => Event::Ready(backend.probe(&row)),
                         Command::SetDpi(value) => Event::Applied(backend.apply(value)),
-                        Command::SetDemoRgb(value) => Event::Applied(backend.rgb(value)),
+                        Command::SetRgb(value) => Event::Applied(backend.rgb(value)),
                         Command::Diagnostic(row) => Event::Diagnostic(save_diagnostic(&row)),
                     };
                     if sender.send(event).is_err() {

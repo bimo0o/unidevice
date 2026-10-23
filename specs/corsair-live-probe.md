@@ -49,3 +49,13 @@ preserving XY flag and RGB; verify stage readback and restore 1000 explicitly if
 the test succeeded. Test stage RGB separately, preserving DPI; its visible effect
 is not assumed. Setter implementation is initially gated to 1B75 firmware 0313.
 Only explicit user applies in GUI, no automatic restore/reapply in the product.
+
+## Successful writes on the connected mouse
+
+2026-10-23: 1000 -> 800 -> 1000 DPI, all replies read back the requested X/Y;
+stage 1, XY=0 and RGB red retained. Stage RGB red -> blue for 8 seconds -> red:
+both readbacks matched; the user confirmed visible blue and restoration. X/Y
+remained 1000. This establishes DPI and active-stage color on THIS Harpoon/fw.
+No firmware, reset, flash, profile save or mode-switch commands were used.
+Replug/persistence and other firmware versions remain unverified. The generic
+Nightsword current-DPI byte layout and lighting-zone bitmap are NOT used here.

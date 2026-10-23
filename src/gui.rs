@@ -221,7 +221,7 @@ impl DesktopApp {
                 self.send(Command::SetDpi(self.requested));
             }
             Action::Rgb => {
-                self.send(Command::SetDemoRgb(self.color));
+                self.send(Command::SetRgb(self.color));
             }
             Action::Diagnostic => {
                 if let Some(row) = self.selected.and_then(|i| self.rows.get(i)).cloned() {
@@ -438,7 +438,7 @@ impl DesktopApp {
                             });
                         });
                         ui.add_space(8.0);
-                        ui.label(RichText::new(format!("Сейчас: {} DPI · значения получены от {}",c.current_dpi,if c.demo {"симулятора"}else{"устройства"})).size(12.0).color(MUTED));
+                        ui.label(RichText::new(format!("Сейчас: {} DPI · {}",c.current_dpi,c.dpi_source)).size(12.0).color(MUTED));
                         ui.add_space(8.0);
                         let enabled=!self.busy && self.requested!=c.current_dpi && c.values.contains(&self.requested);
                         if ui.add_enabled(enabled,egui::Button::new(RichText::new("Применить DPI").color(Color32::WHITE)).fill(ACCENT)).clicked(){action=Some(Action::Dpi);}
@@ -467,13 +467,13 @@ impl DesktopApp {
                                 ui.color_edit_button_srgb(&mut self.color);
                             });
                             ui.add_space(8.0);
-                            ui.label(RichText::new("Палитра — только предпросмотр").size(12.0).color(MUTED));
+                            ui.label(RichText::new("Выберите цвет и нажмите «Применить»").size(12.0).color(MUTED));
                         });
                         mouse_preview(ui,self.color);
                     });
-                    let enabled=caps.as_ref().is_some_and(|c|c.demo)&&!self.busy;
+                    let enabled=caps.as_ref().is_some_and(|c|c.rgb_control)&&!self.busy;
                     if ui.add_enabled(enabled,egui::Button::new("Применить подсветку")).clicked(){action=Some(Action::Rgb);}
-                    ui.label(RichText::new(if enabled {"Изменяется только демонстрационная мышь."} else {"Запись отключена: безопасный протокол подсветки для устройства ещё не подтверждён."}).size(12.0).color(MUTED));
+                    ui.label(RichText::new(if caps.as_ref().is_some_and(|c|c.demo) {"Изменяется только демонстрационная мышь."} else if caps.as_ref().is_some_and(|c|c.rgb_control) {"Цвет активной ступени DPI. Без команды сохранения во встроенную память."} else {"Управление цветом для этого устройства недоступно."}).size(12.0).color(MUTED));
                 });
                 });
                 ui.add_space(14.0);
@@ -509,7 +509,7 @@ impl DesktopApp {
             ui.label("Прошивка, bootloader, сброс и запись аппаратных профилей недоступны.");
             ui.label("Перед DPI проверяются дескриптор и допустимые значения. После — ответ устройства.");
             ui.label("При ошибке нет повторов и автоматического отката. Нужна новая проверка.");
-            ui.label(RichText::new("Абсолютный нулевой риск обещать нельзя: физическая проверка устройств ещё не проведена.").color(MUTED).size(12.0));
+            ui.label(RichText::new("Harpoon 3.13: DPI и цвет проверены на мыши. Абсолютный нулевой риск обещать нельзя.").color(MUTED).size(12.0));
         });
     }
 }
