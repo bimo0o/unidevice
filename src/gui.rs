@@ -43,6 +43,7 @@ enum Action {
     StartScene,
     StopScene,
     RestoreCheckpoint,
+    ReadOnlyRazer,
 }
 
 pub struct DesktopApp {
@@ -168,6 +169,21 @@ impl DesktopApp {
             }
             match event {
                 Event::Recovery(info) => self.recovery = info,
+                Event::ReadOnlyRazer(result) => {
+                    self.caps = None;
+                    self.effect_running = false;
+                    self.tools.scene_running = false;
+                    match result {
+                        Ok((observed, file)) => {
+                            self.notice = format!("Razer · прошивка {} · DPI X/Y: {}/{}. Прочитаны ответы протокола; изменение настроек отключено. Отчёт: {}", observed.firmware, observed.dpi_x, observed.dpi_y, file);
+                            self.failed = false;
+                        }
+                        Err(error) => {
+                            self.notice = desktop::user_error(&error);
+                            self.failed = true;
+                        }
+                    }
+                }
                 Event::Scene(result) => {
                     self.effect_running = false;
                     self.caps = None;
@@ -383,6 +399,11 @@ impl DesktopApp {
                 self.send(Command::SetRgb(self.color));
             }
             Action::RestoreCheckpoint => self.send(Command::RestoreCheckpoint),
+            Action::ReadOnlyRazer => {
+                if let Some(row) = self.selected.and_then(|i| self.rows.get(i)).cloned() {
+                    self.send(Command::ReadOnlyRazer(row));
+                }
+            }
             Action::Diagnostic => {
                 if let Some(row) = self.selected.and_then(|i| self.rows.get(i)).cloned() {
                     self.send(Command::Diagnostic(row));
@@ -542,6 +563,7 @@ impl DesktopApp {
                 ui.label(RichText::new(&row.title).size(21.0).strong());
                 ui.label(RichText::new(&row.detail).size(11.0).color(MUTED));
                 if ui.add_enabled(!self.busy,egui::Button::new("Сохранить диагностику").small()).clicked(){action=Some(Action::Diagnostic);}
+                if row.can_probe_razer() && ui.add_enabled(!self.busy, egui::Button::new("Прочитать DPI Razer · экспериментально").small()).clicked() { action=Some(Action::ReadOnlyRazer); }
                 ui.add_space(16.0);
                 if let Some(checkpoint) = &self.recovery {
                     ui.horizontal_wrapped(|ui| {

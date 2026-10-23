@@ -13,6 +13,7 @@ pub mod passport;
 pub mod portable;
 pub mod profile;
 pub mod protocols;
+pub mod razer;
 pub mod recovery;
 pub mod safety;
 pub mod sensitivity;

@@ -26,6 +26,10 @@ const HELP: &str = r#"
                             Read descriptor; identify protocol adapter candidates
   unidevice models           Show support boundaries
   unidevice protocols        Offline protocol inventory and honest coverage status
+  unidevice razer-probe --demo
+                            Synthetic Razer read-only example; no device access
+  unidevice razer-probe --device N --experimental
+                            Known USB Razer firmware/current XY DPI queries; setters blocked
   unidevice dpi --value 800  Offline plan; auto capability discovery by default
   unidevice dpi --value 800 --apply --experimental --device N
                             Discover HID++ DPI on any eligible wired Logitech model
@@ -293,6 +297,26 @@ fn run(args: &[String]) -> Result<()> {
                 "{}",
                 serde_json::to_string_pretty(&unidevice::protocols::summary())
                     .map_err(|_| Error::Invalid("protocol summary serialization".into()))?
+            );
+            Ok(())
+        }
+        "razer-probe" => {
+            let o = Options::parse(&args[1..], &["device"], &["demo", "experimental"])?;
+            let observed = if o.flag("demo") {
+                if o.flag("experimental") || o.values.contains_key("device") {
+                    return Err(Error::Invalid(
+                        "razer demo cannot have hardware flags".into(),
+                    ));
+                }
+                unidevice::razer::demo_observation()?
+            } else {
+                require_hardware(o.flag("experimental"))?;
+                unidevice::razer::probe_native(o.number("device")?)?
+            };
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&observed)
+                    .map_err(|_| Error::Invalid("Razer observation serialization".into()))?
             );
             Ok(())
         }

@@ -339,3 +339,30 @@ has no devices available. This milestone does not achieve the 99% coverage goal.
 Own-window recovery demo preview captured and visually inspected: the baseline and
 Restore action are visible above the settings cards without clipping. No hardware
 was opened. CLI protocol summary exported to reports/protocol-coverage-v031.json.
+
+## Change 20 — Razer read-only protocol foundation, Studio 0.3.2
+
+Coverage denominator clarified by the user: gaming mice configurable in manufacturer
+software. Required outcome remains DPI plus lighting where present on Windows/Linux
+over USB cable/receiver. Unsupported gaming models stay inside the denominator.
+Market coverage probability remains unknown; recognition counts are not support.
+
+Independent Razer wire implementation reads firmware and current XY DPI only.
+102 compiled USB PID/routing profiles derive from the pinned OpenRazer mouse driver,
+linked to catalog records. USB bus, VID/PID, exact interface and descriptor feature
+ID 0 / 720 bits must match before requests. Native transport permits exactly two
+precomputed queries once, enforces response correlation/checksum/status and latches
+on faults without retries. No serial, storage setter, reset or firmware commands.
+Busy is failure, not success. Normal scan does not invoke this probe.
+
+CLI requires an experimental opt-in; its demo is synthetic and accesses no HID.
+The GUI exposes a separate experimental read button, releases the prior control
+session and saves a non-unique observation with create-new/sync semantics. Read
+success never grants writable capabilities. Protocol-level getters require outgoing
+HID requests and are not passive capture. No real Razer probe was performed.
+
+Checks: 64 library/GUI + 6 CLI tests passed; all-target GUI Clippy -D warnings,
+formatting, offline release build and catalog/provenance checks passed. Fixtures
+are synthetic, not physical captures. Studio 0.3.1 source f3fc75a passed Windows
+and Linux CI in run 39966486968. The new 0.3.2 CI result is tracked separately.
+The 99% configuration goal remains active and is not achieved by this milestone.

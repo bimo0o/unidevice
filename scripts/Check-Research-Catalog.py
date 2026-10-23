@@ -65,4 +65,16 @@ assert page.count("<tr>") == len(rows) + 1
 stats = json.loads((root / "research/coverage.json").read_text(encoding="utf-8"))
 assert stats["source_records"] == len(rows)
 assert stats["by_upstream"] == dict(Counter(r["upstream"] for r in rows))
+razer = json.loads((root / "research/razer-read-profiles.json").read_text(encoding="utf-8"))
+assert razer["purpose"] == "experimental_read_only_no_setters"
+assert razer["upstream_commit"] == "477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d"
+assert len(razer["profiles"]) == len({p["pid"] for p in razer["profiles"]}) == 102
+for profile in razer["profiles"]:
+    model = indexed[profile["source_record"]]
+    assert model["upstream"] == "openrazer" and model["category"] == "mouse"
+    assert profile["name"] == model["name"]
+    assert profile["source_declared_max_dpi"] == model["parameters"]["dpi_max"]
+    assert any(int(identity["pid"], 16) == profile["pid"] for identity in model["identifiers"])
+    assert "BLUETOOTH" not in profile["symbol"]
 print(f"PASS: {len(rows)} source records, ids, inherited methods, limits, CSV/HTML, source hash and no runtime permissions")
+print("PASS: 102 read-only Razer profiles retain catalog provenance; no hardware verification asserted")

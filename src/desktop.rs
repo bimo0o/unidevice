@@ -36,6 +36,12 @@ pub struct Capabilities {
     pub dpi_source: String,
 }
 impl DeviceRow {
+    pub fn can_probe_razer(&self) -> bool {
+        self.token.as_ref().is_some_and(|t| {
+            t.vid == 0x1532
+                && crate::razer::profile(t.pid).is_some_and(|p| t.interface == p.usb_interface)
+        })
+    }
     pub fn identity(&self) -> Option<(u16, u16)> {
         self.token.as_ref().map(|t| (t.vid, t.pid))
     }
@@ -69,6 +75,7 @@ pub enum Command {
     SceneStart(Vec<SceneSelection>, crate::effects::Effect),
     SceneStop,
     RestoreCheckpoint,
+    ReadOnlyRazer(DeviceRow),
     Transfer {
         dpi: Option<u16>,
         rgb: Option<[u8; 3]>,
@@ -86,6 +93,7 @@ pub enum Event {
     SceneFrame(Vec<SceneStatus>),
     Transfer(Result<(Capabilities, Vec<String>)>),
     Recovery(Option<crate::recovery::RecoveryInfo>),
+    ReadOnlyRazer(Result<(crate::razer::Observation, String)>),
 }
 
 #[derive(Clone)]
@@ -808,6 +816,33 @@ fn save_diagnostic(row: &DeviceRow) -> Result<String> {
     Ok(name)
 }
 
+fn read_only_razer(row: &DeviceRow) -> Result<(crate::razer::Observation, String)> {
+    let token = row.token.as_ref().ok_or(Error::NotFound)?;
+    let api = device::enumerate()?;
+    let info = api
+        .device_list()
+        .find(|d| {
+            d.path() == token.path.as_c_str()
+                && d.vendor_id() == token.vid
+                && d.product_id() == token.pid
+                && d.interface_number() == token.interface
+                && d.usage_page() == token.usage_page
+                && d.usage() == token.usage
+        })
+        .ok_or(Error::NotFound)?;
+    let observed = crate::razer::probe_info(&api, info)?;
+    let stamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_nanos();
+    let name = format!("razer-{stamp}");
+    let path = crate::storage::path("diagnostics", &name)?;
+    let text = serde_json::to_string_pretty(&observed)
+        .map_err(|_| Error::Io("Razer report serialization".into()))?;
+    crate::storage::save_new(&path, &text)?;
+    Ok((observed, format!("diagnostics/{name}.json")))
+}
+
 pub struct Worker {
     pub events: mpsc::Receiver<Event>,
     commands: Option<mpsc::SyncSender<Command>>,
@@ -930,6 +965,11 @@ impl Worker {
                         Command::SetDpi(value) => Event::Applied(backend.apply(value)),
                         Command::SetRgb(value) => Event::Applied(backend.rgb(value)),
                         Command::RestoreCheckpoint => Event::Applied(backend.restore_checkpoint()),
+                        Command::ReadOnlyRazer(row) => {
+                            backend.active = None;
+                            backend.checkpoint = None;
+                            Event::ReadOnlyRazer(read_only_razer(&row))
+                        }
                         Command::Diagnostic(row) => Event::Diagnostic(save_diagnostic(&row)),
                     };
                     if recovery_events
@@ -1168,6 +1208,8 @@ mod tests {
     fn demo_has_no_device_token_and_cannot_open_real_transport() {
         let row = demo_rows().remove(0);
         assert!(row.token.is_none());
+        assert!(!row.can_probe_razer());
+        assert!(read_only_razer(&row).is_err());
         let mut backend = Backend::default();
         assert_eq!(backend.probe(&row).unwrap().current_dpi, 800);
         assert_eq!(backend.apply(1600).unwrap().current_dpi, 1600);

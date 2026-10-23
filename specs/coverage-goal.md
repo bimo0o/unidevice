@@ -1,6 +1,7 @@
 # Mouse protocol coverage goal
 
-Accepted 2026-10-23: target 99% configurable mice; success means DPI plus lighting
+Accepted 2026-10-23: target 99% of gaming mice configurable in their manufacturer's
+software; success means DPI plus lighting
 where lighting is present. Initial platform scope: Windows/Linux, USB cable and USB
 radio receiver. Bluetooth requires separately specified routes and is not silently
 treated as equivalent to a USB connection. Button assignments are not required for
@@ -9,6 +10,9 @@ this success criterion; per-application automation remains excluded.
 The probability is currently unknown: no representative market distribution, agreed
 benchmark population or model/firmware test sample exists. Do not compute the target
 percentage from source-file counts, VID/PID matches or one physical test.
+The denominator excludes office mice with fixed hardware DPI. Unsupported gaming
+models inside the agreed population remain failures, not exclusions. Population
+eligibility and absence of lighting need evidence independent of our own support.
 
 Track separately: source identity recognition, protocol implemented, capability reported
 at runtime, DPI setter validated, RGB setter validated or lighting authoritatively absent,

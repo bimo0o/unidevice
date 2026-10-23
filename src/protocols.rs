@@ -67,11 +67,13 @@ pub fn summary() -> serde_json::Value {
         "identity_source_records": data.identities.len(),
         "distinct_vid_pid_pairs": pairs.len(),
         "families": families,
-        "goal": {"target_percent": 99, "required": "DPI and lighting where present", "transports": ["USB", "USB receiver"], "os": ["Windows", "Linux"]},
+        "goal": {"target_percent": 99, "population": "gaming mice configurable in manufacturer software", "required": "DPI and lighting where present", "transports": ["USB", "USB receiver"], "os": ["Windows", "Linux"]},
         "market_coverage_probability": null,
         "representative_sample_available": false,
         "native": {"hidpp2": "conditional wired DPI discovery; RGB not implemented", "corsair": "Harpoon RGB PRO 1B75 firmware 3.13 DPI and active-stage RGB"},
         "physical_verified_model_firmware_variants": 1,
+        "razer_experimental_read_only_profiles": crate::razer::profile_count(),
+        "razer_dpi_and_rgb_setters_available": false,
         "recognition_grants_write_permission": false,
     })
 }
