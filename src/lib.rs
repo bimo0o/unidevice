@@ -1,3 +1,4 @@
+pub mod compatibility;
 pub mod controller;
 pub mod corsair;
 pub mod descriptor;
@@ -8,6 +9,10 @@ pub mod error;
 #[cfg(feature = "gui")]
 pub mod gui;
 pub mod hidpp;
+pub mod passport;
+pub mod portable;
 pub mod profile;
 pub mod safety;
+pub mod sensitivity;
+pub mod storage;
 pub mod transport;

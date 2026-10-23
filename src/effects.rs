@@ -1,8 +1,10 @@
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Pattern {
     Gradient,
     Breathing,
     Rainbow,
+    Timeline,
 }
 
 impl Pattern {
@@ -11,20 +13,71 @@ impl Pattern {
             Self::Gradient => "Градиент",
             Self::Breathing => "Дыхание",
             Self::Rainbow => "Радуга",
+            Self::Timeline => "Конструктор",
         }
     }
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Keyframe {
+    pub at: f32,
+    pub color: [u8; 3],
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum Easing {
+    Linear,
+    #[default]
+    Smooth,
+}
+
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Effect {
     pub pattern: Pattern,
     pub first: [u8; 3],
     pub second: [u8; 3],
     pub seconds: f32,
+    #[serde(default)]
+    pub easing: Easing,
+    #[serde(default)]
+    pub keyframes: Vec<Keyframe>,
+}
+impl Default for Effect {
+    fn default() -> Self {
+        Self {
+            pattern: Pattern::Gradient,
+            first: [83, 129, 255],
+            second: [242, 153, 117],
+            seconds: 8.0,
+            easing: Easing::Smooth,
+            keyframes: vec![
+                Keyframe {
+                    at: 0.0,
+                    color: [83, 129, 255],
+                },
+                Keyframe {
+                    at: 0.5,
+                    color: [242, 153, 117],
+                },
+            ],
+        }
+    }
 }
 impl Effect {
     pub fn valid(&self) -> bool {
-        self.seconds.is_finite() && (4.0..=30.0).contains(&self.seconds)
+        self.seconds.is_finite()
+            && (4.0..=30.0).contains(&self.seconds)
+            && self.keyframes.len() <= 8
+            && (self.pattern != Pattern::Timeline
+                || (self.keyframes.len() >= 2 && self.keyframes[0].at == 0.0))
+            && self
+                .keyframes
+                .iter()
+                .all(|k| k.at.is_finite() && (0.0..=0.98).contains(&k.at))
+            && self.keyframes.windows(2).all(|w| w[1].at - w[0].at >= 0.02)
     }
     pub fn color(&self, elapsed: std::time::Duration) -> [u8; 3] {
         let phase =
@@ -47,7 +100,58 @@ impl Effect {
                 let index = segment.floor() as usize;
                 blend(colors[index], colors[index + 1], segment.fract())
             }
+            Pattern::Timeline => {
+                if !self.valid() {
+                    return self.first;
+                }
+                let index = self
+                    .keyframes
+                    .iter()
+                    .rposition(|k| f64::from(k.at) <= phase)
+                    .unwrap_or(0);
+                let a = &self.keyframes[index];
+                let (end, color) = self
+                    .keyframes
+                    .get(index + 1)
+                    .map_or((1.0, self.keyframes[0].color), |b| {
+                        (f64::from(b.at), b.color)
+                    });
+                let mut t = (phase - f64::from(a.at)) / (end - f64::from(a.at));
+                if self.easing == Easing::Smooth {
+                    t = (1.0 - (t * std::f64::consts::PI).cos()) * 0.5;
+                }
+                blend(a.color, color, t)
+            }
         }
+    }
+}
+
+#[cfg(test)]
+mod timeline_tests {
+    use super::*;
+    #[test]
+    fn cyclic_timeline_is_continuous_and_rejects_hostile_points() {
+        let mut e = Effect {
+            pattern: Pattern::Timeline,
+            ..Effect::default()
+        };
+        assert!(e.valid());
+        assert_eq!(
+            e.color(std::time::Duration::from_secs(4)),
+            e.keyframes[1].color
+        );
+        assert_eq!(
+            e.color(std::time::Duration::from_secs(8)),
+            e.keyframes[0].color
+        );
+        assert_eq!(
+            e.color(std::time::Duration::from_millis(7999)),
+            e.keyframes[0].color
+        );
+        e.keyframes[1].at = 0.0;
+        assert!(!e.valid());
+        e.keyframes[1].at = f32::NAN;
+        assert!(!e.valid());
     }
 }
 fn blend(a: [u8; 3], b: [u8; 3], t: f64) -> [u8; 3] {
@@ -64,6 +168,7 @@ mod tests {
             first: [255, 0, 0],
             second: [0, 0, 255],
             seconds: 8.0,
+            ..Default::default()
         };
         assert_eq!(e.color(std::time::Duration::ZERO), e.first);
         assert_eq!(e.color(std::time::Duration::from_secs(4)), e.second);
@@ -77,6 +182,7 @@ mod tests {
             first: [0; 3],
             second: [0; 3],
             seconds: 6.0,
+            ..Default::default()
         };
         assert!(e.valid());
         assert_eq!(e.color(std::time::Duration::from_secs(1)), [255, 255, 0]);

@@ -36,6 +36,7 @@ fn run() -> Result<()> {
         first: before.rgb,
         second: [0, 0, 255],
         seconds: 4.0,
+        ..Default::default()
     })))?;
     let mut frames = 0;
     let mut last_frame = None;

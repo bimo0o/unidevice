@@ -22,6 +22,7 @@ pub struct DeviceRow {
     pub eligible: bool,
     pub reason: String,
     pub demo: bool,
+    pub package: Option<crate::compatibility::Pack>,
     token: Option<DeviceToken>,
 }
 
@@ -34,6 +35,28 @@ pub struct Capabilities {
     pub rgb_control: bool,
     pub dpi_source: String,
 }
+impl DeviceRow {
+    pub fn identity(&self) -> Option<(u16, u16)> {
+        self.token.as_ref().map(|t| (t.vid, t.pid))
+    }
+    fn same_device(&self, other: &Self) -> bool {
+        match (&self.token, &other.token) {
+            (Some(a), Some(b)) => a.path == b.path,
+            (None, None) => self.title == other.title,
+            _ => false,
+        }
+    }
+}
+impl Capabilities {
+    pub fn passport(&self) -> crate::passport::Passport {
+        crate::passport::Passport::for_caps(self.demo, self.rgb_control, &self.dpi_source)
+    }
+    fn narrow(&mut self, row: &DeviceRow) {
+        if let Some(max) = row.package.as_ref().and_then(|p| p.max_dpi) {
+            self.values.retain(|v| *v <= max);
+        }
+    }
+}
 
 pub enum Command {
     Scan,
@@ -43,6 +66,12 @@ pub enum Command {
     Effect(Option<crate::effects::Effect>),
     Demo,
     Diagnostic(DeviceRow),
+    SceneStart(Vec<SceneSelection>, crate::effects::Effect),
+    SceneStop,
+    Transfer {
+        dpi: Option<u16>,
+        rgb: Option<[u8; 3]>,
+    },
 }
 
 pub enum Event {
@@ -52,6 +81,93 @@ pub enum Event {
     Diagnostic(Result<String>),
     Effect(Result<bool>),
     Frame([u8; 3]),
+    Scene(Result<Vec<SceneStatus>>),
+    SceneFrame(Vec<SceneStatus>),
+    Transfer(Result<(Capabilities, Vec<String>)>),
+}
+
+#[derive(Clone)]
+pub struct SceneSelection {
+    pub row: DeviceRow,
+    pub brightness: f32,
+    pub phase_ms: i32,
+}
+#[derive(Clone, Debug)]
+pub struct SceneStatus {
+    pub name: String,
+    pub color: [u8; 3],
+    pub dpi: u16,
+}
+struct SceneController {
+    members: Vec<(SceneSelection, Backend)>,
+}
+impl SceneController {
+    fn start(selections: Vec<SceneSelection>, effect: crate::effects::Effect) -> Result<Self> {
+        if selections.is_empty() || selections.len() > 8 || !effect.valid() {
+            return Err(Error::Invalid(
+                "select 1..8 RGB targets and a valid effect".into(),
+            ));
+        }
+        let mut members: Vec<(SceneSelection, Backend)> = Vec::new();
+        for s in selections {
+            if !s.brightness.is_finite()
+                || !(0.0..=1.0).contains(&s.brightness)
+                || !(-500..=500).contains(&s.phase_ms)
+                || members
+                    .iter()
+                    .any(|(other, _)| s.row.same_device(&other.row))
+            {
+                return Err(Error::Invalid(
+                    "scene contains duplicate device or invalid compensation".into(),
+                ));
+            }
+            let mut b = Backend::default();
+            let caps = b.probe(&s.row)?;
+            if !caps.rgb_control {
+                return Err(Error::Unsupported(format!(
+                    "{} has no verified RGB adapter",
+                    s.row.title
+                )));
+            }
+            b.effect(Some(effect.clone()))?;
+            members.push((s, b));
+        }
+        let epoch = std::time::Instant::now();
+        for (_, b) in &mut members {
+            b.animation.as_mut().unwrap().1 = epoch;
+        }
+        Ok(Self { members })
+    }
+    fn statuses(&self) -> Vec<SceneStatus> {
+        self.members
+            .iter()
+            .filter_map(|(s, b)| {
+                b.caps().map(|c| SceneStatus {
+                    name: s.row.title.clone(),
+                    color: c.rgb,
+                    dpi: c.current_dpi,
+                })
+            })
+            .collect()
+    }
+    fn frame(&mut self) -> Result<Vec<SceneStatus>> {
+        let (effect, epoch, _) = self.members[0]
+            .1
+            .animation
+            .as_ref()
+            .ok_or(Error::Safety("scene stopped".into()))?;
+        let effect = effect.clone();
+        let epoch = *epoch;
+        for (s, b) in &mut self.members {
+            let seconds = (epoch.elapsed().as_secs_f64() + f64::from(s.phase_ms) / 1000.0)
+                .rem_euclid(f64::from(effect.seconds));
+            let color = effect
+                .color(std::time::Duration::from_secs_f64(seconds))
+                .map(|v| (f32::from(v) * s.brightness).round() as u8);
+            b.render_frame(color)?;
+        }
+        Ok(self.statuses())
+    }
 }
 
 fn open_token(token: &DeviceToken) -> Result<NativeTransport> {
@@ -86,6 +202,7 @@ fn open_token(token: &DeviceToken) -> Result<NativeTransport> {
 
 fn scan() -> Result<Vec<DeviceRow>> {
     let api = device::enumerate()?;
+    let packages = crate::compatibility::installed();
     let mut rows = Vec::new();
     for d in api.device_list() {
         if (d.vendor_id(), d.product_id()) == (0x1b1c, 0x1b75)
@@ -100,7 +217,13 @@ fn scan() -> Result<Vec<DeviceRow>> {
             continue;
         }
         let known = device::label(d.vendor_id(), d.product_id());
-        let title = if known.starts_with("Unknown") {
+        let package = packages
+            .iter()
+            .find(|p| p.matches(d.vendor_id(), d.product_id()))
+            .cloned();
+        let title = if let Some(pack) = &package {
+            pack.name.clone()
+        } else if known.starts_with("Unknown") {
             d.product_string()
                 .unwrap_or("HID-устройство")
                 .chars()
@@ -165,6 +288,7 @@ fn scan() -> Result<Vec<DeviceRow>> {
             eligible,
             reason,
             demo: false,
+            package,
             token: Some(DeviceToken {
                 path: d.path().to_owned(),
                 vid: d.vendor_id(),
@@ -180,14 +304,19 @@ fn scan() -> Result<Vec<DeviceRow>> {
 }
 
 pub fn demo_rows() -> Vec<DeviceRow> {
-    vec![DeviceRow {
+    let first = DeviceRow {
         title: "Demo Mouse".into(),
         detail: "Демонстрация · DPI и палитра".into(),
         eligible: true,
         reason: "Все изменения остаются внутри приложения.".into(),
         demo: true,
+        package: None,
         token: None,
-    }]
+    };
+    let mut second = first.clone();
+    second.title = "Demo Mouse 2".into();
+    second.detail = "Второе независимое RGB-устройство".into();
+    vec![first, second]
 }
 
 enum Active {
@@ -208,6 +337,13 @@ struct Backend {
     animation: Option<(crate::effects::Effect, std::time::Instant, u8)>,
 }
 impl Backend {
+    fn caps(&self) -> Option<&Capabilities> {
+        match self.active.as_ref()? {
+            Active::Harpoon { caps, .. } | Active::Real { caps, .. } | Active::Demo(caps) => {
+                Some(caps)
+            }
+        }
+    }
     fn effect(&mut self, effect: Option<crate::effects::Effect>) -> Result<bool> {
         self.animation = None;
         let Some(effect) = effect else {
@@ -232,9 +368,18 @@ impl Backend {
     fn frame(&mut self) -> Result<[u8; 3]> {
         let (effect, start, stage) = self
             .animation
+            .clone()
             .ok_or(Error::Safety("animation is stopped".into()))?;
+        let _ = stage;
+        self.render_frame(effect.color(start.elapsed()))
+    }
+    fn render_frame(&mut self, color: [u8; 3]) -> Result<[u8; 3]> {
+        let stage = self
+            .animation
+            .as_ref()
+            .ok_or(Error::Safety("animation is stopped".into()))?
+            .2;
         let result = (|| {
-            let color = effect.color(start.elapsed());
             match self.active.as_mut() {
                 Some(Active::Harpoon { session, caps }) => {
                     let state = session.set_rgb_expected(color, Some(stage))?;
@@ -256,7 +401,7 @@ impl Backend {
     fn probe(&mut self, row: &DeviceRow) -> Result<Capabilities> {
         self.active = None;
         if row.demo {
-            let caps = Capabilities {
+            let mut caps = Capabilities {
                 current_dpi: 800,
                 values: vec![400, 800, 1200, 1600, 2400, 3200, 6400],
                 demo: true,
@@ -264,6 +409,7 @@ impl Backend {
                 rgb_control: true,
                 dpi_source: "значения симулятора".into(),
             };
+            caps.narrow(row);
             self.active = Some(Active::Demo(caps.clone()));
             return Ok(caps);
         }
@@ -290,7 +436,7 @@ impl Backend {
                     d.open_device(&api).map_err(|_| Error::Access)?,
                 )?)?;
             let state = session.state()?;
-            let caps = Capabilities {
+            let mut caps = Capabilities {
                 current_dpi: state.x,
                 values: (100..=12000).step_by(100).collect(),
                 demo: false,
@@ -298,6 +444,7 @@ impl Backend {
                 rgb_control: true,
                 dpi_source: "диапазон приложения: 100–12000, шаг 100".into(),
             };
+            caps.narrow(row);
             self.active = Some(Active::Harpoon {
                 session,
                 caps: caps.clone(),
@@ -316,7 +463,7 @@ impl Backend {
                 "no DPI values inside the application policy".into(),
             ));
         }
-        let caps = Capabilities {
+        let mut caps = Capabilities {
             current_dpi: session.read_dpi()?,
             values,
             demo: false,
@@ -324,6 +471,12 @@ impl Backend {
             rgb_control: false,
             dpi_source: "значения получены от устройства".into(),
         };
+        caps.narrow(row);
+        if caps.values.is_empty() {
+            return Err(Error::Unsupported(
+                "package excluded every advertised DPI".into(),
+            ));
+        }
         self.active = Some(Active::Real {
             session,
             caps: caps.clone(),
@@ -467,17 +620,28 @@ impl Worker {
             .name("unidevice-hid".into())
             .spawn(move || {
                 let mut backend = Backend::default();
+                let mut scene: Option<SceneController> = None;
                 let mut frame_wait = std::time::Duration::from_millis(16);
                 loop {
-                    let command = if backend.animation.is_some() {
+                    let command = if backend.animation.is_some() || scene.is_some() {
                         match receiver.recv_timeout(frame_wait) {
                             Ok(command) => command,
                             Err(mpsc::RecvTimeoutError::Disconnected) => break,
                             Err(mpsc::RecvTimeoutError::Timeout) => {
                                 let started = std::time::Instant::now();
-                                let event = match backend.frame() {
-                                    Ok(color) => Event::Frame(color),
-                                    Err(e) => Event::Effect(Err(e)),
+                                let event = if let Some(controller) = scene.as_mut() {
+                                    match controller.frame() {
+                                        Ok(status) => Event::SceneFrame(status),
+                                        Err(e) => {
+                                            scene = None;
+                                            Event::Scene(Err(e))
+                                        }
+                                    }
+                                } else {
+                                    match backend.frame() {
+                                        Ok(color) => Event::Frame(color),
+                                        Err(e) => Event::Effect(Err(e)),
+                                    }
                                 };
                                 frame_wait = std::time::Duration::from_millis(16)
                                     .saturating_sub(started.elapsed())
@@ -498,7 +662,36 @@ impl Worker {
                     if !matches!(command, Command::Effect(_)) {
                         backend.animation = None;
                     }
+                    scene = None;
                     let event = match command {
+                        Command::SceneStop => Event::Scene(Ok(Vec::new())),
+                        Command::Transfer { dpi, rgb } => Event::Transfer((|| {
+                            if dpi.is_none() && rgb.is_none() {
+                                return Err(Error::Invalid("no compatible fields to apply".into()));
+                            }
+                            let mut applied = Vec::new();
+                            if let Some(dpi) = dpi {
+                                backend.apply(dpi)?;
+                                applied.push(format!("DPI {dpi}"));
+                            }
+                            if let Some(rgb) = rgb {
+                                backend.rgb(rgb)?;
+                                applied.push("RGB".into());
+                            }
+                            Ok((backend.caps().cloned().ok_or(Error::NotFound)?, applied))
+                        })(
+                        )),
+                        Command::SceneStart(selections, effect) => {
+                            backend.active = None;
+                            match SceneController::start(selections, effect) {
+                                Ok(controller) => {
+                                    let status = controller.statuses();
+                                    scene = Some(controller);
+                                    Event::Scene(Ok(status))
+                                }
+                                Err(e) => Event::Scene(Err(e)),
+                            }
+                        }
                         Command::Effect(effect) => Event::Effect(backend.effect(effect)),
                         Command::Scan => {
                             backend.active = None;
@@ -561,6 +754,60 @@ pub fn user_error(error: &Error) -> String {
 mod tests {
     use super::*;
     #[test]
+    fn scene_uses_one_clock_and_rejects_duplicate_targets_before_writes() {
+        let rows = demo_rows();
+        let selections: Vec<_> = rows
+            .iter()
+            .cloned()
+            .map(|row| SceneSelection {
+                row,
+                brightness: 1.0,
+                phase_ms: 0,
+            })
+            .collect();
+        let mut scene =
+            SceneController::start(selections, crate::effects::Effect::default()).unwrap();
+        assert_eq!(
+            scene.members[0].1.animation.as_ref().unwrap().1,
+            scene.members[1].1.animation.as_ref().unwrap().1
+        );
+        let statuses = scene.frame().unwrap();
+        assert_eq!(statuses.len(), 2);
+        assert_eq!(statuses[0].dpi, 800);
+        assert_eq!(statuses[0].color, statuses[1].color);
+        let duplicate = SceneSelection {
+            row: rows[0].clone(),
+            brightness: 1.0,
+            phase_ms: 0,
+        };
+        assert!(SceneController::start(
+            vec![duplicate.clone(), duplicate],
+            crate::effects::Effect::default()
+        )
+        .is_err());
+        scene.members[1].1.active = None;
+        assert!(scene.frame().is_err());
+    }
+    #[test]
+    fn imported_pack_can_only_narrow_runtime_values() {
+        let mut row = demo_rows().remove(0);
+        row.package = Some(crate::compatibility::Pack {
+            version: 1,
+            id: "limit".into(),
+            name: "Limited mouse".into(),
+            adapter: crate::compatibility::Adapter::Hidpp2,
+            vid: 0x046d,
+            pids: vec![1],
+            max_dpi: Some(1200),
+            evidence: "local".into(),
+            sources: vec![],
+        });
+        let mut backend = Backend::default();
+        let caps = backend.probe(&row).unwrap();
+        assert_eq!(caps.values, vec![400, 800, 1200]);
+        assert!(backend.apply(1600).is_err());
+    }
+    #[test]
     fn effects_require_start_stop_cancels_frames_and_fault_ends_animation() {
         let mut b = Backend::default();
         b.probe(&demo_rows()[0]).unwrap();
@@ -570,13 +817,14 @@ mod tests {
             first: [255, 0, 0],
             second: [0, 0, 255],
             seconds: 4.0,
+            ..Default::default()
         };
-        assert!(b.effect(Some(effect)).unwrap());
+        assert!(b.effect(Some(effect.clone())).unwrap());
         assert!(b.frame().is_ok());
         assert!(!b.effect(None).unwrap());
         assert!(b.frame().is_err());
         assert_eq!(b.apply(1600).unwrap().current_dpi, 1600);
-        b.effect(Some(effect)).unwrap();
+        b.effect(Some(effect.clone())).unwrap();
         b.active = None;
         assert!(b.frame().is_err());
         assert!(b.animation.is_none());
@@ -596,6 +844,7 @@ mod tests {
             first: [0; 3],
             second: [0; 3],
             seconds: 6.0,
+            ..Default::default()
         })))
         .unwrap();
         assert!(matches!(

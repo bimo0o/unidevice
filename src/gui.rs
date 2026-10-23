@@ -1,9 +1,9 @@
 use crate::desktop::{self, Capabilities, Command, DeviceRow, Event, Worker};
-use crate::device::Model;
-use crate::profile::Profile;
 use eframe::egui::{self, Color32, RichText, Stroke, Vec2};
 use std::path::PathBuf;
 use std::sync::Arc;
+#[path = "workbench.rs"]
+mod workbench;
 
 const ACCENT: Color32 = Color32::from_rgb(74, 105, 235);
 const INK: Color32 = Color32::from_rgb(30, 39, 60);
@@ -16,7 +16,7 @@ pub fn run(demo: bool, capture: Option<PathBuf>) -> eframe::Result {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([1080.0, 760.0])
             .with_min_inner_size([900.0, 660.0])
-            .with_title("UniDevice"),
+            .with_title("UniDevice 0.3 · Studio"),
         renderer: eframe::Renderer::Glow,
         persist_window: false,
         ..Default::default()
@@ -39,9 +39,13 @@ enum Action {
     Diagnostic,
     StartEffect,
     StopEffect,
+    Transfer,
+    StartScene,
+    StopScene,
 }
 
 pub struct DesktopApp {
+    tools: workbench::Workbench,
     worker: Worker,
     rows: Vec<DeviceRow>,
     selected: Option<usize>,
@@ -92,6 +96,7 @@ impl DesktopApp {
         let worker = Worker::start(Arc::new(move || wake_ctx.request_repaint()))?;
         worker.send(if demo { Command::Demo } else { Command::Scan })?;
         Ok(Self {
+            tools: workbench::Workbench::default(),
             worker,
             rows: Vec::new(),
             selected: None,
@@ -133,7 +138,59 @@ impl DesktopApp {
         while let Ok(event) = self.worker.events.try_recv() {
             self.busy = false;
             match event {
+                Event::Scene(result) => {
+                    self.effect_running = false;
+                    self.caps = None;
+                    match result {
+                        Ok(status) => {
+                            self.tools.scene_running = !status.is_empty();
+                            self.tools.scene_status = status;
+                            self.notice = if self.tools.scene_running {
+                                "Общая сцена запущена. Для ручной настройки остановите её и выберите устройство заново.".into()
+                            } else {
+                                "Сцена остановлена. Последние цвета остаются на устройствах.".into()
+                            };
+                            self.failed = false;
+                        }
+                        Err(e) => {
+                            self.tools.scene_running = false;
+                            self.tools.scene_status.clear();
+                            self.failed = true;
+                            self.notice = desktop::user_error(&e);
+                        }
+                    }
+                }
+                Event::SceneFrame(status) => {
+                    self.tools.scene_status = status;
+                }
+                Event::Transfer(result) => {
+                    self.effect_running = false;
+                    self.tools.scene_running = false;
+                    match result {
+                        Ok((caps, fields)) => {
+                            self.requested = caps.current_dpi;
+                            self.color = caps.rgb;
+                            self.caps = Some(caps);
+                            self.notice = format!(
+                                "Перенесено: {}. Эффект не запускается автоматически.",
+                                fields.join(", ")
+                            );
+                            self.failed = false;
+                        }
+                        Err(e) => {
+                            self.caps = None;
+                            self.failed = true;
+                            self.notice = format!(
+                                "Перенос остановлен; часть настроек могла примениться. {}",
+                                desktop::user_error(&e)
+                            );
+                        }
+                    }
+                }
                 Event::Devices(result) => {
+                    self.tools.scene_running = false;
+                    self.tools.scene_status.clear();
+                    self.tools.choices.clear();
                     self.effect_running = false;
                     self.caps = None;
                     self.selected = None;
@@ -153,7 +210,9 @@ impl DesktopApp {
                                 .filter(|(_, r)| r.eligible)
                                 .map(|(i, _)| i)
                                 .collect();
-                            if candidates.len() == 1 {
+                            if self.demo && !self.rows.is_empty() {
+                                self.action(Action::Probe(0));
+                            } else if candidates.len() == 1 {
                                 self.action(Action::Probe(candidates[0]));
                             } else if self.rows.len() == 1 {
                                 self.selected = Some(0);
@@ -167,6 +226,7 @@ impl DesktopApp {
                     }
                 }
                 Event::Ready(result) | Event::Applied(result) => {
+                    self.tools.scene_running = false;
                     self.effect_running = false;
                     match result {
                         Ok(caps) => {
@@ -213,6 +273,7 @@ impl DesktopApp {
                     }
                 }
                 Event::Diagnostic(result) => {
+                    self.tools.scene_running = false;
                     self.effect_running = false;
                     match result {
                         Ok(name) => {
@@ -234,13 +295,32 @@ impl DesktopApp {
             return;
         }
         match action {
-            Action::StartEffect => self.send(Command::Effect(Some(crate::effects::Effect {
-                pattern: self.pattern,
-                first: self.color,
-                second: self.second_color,
-                seconds: self.effect_seconds,
-            }))),
+            Action::StartEffect => self.send(Command::Effect(Some(self.effect_draft()))),
             Action::StopEffect => self.send(Command::Effect(None)),
+            Action::StartScene => {
+                let targets = self
+                    .rows
+                    .iter()
+                    .zip(self.tools.choices.iter())
+                    .filter(|(_, c)| c.selected)
+                    .map(|(row, c)| desktop::SceneSelection {
+                        row: row.clone(),
+                        brightness: c.brightness,
+                        phase_ms: c.phase_ms,
+                    })
+                    .collect();
+                self.send(Command::SceneStart(targets, self.effect_draft()));
+            }
+            Action::StopScene => self.send(Command::SceneStop),
+            Action::Transfer => {
+                if let (Some(profile), Some(caps)) = (&self.tools.loaded, &self.caps) {
+                    self.send(Command::Transfer {
+                        dpi: (profile.dpi.is_some() && caps.values.contains(&self.requested))
+                            .then_some(self.requested),
+                        rgb: if caps.rgb_control { profile.rgb } else { None },
+                    });
+                }
+            }
             Action::Scan => {
                 self.demo = false;
                 self.caps = None;
@@ -278,42 +358,7 @@ impl DesktopApp {
                 }
             }
             Action::Save | Action::Load => {
-                let result = (|| -> crate::error::Result<String> {
-                    let path = profile_path(&self.profile_name)?;
-                    if matches!(action, Action::Save) {
-                        if self.caps.is_none() {
-                            return Err(crate::error::Error::Invalid("no capabilities".into()));
-                        }
-                        std::fs::create_dir_all(path.parent().unwrap()).map_err(|_| {
-                            crate::error::Error::Io("cannot create profiles folder".into())
-                        })?;
-                        Profile {
-                            version: 1,
-                            model: Model::Auto,
-                            dpi: Some(self.requested),
-                            rgb: None,
-                            zone: None,
-                        }
-                        .save(&path)?;
-                        Ok("Профиль DPI сохранён в папке profiles рядом с приложением.".into())
-                    } else {
-                        let profile = Profile::load(&path)?;
-                        let value = profile
-                            .dpi
-                            .ok_or(crate::error::Error::Unsupported("not a DPI profile".into()))?;
-                        if !self
-                            .caps
-                            .as_ref()
-                            .is_some_and(|c| c.values.contains(&value))
-                        {
-                            return Err(crate::error::Error::Unsupported(
-                                "DPI not advertised".into(),
-                            ));
-                        }
-                        self.requested = value;
-                        Ok("Профиль загружен в интерфейс. Устройство изменится только по кнопке «Применить».".into())
-                    }
-                })();
+                let result = self.transfer_file(matches!(action, Action::Save));
                 match result {
                     Ok(text) => {
                         self.notice = text;
@@ -447,7 +492,10 @@ impl DesktopApp {
             ui.add_space(5.0);
             ui.label(RichText::new(if self.demo {"ДЕМО · никакие команды устройствам не отправляются"} else {"Изменения — только по вашему действию"}).size(12.0).color(if self.demo {ACCENT}else{MUTED}));
             ui.add_space(18.0);
+            ui.horizontal_wrapped(|ui|{for page in [workbench::Page::Device,workbench::Page::Scene,workbench::Page::Profiles,workbench::Page::Sensitivity,workbench::Page::Compatibility]{ui.selectable_value(&mut self.tools.page,page,page.label());}});
+            ui.add_space(12.0);
             egui::ScrollArea::vertical().show(ui,|ui| {
+                if self.tools.page!=workbench::Page::Device {self.workbench_ui(ui,&mut action);return;}
                 let Some(row)=self.selected.and_then(|i|self.rows.get(i)).cloned() else {
                     card().show(ui,|ui| {
                         ui.add_space(24.0);
@@ -530,12 +578,13 @@ impl DesktopApp {
                     ui.label(RichText::new(if caps.as_ref().is_some_and(|c|c.demo) {"Изменяется только демонстрационная мышь."} else if caps.as_ref().is_some_and(|c|c.rgb_control) {"Цвет активной ступени DPI. Без команды сохранения во встроенную память."} else {"Управление цветом для этого устройства недоступно."}).size(12.0).color(MUTED));
                     ui.add_space(6.0);
                     egui::ComboBox::from_id_salt("effect-pattern").selected_text(self.pattern.label()).show_ui(ui,|ui| {
-                        for pattern in [crate::effects::Pattern::Gradient,crate::effects::Pattern::Breathing,crate::effects::Pattern::Rainbow] {ui.selectable_value(&mut self.pattern,pattern,pattern.label());}
+                        for pattern in [crate::effects::Pattern::Gradient,crate::effects::Pattern::Breathing,crate::effects::Pattern::Rainbow,crate::effects::Pattern::Timeline] {ui.selectable_value(&mut self.pattern,pattern,pattern.label());}
                     });
                     if self.pattern==crate::effects::Pattern::Gradient {
                         ui.horizontal(|ui|{ui.label("Второй цвет:");ui.color_edit_button_srgb(&mut self.second_color);});
                     }
                     ui.add(egui::Slider::new(&mut self.effect_seconds,4.0..=30.0).suffix(" с / цикл"));
+                    self.timeline_ui(ui);
                     ui.horizontal(|ui| {
                         if ui.add_enabled(enabled&&!self.effect_running,egui::Button::new("Запустить эффект")).clicked(){action=Some(Action::StartEffect);}
                         if ui.add_enabled(self.effect_running&&!self.busy,egui::Button::new("Остановить")).clicked(){action=Some(Action::StopEffect);}
@@ -546,7 +595,7 @@ impl DesktopApp {
                 ui.add_space(14.0);
                 card().show(ui,|ui| {
                     ui.horizontal(|ui| {
-                        ui.label(RichText::new("Профиль DPI").strong());
+                        ui.label(RichText::new("Переносимый профиль").strong());
                         ui.add(egui::TextEdit::singleline(&mut self.profile_name).desired_width(140.0));
                         if ui.add_enabled(caps.is_some()&&!self.busy,egui::Button::new("Сохранить")).clicked(){action=Some(Action::Save);}
                         if ui.add_enabled(caps.is_some()&&!self.busy,egui::Button::new("Загрузить")).clicked(){action=Some(Action::Load);}
@@ -584,6 +633,7 @@ impl DesktopApp {
 impl eframe::App for DesktopApp {
     fn update(&mut self, ctx: &egui::Context, _: &mut eframe::Frame) {
         self.poll();
+        self.process_raw_motion(ctx);
         self.ui(ctx);
         if let Some(path) = self.capture.clone() {
             let screenshot = ctx.input(|i| {

@@ -249,3 +249,20 @@ build passed. Files: corsair.rs, desktop.rs, bounded probe/benchmark examples,
 specs and reports/rgb-pacing-windows.json. No new device commands, no removed
 checks, no firmware/reset/flash/profile writes. Other hardware timings unverified.
 User confirmed the updated animation is smooth and visually pleasing.
+
+## Change 16 — Studio feature foundation and UI
+
+Implements selected features 1,2,3,4,6,7,8; per-application automation excluded.
+Adds strict local compatibility packs constrained to compiled adapters, evidence
+passports, portable DPI/RGB/effect/feel profiles with explicit compatible-field
+apply, sensitivity and cm/360 calculators, experimental aggregate raw-motion
+measurement without input history, cyclic 2–8-keyframe effects, and shared scenes.
+Scenes probe every target before first write and share one Instant; per-device
+brightness/phase correction, duplicate rejection and fail-stop behavior. Two demo
+mice are independent targets. Import cannot introduce arbitrary commands or lift
+firmware gates. No new HID command, manufacturer SDK, network or dependency added.
+Checks: 49 library + 4 CLI tests passed; all-target GUI Clippy -D warnings passed.
+Limits: physical multi-device/multi-brand sync not yet verified; raw-motion units
+are OS/driver-dependent estimates. Compatibility publisher signatures/network
+updates are not implemented; imports are explicitly untrusted local metadata.
+Next: full UI visual QA, bounded Studio hardware regression and portable release.

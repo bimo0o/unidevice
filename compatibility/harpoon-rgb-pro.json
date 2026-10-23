@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "id": "harpoon-rgb-pro",
+  "name": "Corsair Harpoon RGB PRO",
+  "adapter": "harpoon313",
+  "vid": 6940,
+  "pids": [7029],
+  "max_dpi": 12000,
+  "evidence": "Project hardware test: firmware 3.13, DPI and RGB; see reports/rgb-pacing-windows.json. Imported claims never unlock firmware or commands.",
+  "sources": ["https://github.com/bimo0o/unidevice"]
+}
