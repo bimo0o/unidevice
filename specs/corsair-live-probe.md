@@ -33,3 +33,19 @@ blocked until its model-specific mapping/transport is established.
 
 This independently worded note attributes the protocol documentation above and
 is distributed under CC BY-SA 4.0, matching the existing Corsair research note.
+
+## Actual Harpoon read-only results
+
+Firmware 3.13, bootloader 3.05. Feature/input/output: unnumbered 64 bytes.
+Queries above all returned correctly correlated 65-byte hidapi replies. Stage 1,
+mask 03, stage DPI (LE): 400,1000,1500,3000,6000,9000. Stage 1 payload bytes
+4..11: `00 e8 03 e8 03 ff 00 00`. Current-stage reply bytes 5+ contain stale
+identity data: DO NOT interpret those bytes as DPI on Harpoon. Read the selected
+stage instead. Identity continuation does NOT match the wiki's example lighting
+capability layout, so no lighting-zone inference is permitted.
+
+Next authorized physical experiment: only rewrite active stage 1, 1000 -> 800,
+preserving XY flag and RGB; verify stage readback and restore 1000 explicitly if
+the test succeeded. Test stage RGB separately, preserving DPI; its visible effect
+is not assumed. Setter implementation is initially gated to 1B75 firmware 0313.
+Only explicit user applies in GUI, no automatic restore/reapply in the product.
