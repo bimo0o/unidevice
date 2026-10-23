@@ -1,0 +1,22 @@
+{
+  "device": "Corsair Harpoon RGB PRO",
+  "vid": "1B1C",
+  "pid": "1B75",
+  "firmware": "3.13",
+  "date": "2026-10-23",
+  "platform": "Windows x64",
+  "mode": "debug build, real desktop worker, 120 verified gradient frames",
+  "read_only_calibration": [
+    {"packet_gap_ms": 2, "requests": 301, "matched": 301, "elapsed_ms": 1188},
+    {"packet_gap_ms": 1, "requests": 301, "matched": 301, "elapsed_ms": 868}
+  ],
+  "verified_frame_tests": [
+    {"packet_gap_ms": 2, "post_frame_wait_ms": 16, "frames": 120, "fps": 16.63, "mean_ms": 60.11, "p95_ms": 63.95, "max_ms": 68.07},
+    {"packet_gap_ms": 1, "minimum_post_frame_wait_ms": 4, "minimum_frame_interval_ms": 16, "frames": 120, "fps": 31.52, "mean_ms": 31.73, "p95_ms": 42.24, "max_ms": 48.98}
+  ],
+  "checks_removed": [],
+  "stop_silence_verified_ms": 700,
+  "restored_dpi": 1200,
+  "restored_rgb": [83, 129, 255],
+  "other_firmware_verified": false
+}

@@ -30,7 +30,7 @@ impl FeatureIo for NativeFeature {
         self.0
             .send_feature_report(report)
             .map_err(|_| Error::Disconnected)?;
-        std::thread::sleep(std::time::Duration::from_millis(20));
+        std::thread::sleep(std::time::Duration::from_millis(1));
         Ok(())
     }
     fn receive(&mut self) -> Result<[u8; 65]> {

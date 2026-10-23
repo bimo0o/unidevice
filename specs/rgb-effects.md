@@ -11,9 +11,11 @@ blocked. Single-zone effects are temporal, not spatial gradients.
 
 Effect engine: static, two-color cosine blend, breathing, rainbow. Pure deterministic
 color computation from monotonic elapsed time and cycle length 4..30 seconds.
-One serialized worker owns the HID session and animation. Wait at least 250 ms
-AFTER a completed frame before another; never catch up on late frames. Existing
-verified transaction costs about 200 ms, so actual rate is below 4 setter/s.
+One serialized worker owns the HID session and animation. Initial 250ms post-frame
+pacing was replaced after physical measurements: 1ms per packet, at least 4ms
+after a completed frame, and a 16ms minimum frame-start interval. Never catch up
+on late frames. All pre-write snapshots and post-write readbacks retained.
+Measured 31.52fps for 120 verified frames on Harpoon 3.13. See rgb-smooth-pacing.md.
 
 Stop, DPI apply, static RGB apply, scan, selection, demo switch and shutdown cancel
 the effect before further work. Any I/O/readback/state error latches control and

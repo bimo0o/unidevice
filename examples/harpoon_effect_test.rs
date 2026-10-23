@@ -38,7 +38,9 @@ fn run() -> Result<()> {
         seconds: 4.0,
     })))?;
     let mut frames = 0;
-    while frames < 12 {
+    let mut last_frame = None;
+    let mut intervals = Vec::new();
+    while frames < 120 {
         match worker
             .events
             .recv_timeout(Duration::from_secs(5))
@@ -48,12 +50,27 @@ fn run() -> Result<()> {
                 result?;
             }
             Event::Frame(color) => {
+                let now = std::time::Instant::now();
+                if let Some(previous) = last_frame {
+                    intervals.push(now.duration_since(previous).as_secs_f64() * 1000.0);
+                }
+                last_frame = Some(now);
                 frames += 1;
-                println!("frame {frames}: {color:?}");
+                if frames % 20 == 0 {
+                    println!("frame {frames}: {color:?}");
+                }
             }
             _ => return Err(Error::Protocol("unexpected animation event".into())),
         }
     }
+    intervals.sort_by(f64::total_cmp);
+    let mean = intervals.iter().sum::<f64>() / intervals.len() as f64;
+    println!(
+        "verified_frames={frames} mean_ms={mean:.2} fps={:.2} p95_ms={:.2} max_ms={:.2}",
+        1000.0 / mean,
+        intervals[intervals.len() * 95 / 100],
+        intervals.last().unwrap()
+    );
     worker.send(Command::Effect(None))?;
     loop {
         match worker

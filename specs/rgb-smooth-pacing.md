@@ -31,3 +31,9 @@ checks, perform a second READ-ONLY 301-query experiment at 1ms. Only if all
 replies correlate, use 1ms packet pacing and 4ms post-frame wait, then repeat
 the bounded full-frame test. The previous 62.5/sec theoretical setter ceiling
 remains: add a monotonic 16ms floor between completed frame starts if needed.
+
+Final measurement: 301/301 read-only requests at 1ms matched in 868ms. Then
+120/120 full frames passed at 31.52fps (mean 31.73ms, p95 42.24ms, max 48.98ms).
+No frame for 700ms after stop; original 1200 DPI / RGB [83,129,255] restored.
+Worker subtracts completed-frame duration from a 16ms floor, with >=4ms idle gap.
+Slow frames are never followed by catch-up bursts. No validation was removed.

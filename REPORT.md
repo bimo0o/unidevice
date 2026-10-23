@@ -234,3 +234,18 @@ frames read back successfully; stopped with no frame for 700ms; original 1200 DP
 and RGB [106,205,181] restored. This was the user's CURRENT state at test time.
 Limits: single-zone temporal gradient; conservative update rate (~2 frames/sec on
 this mouse), no spatial wave or cross-device sync. Other mice require their adapter.
+
+## Change 15 — Smooth verified animation pacing
+
+User reported severe visible stepping. Removed excessive packet/frame sleeps after
+physical calibration, keeping every pre-write snapshot and full post-write check.
+Read-only 301-query tests at 2ms and 1ms had zero correlation failures. First full
+120-frame test reached 16.63fps; final 1ms packet pacing and >=4ms post-frame gap
+reached 31.52fps (mean 31.73ms, p95 42.24ms, max 48.98ms). A monotonic 16ms
+frame floor prevents runaway frame rates; no catch-up bursts. Stop left no further
+frames for 700ms. Original 1200 DPI and RGB [83,129,255] restored after each test.
+All 43 library and 4 CLI tests passed; all-target GUI Clippy -D warnings and release
+build passed. Files: corsair.rs, desktop.rs, bounded probe/benchmark examples,
+specs and reports/rgb-pacing-windows.json. No new device commands, no removed
+checks, no firmware/reset/flash/profile writes. Other hardware timings unverified.
+User confirmed the updated animation is smooth and visually pleasing.

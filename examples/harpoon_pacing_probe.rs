@@ -4,7 +4,11 @@ use unidevice::{
     error::{Error, Result},
 };
 fn run() -> Result<()> {
-    let gap=match std::env::args().nth(1).as_deref(){None|Some("2")=>2,Some("1")=>1,_=>return Err(Error::Invalid("probe gap must be 1 or 2 ms".into()))};
+    let gap = match std::env::args().nth(1).as_deref() {
+        None | Some("2") => 2,
+        Some("1") => 1,
+        _ => return Err(Error::Invalid("probe gap must be 1 or 2 ms".into())),
+    };
     let api = device::enumerate()?;
     let mut matches = api.device_list().filter(|d| {
         (d.vendor_id(), d.product_id(), d.usage_page(), d.usage()) == (0x1b1c, 0x1b75, 0xffc2, 4)

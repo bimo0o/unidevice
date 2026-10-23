@@ -467,16 +467,21 @@ impl Worker {
             .name("unidevice-hid".into())
             .spawn(move || {
                 let mut backend = Backend::default();
+                let mut frame_wait = std::time::Duration::from_millis(16);
                 loop {
                     let command = if backend.animation.is_some() {
-                        match receiver.recv_timeout(std::time::Duration::from_millis(250)) {
+                        match receiver.recv_timeout(frame_wait) {
                             Ok(command) => command,
                             Err(mpsc::RecvTimeoutError::Disconnected) => break,
                             Err(mpsc::RecvTimeoutError::Timeout) => {
+                                let started = std::time::Instant::now();
                                 let event = match backend.frame() {
                                     Ok(color) => Event::Frame(color),
                                     Err(e) => Event::Effect(Err(e)),
                                 };
+                                frame_wait = std::time::Duration::from_millis(16)
+                                    .saturating_sub(started.elapsed())
+                                    .max(std::time::Duration::from_millis(4));
                                 if sender.send(event).is_err() {
                                     break;
                                 }
