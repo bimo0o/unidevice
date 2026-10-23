@@ -19,3 +19,15 @@ DPI. Do not restart old animation automatically or run two controller processes.
 
 If 2ms replies fail, retain slow pacing and investigate a documented RGB-only
 command from a model-specific capture. Do not guess a lighting-zone index.
+
+Read-only result on the user's Harpoon 3.13: 301/301 correctly correlated replies
+in 1188ms with requested 2ms gap; no setters. The user confirmed the old effect
+was stopped before measurement. Proceed to bounded verified-frame measurement.
+
+120 frames with 2ms packet gap and 16ms frame wait passed all state checks:
+16.63 fps, mean 60.11ms, p95 63.95ms, max 68.07ms. Stop verified, original
+1200 DPI / RGB [83,129,255] restored. To approach 30fps without dropping any
+checks, perform a second READ-ONLY 301-query experiment at 1ms. Only if all
+replies correlate, use 1ms packet pacing and 4ms post-frame wait, then repeat
+the bounded full-frame test. The previous 62.5/sec theoretical setter ceiling
+remains: add a monotonic 16ms floor between completed frame starts if needed.
