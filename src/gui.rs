@@ -431,8 +431,12 @@ impl DesktopApp {
                         ui.add_enabled_ui(!self.busy,|ui| {
                             let mut index=c.values.iter().position(|v|*v==self.requested).unwrap_or(0);
                             if ui.add(egui::Slider::new(&mut index,0..=c.values.len()-1).show_value(false)).changed(){self.requested=c.values[index];}
+                            ui.horizontal(|ui| {
+                                ui.label("Точное значение:");
+                                ui.add(egui::DragValue::new(&mut self.requested).range(100..=25600).speed(100.0).suffix(" DPI").update_while_editing(false));
+                            });
                             ui.horizontal_wrapped(|ui| {
-                                for value in [400,800,1200,1600,3200,6400].into_iter().filter(|v|c.values.contains(v)) {
+                                for value in [400,800,1000,1200,1600,2000,3000,4000,6400].into_iter().filter(|v|c.values.contains(v)) {
                                     if ui.selectable_label(self.requested==value,value.to_string()).clicked(){self.requested=value;}
                                 }
                             });
@@ -441,6 +445,7 @@ impl DesktopApp {
                         ui.label(RichText::new(format!("Сейчас: {} DPI · {}",c.current_dpi,c.dpi_source)).size(12.0).color(MUTED));
                         ui.add_space(8.0);
                         let enabled=!self.busy && self.requested!=c.current_dpi && c.values.contains(&self.requested);
+                        if !c.values.contains(&self.requested) {ui.colored_label(MUTED,"Выберите значение из допустимого диапазона и шага устройства.");}
                         if ui.add_enabled(enabled,egui::Button::new(RichText::new("Применить DPI").color(Color32::WHITE)).fill(ACCENT)).clicked(){action=Some(Action::Dpi);}
                     } else {
                         ui.label(RichText::new(if self.busy {"Проверяем возможности…"}else{&row.reason}).color(MUTED));

@@ -209,3 +209,12 @@ Own-window demo screenshot captured successfully to assets/gui-demo.png.
 Archive size 2910533 bytes; GUI SHA256
 00cc8650c90e3d4245f0871727d3b9410a41ddbd8b44f69fbf81b399302c0b51.
 This new executable has not been submitted by the agent to VirusTotal.
+
+## Change 13 — Exact DPI entry
+
+User could not select exact values such as 1000/2000 with the index slider.
+Added explicit numeric DPI entry and presets 1000/2000/3000/4000. Draft values
+still require Apply; unsupported values disable Apply and explain the restriction.
+Files: src/gui.rs. Hardware protocol and device settings unchanged by this fix.
+Checks: two GUI state/profile tests passed; all-target GUI Clippy -D warnings passed.
+No additional physical writes: user clarified this was a value-selection problem.
