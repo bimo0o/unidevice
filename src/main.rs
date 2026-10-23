@@ -25,6 +25,7 @@ const HELP: &str = r#"
   unidevice inspect --device N
                             Read descriptor; identify protocol adapter candidates
   unidevice models           Show support boundaries
+  unidevice protocols        Offline protocol inventory and honest coverage status
   unidevice dpi --value 800  Offline plan; auto capability discovery by default
   unidevice dpi --value 800 --apply --experimental --device N
                             Discover HID++ DPI on any eligible wired Logitech model
@@ -158,6 +159,9 @@ fn dpi(model: Model, value: u16, o: &Options) -> Result<()> {
     let mut controller = Logitech(Session::connect(NativeTransport::new(device::open(
         model, index,
     )?))?);
+    let original = controller.0.read_dpi()?;
+    let backup = unidevice::recovery::save_settings(Some(original), None)?;
+    println!("Original DPI saved to {backup}; no automatic rollback.");
     let actual = controller.set_dpi(value)?;
     println!("DPI {actual} acknowledged and read back. Physical behavior remains UNVERIFIED.");
     Ok(())
@@ -284,6 +288,14 @@ fn run(args: &[String]) -> Result<()> {
             Ok(())
         }
         "demo" if args.len() == 1 => demo(),
+        "protocols" if args.len() == 1 => {
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&unidevice::protocols::summary())
+                    .map_err(|_| Error::Invalid("protocol summary serialization".into()))?
+            );
+            Ok(())
+        }
         "inspect" => {
             let o = Options::parse(&args[1..], &["device"], &[])?;
             device::inspect(o.number("device")?)

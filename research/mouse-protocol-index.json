@@ -1,0 +1,4408 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-10-23",
+  "purpose": "recognition_only_never_authorizes_io",
+  "identities": [
+    {
+      "vid": 1008,
+      "pid": 1168,
+      "name": "HyperX Pulsefire Surge (HP)",
+      "family": "rgb_only:HyperX Pulsefire Surge",
+      "source_record": "OpenRGB:1072",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1008,
+      "pid": 1678,
+      "name": "HyperX Pulsefire Dart (Wireless)",
+      "family": "rgb_only:HyperX Pulsefire Dart",
+      "source_record": "OpenRGB:1061",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1008,
+      "pid": 2190,
+      "name": "HyperX Pulsefire Dart (Wired)",
+      "family": "rgb_only:HyperX Pulsefire Dart",
+      "source_record": "OpenRGB:1063",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1008,
+      "pid": 3471,
+      "name": "HyperX Pulsefire Core (HP)",
+      "family": "rgb_only:HyperX Pulsefire FPS",
+      "source_record": "OpenRGB:1066",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1008,
+      "pid": 3983,
+      "name": "HyperX Pulsefire Haste",
+      "family": "rgb_only:HyperX Pulsefire Haste",
+      "source_record": "OpenRGB:1067",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1008,
+      "pid": 3983,
+      "name": "HyperX Pulsefire Haste",
+      "family": "rgb_only:HyperX Pulsefire Haste",
+      "source_record": "OpenRGB:1068",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 2697,
+      "name": "Logitech G635",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g635",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g635.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 2741,
+      "name": "Logitech G733 Gaming Headset",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g733",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g733.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 2814,
+      "name": "Logitech G733 Gaming Headset",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g733",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g733.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 4123,
+      "name": "Logitech M705",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-M705",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-M705.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 4136,
+      "name": "Logitech M570",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-M570",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-M570.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16394,
+      "name": "Logitech M325",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-M325",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-M325.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16401,
+      "name": "Logitech Wireless Touchpad",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-Wireless-Touchpad",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-Wireless-Touchpad.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16428,
+      "name": "Logitech G602",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g602",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g602.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16449,
+      "name": "Logitech MX Master",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Master",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Master.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16458,
+      "name": "Logitech MX Anywhere 2",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Anywhere2",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Anywhere2.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16466,
+      "name": "Logitech M545",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-M545",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-M545.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16467,
+      "name": "Logitech G900",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g900",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g900.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16477,
+      "name": "Logitech G403 Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g403-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g403-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16478,
+      "name": "Logitech M720",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-M720",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-M720.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16480,
+      "name": "Logitech MX Master",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Master",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Master.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16483,
+      "name": "Logitech MX Anywhere 2",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Anywhere2",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Anywhere2.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16487,
+      "name": "Logitech G903",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g903",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g903.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16489,
+      "name": "Logitech MX Master 2S",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Master-2S",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Master-2S.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16490,
+      "name": "Logitech MX Anywhere 2S",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Anywhere2S",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Anywhere2S.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16491,
+      "name": "Logitech M585/M590",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-M585-M590",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-M585-M590.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16492,
+      "name": "Logitech G603",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g603",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g603.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16493,
+      "name": "Logitech Marathon M705",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-Marathon-M705",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-Marathon-M705.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16495,
+      "name": "Logitech MX Ergo",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Ergo",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Ergo.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16496,
+      "name": "Logitech G703",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g703",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g703.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16497,
+      "name": "Logitech MX Master",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Master",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Master.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16498,
+      "name": "Logitech MX Anywhere 2",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Anywhere2",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Anywhere2.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16500,
+      "name": "Logitech Gaming Mouse G305",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g305",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g305.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16505,
+      "name": "Logitech G Pro Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g-pro-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g-pro-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16507,
+      "name": "Logitech MX Vertical",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Vertical",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Vertical.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16511,
+      "name": "Logitech G502 Hero Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-hero-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-hero-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16514,
+      "name": "Logitech MX Master 3",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Master-3",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Master-3.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16517,
+      "name": "Logitech G604",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g604",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g604.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16518,
+      "name": "Logitech G703 Hero",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g703-hero",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g703-hero.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16519,
+      "name": "Logitech G903 Hero",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g903-hero",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g903-hero.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16528,
+      "name": "Logitech MX Anywhere 3",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Anywhere-3",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Anywhere-3.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16531,
+      "name": "Logitech G Pro X Wireless Superlight",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g-pro-x-wireless-superlight",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g-pro-x-wireless-superlight.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16537,
+      "name": "Logitech G502 X PLUS",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-x-plus",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-x-plus.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16541,
+      "name": "Logitech G705",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g705",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g705.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16543,
+      "name": "Logitech G502 X Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-x-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-x-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 16641,
+      "name": "Logitech T650",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-T650",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-T650.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49217,
+      "name": "G5",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g5",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g5.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49224,
+      "name": "Logitech G9",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g9",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g9.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49225,
+      "name": "Logitech G5",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g5-2007",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g5-2007.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49254,
+      "name": "G9x [Original]",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g9x-Original",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g9x-Original.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49256,
+      "name": "Logitech G500",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g500",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g500.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49259,
+      "name": "Logitech G700",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g700",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g700.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49271,
+      "name": "Logitech MX Vertical",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Vertical",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Vertical.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49276,
+      "name": "Logitech G700s",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g700s",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g700s.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49277,
+      "name": "Logitech G502 Proteus Core",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-proteus-core",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-proteus-core.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49278,
+      "name": "Logitech G402 Gaming Mouse",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g402",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g402.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49279,
+      "name": "Logitech Gaming Mouse G302",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g302",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g302.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49280,
+      "name": "Logitech Gaming Mouse G303",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g303",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g303.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49280,
+      "name": "Logitech G303 Daedalus Apex",
+      "family": "rgb_only:Logitech Lightsync Mouse",
+      "source_record": "OpenRGB:1167",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49281,
+      "name": "Logitech G900",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g900",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g900.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49282,
+      "name": "Logitech G403 Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g403-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g403-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49283,
+      "name": "Logitech G403",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g403",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g403.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49284,
+      "name": "Logitech Gaming Mouse G102/G103/G203",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g102-g203",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g102-g203.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49284,
+      "name": "Logitech G203 Prodigy",
+      "family": "rgb_only:Logitech Lightsync Mouse (1 Zone)",
+      "source_record": "OpenRGB:1169",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49285,
+      "name": "Logitech Gaming Mouse G Pro",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g-pro",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g-pro.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49285,
+      "name": "Logitech G Pro Gaming Mouse",
+      "family": "rgb_only:Logitech Lightsync Mouse (1 Zone)",
+      "source_record": "OpenRGB:1172",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49286,
+      "name": "Logitech G903",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g903",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g903.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49287,
+      "name": "Logitech G703",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g703",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g703.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49288,
+      "name": "Logitech G Pro Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g-pro-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g-pro-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49290,
+      "name": "Logitech MX Vertical",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX-Vertical",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX-Vertical.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49291,
+      "name": "Logitech G502 Hero",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-hero",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-hero.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49292,
+      "name": "Logitech Gaming Mouse G Pro",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g-pro",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g-pro.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49292,
+      "name": "Logitech G Pro HERO Gaming Mouse",
+      "family": "rgb_only:Logitech Lightsync Mouse (1 Zone)",
+      "source_record": "OpenRGB:1173",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49293,
+      "name": "Logitech G502 Hero Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-hero-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-hero-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49294,
+      "name": "MX518",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-MX518",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-MX518.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49295,
+      "name": "Logitech G403 Hero",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g403-hero",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g403-hero.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49295,
+      "name": "Logitech G403 HERO",
+      "family": "rgb_only:Logitech Lightsync Mouse",
+      "source_record": "OpenRGB:1168",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49296,
+      "name": "Logitech G703 Hero",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g703-hero",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g703-hero.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49297,
+      "name": "Logitech G903 Hero",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g903-hero",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g903-hero.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49298,
+      "name": "Logitech Gaming Mouse G102/G103/G203",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g102-g203",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g102-g203.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49298,
+      "name": "Logitech G203 Lightsync",
+      "family": "rgb_only:Logitech G203L",
+      "source_record": "OpenRGB:1144",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49298,
+      "name": "Logitech G203 Lightsync",
+      "family": "rgb_only:Logitech Lightsync Mouse (1 Zone)",
+      "source_record": "OpenRGB:1170",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49299,
+      "name": "Logitech M500s",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-M500s",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-M500s.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49300,
+      "name": "Logitech G Pro X Wireless Superlight",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g-pro-x-wireless-superlight",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g-pro-x-wireless-superlight.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49301,
+      "name": "Logitech G502 X PLUS",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-x-plus",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-x-plus.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49302,
+      "name": "Logitech G705",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g705",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g705.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49303,
+      "name": "Logitech G303 Shroud Edition",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g303-shroud",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g303-shroud.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49304,
+      "name": "Logitech G502 X Wireless",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-x-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-x-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49305,
+      "name": "Logitech G502 X",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-x",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-x.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49309,
+      "name": "Logitech Gaming Mouse G102/G103/G203",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g102-g203",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g102-g203.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49309,
+      "name": "Logitech G203 Lightsync",
+      "family": "rgb_only:Logitech G203L",
+      "source_record": "OpenRGB:1145",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49309,
+      "name": "Logitech G203 Lightsync",
+      "family": "rgb_only:Logitech Lightsync Mouse (1 Zone)",
+      "source_record": "OpenRGB:1171",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49734,
+      "name": "Logitech G300",
+      "family": "logitech_g300",
+      "source_record": "libratbag:logitech-g300",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g300.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49737,
+      "name": "Logitech G9x [Call of Duty MW3 Edition]",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g9x-Call-of-Duty-MW3-Edition",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g9x-Call-of-Duty-MW3-Edition.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49738,
+      "name": "Logitech G600",
+      "family": "logitech_g600",
+      "source_record": "libratbag:logitech-g600",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g600.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49738,
+      "name": "Logitech G600 Gaming Mouse",
+      "family": "rgb_only:Logitech G600",
+      "source_record": "OpenRGB:1148",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1133,
+      "pid": 49742,
+      "name": "Logitech G500s",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g500s",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g500s.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 49970,
+      "name": "Logitech G502 Proteus Spectrum",
+      "family": "hidpp20",
+      "source_record": "libratbag:logitech-g502-proteus-spectrum",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g502-proteus-spectrum.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 50458,
+      "name": "Logitech G7",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g7",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g7.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1133,
+      "pid": 50481,
+      "name": "Logitech G700",
+      "family": "hidpp10",
+      "source_record": "libratbag:logitech-g700-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/logitech-g700-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1240,
+      "pid": 64778,
+      "name": "Np93 ALPHA - Gaming Mouse",
+      "family": "rgb_only:Lexip Mouse",
+      "source_record": "OpenRGB:1115",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64088,
+      "name": "Mars Gaming MM4",
+      "family": "marsgaming",
+      "source_record": "libratbag:marsgaming-mm4",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/marsgaming-mm4.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 1241,
+      "pid": 64126,
+      "name": "Redragon M810 Taipan",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2270",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64517,
+      "name": "Tecknet M008",
+      "family": "rgb_only:Tecknet Mouse",
+      "source_record": "OpenRGB:2453",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64560,
+      "name": "Redragon M711 Cobra",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2263",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64568,
+      "name": "Redragon M602 Griffin",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2267",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64569,
+      "name": "Redragon M715 Dagger",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2264",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64570,
+      "name": "Redragon M716 Inquisitor",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2265",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64576,
+      "name": "Redragon M921 Azzinoth",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2272",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64589,
+      "name": "Redragon M908 Impact",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2266",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64600,
+      "name": "Redragon M801 Sniper",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2269",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64607,
+      "name": "Redragon M808 Storm",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2268",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 1241,
+      "pid": 64617,
+      "name": "Redragon M987 Reaping",
+      "family": "rgb_only:Redragon Mice",
+      "source_record": "OpenRGB:2271",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2385,
+      "pid": 5843,
+      "name": "HyperX Pulsefire Surge",
+      "family": "rgb_only:HyperX Pulsefire Surge",
+      "source_record": "OpenRGB:1071",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2385,
+      "pid": 5847,
+      "name": "HyperX Pulsefire FPS Pro",
+      "family": "rgb_only:HyperX Pulsefire FPS",
+      "source_record": "OpenRGB:1064",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2385,
+      "pid": 5854,
+      "name": "HyperX Pulsefire Core",
+      "family": "rgb_only:HyperX Pulsefire FPS",
+      "source_record": "OpenRGB:1065",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2385,
+      "pid": 5857,
+      "name": "HyperX Pulsefire Dart (Wireless)",
+      "family": "rgb_only:HyperX Pulsefire Dart",
+      "source_record": "OpenRGB:1060",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2385,
+      "pid": 5858,
+      "name": "HyperX Pulsefire Dart (Wired)",
+      "family": "rgb_only:HyperX Pulsefire Dart",
+      "source_record": "OpenRGB:1062",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2385,
+      "pid": 5860,
+      "name": "HyperX Pulsefire Raid",
+      "family": "rgb_only:HyperX Pulsefire Raid",
+      "source_record": "OpenRGB:1070",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2385,
+      "pid": 5927,
+      "name": "HyperX Pulsefire Haste",
+      "family": "rgb_only:HyperX Pulsefire Haste",
+      "source_record": "OpenRGB:1069",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6166,
+      "name": "ASUS ROG GX860 Buzzard Mouse",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-buzzard",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-buzzard.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6172,
+      "name": "ASUS ROG Spatha Wired",
+      "family": "rgb_only:Asus Aura Spatha",
+      "source_record": "OpenRGB:164",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6180,
+      "name": "ASUS ROG Spatha Wireless",
+      "family": "rgb_only:Asus Aura Spatha",
+      "source_record": "OpenRGB:165",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6213,
+      "name": "ASUS ROG Gladius II",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-gladius2",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-gladius2.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6213,
+      "name": "ASUS ROG Gladius II",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:123",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6214,
+      "name": "ASUS ROG Pugio",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-pugio",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-pugio.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6214,
+      "name": "ASUS ROG Pugio",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:144",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6215,
+      "name": "ASUS ROG Strix Impact",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-strix-impact",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-strix-impact.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6215,
+      "name": "ASUS ROG Strix Impact",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:147",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6235,
+      "name": "ASUS ROG Strix Evolve",
+      "family": "rgb_only:Asus Aura Strix Evolve",
+      "source_record": "OpenRGB:166",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6263,
+      "name": "ASUS ROG Gladius II Origin",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-gladius2-origin",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-gladius2-origin.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6263,
+      "name": "ASUS ROG Gladius II Origin",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:124",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6296,
+      "name": "ASUS TUF Gaming M5",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:163",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6302,
+      "name": "ASUS ROG Gladius II Wireless",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:127",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6302,
+      "name": "ASUS ROG Strix Impact II Gundam",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:149",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6304,
+      "name": "ASUS ROG Gladius II Wireless",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:128",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6321,
+      "name": "ASUS ROG Gladius II Origin COD",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:126",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6324,
+      "name": "ASUS ROG Strix Carry",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-strix-carry",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-strix-carry.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6349,
+      "name": "ASUS ROG Gladius II Origin PNK LTD",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-gladius2-origin-pink",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-gladius2-origin-pink.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6349,
+      "name": "ASUS ROG Gladius II Origin PNK LTD",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:125",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6365,
+      "name": "ASUS ROG Gladius II Core",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:122",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6369,
+      "name": "ASUS ROG Strix Impact II",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-strix-impact2",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-strix-impact2.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6369,
+      "name": "ASUS ROG Strix Impact II",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:148",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6371,
+      "name": "ASUS ROG Chakram",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-chakram",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-chakram.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6371,
+      "name": "Asus ROG Chakram (Wired)",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:137",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6373,
+      "name": "ASUS ROG Chakram",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-chakram",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-chakram.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6373,
+      "name": "ASUS ROG Chakram (Wireless)",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:136",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6406,
+      "name": "ASUS ROG Pugio II (Wired)",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:145",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6408,
+      "name": "ASUS ROG Pugio II (Wireless)",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:146",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6416,
+      "name": "ASUS TUF Gaming M3",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:161",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6471,
+      "name": "ASUS ROG Strix Impact II Wireless",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-strix-impact2-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-strix-impact2-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6471,
+      "name": "ASUS ROG Strix Impact II Wireless USB",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:152",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6473,
+      "name": "ASUS ROG Strix Impact II Wireless",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-strix-impact2-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-strix-impact2-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6473,
+      "name": "ASUS ROG Strix Impact II Wireless 2.4 Ghz",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:153",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6486,
+      "name": "ASUS ROG Strix Impact II Electro Punk",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:150",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6488,
+      "name": "ASUS ROG Chakram Core",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-chakram-core",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-chakram-core.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6488,
+      "name": "Asus ROG Chakram Core",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:138",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6492,
+      "name": "ASUS ROG Keris",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-keris",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-keris.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6492,
+      "name": "ASUS ROG Keris",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:155",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6494,
+      "name": "ASUS ROG Keris Wireless",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-keris-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-keris-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6494,
+      "name": "ASUS ROG Keris Wireless USB",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:156",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6496,
+      "name": "ASUS ROG Keris Wireless",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-keris-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-keris-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6496,
+      "name": "ASUS ROG Keris Wireless 2.4Ghz",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:157",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6498,
+      "name": "ASUS ROG Keris Wireless Bluetooth",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:158",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6519,
+      "name": "ASUS ROG Spatha X",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-spatha-x",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-spatha-x.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6519,
+      "name": "Asus ROG Spatha X USB",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:141",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6521,
+      "name": "ASUS ROG Spatha X",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-spatha-x",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-spatha-x.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6521,
+      "name": "Asus ROG Spatha X 2.4GHz",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:142",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6521,
+      "name": "Asus ROG Spatha X Dock",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:143",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6523,
+      "name": "ASUS ROG Gladius III",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:129",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6525,
+      "name": "ASUS ROG Gladius III Wireless USB",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:131",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6527,
+      "name": "ASUS ROG Gladius III Wireless 2.4Ghz",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:132",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6529,
+      "name": "ASUS ROG Gladius III Wireless Bluetooth",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:133",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6610,
+      "name": "ASUS ROG Strix Impact II Moonlight White",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:151",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6659,
+      "name": "ASUS TUF GAMING M4 AIR",
+      "family": "asus",
+      "source_record": "libratbag:asus-tuf-gaming-m4-air",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-tuf-gaming-m4-air.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6680,
+      "name": "ASUS ROG Chakram X",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-chakram-x",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-chakram-x.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6680,
+      "name": "Asus ROG Chakram X USB",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:139",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6682,
+      "name": "ASUS ROG Chakram X",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-chakram-x",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-chakram-x.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6682,
+      "name": "Asus ROG Chakram X 2.4GHz",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:140",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6758,
+      "name": "ASUS ROG Keris Wireless AimPoint",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-keris-wireless-aimpoint",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-keris-wireless-aimpoint.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6758,
+      "name": "ASUS ROG Keris Wireless AimPoint USB",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:159",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6760,
+      "name": "ASUS ROG Keris Wireless AimPoint",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-keris-wireless-aimpoint",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-keris-wireless-aimpoint.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6760,
+      "name": "ASUS ROG Keris Wireless AimPoint 2.4Ghz",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:160",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6768,
+      "name": "ASUS ROG Gladius III Wireless AimPoint USB",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:134",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6770,
+      "name": "ASUS ROG Gladius III Wireless AimPoint 2.4Ghz",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:135",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6792,
+      "name": "ASUS ROG Strix Impact III",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-strix-impact3",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-strix-impact3.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6792,
+      "name": "ASUS ROG Strix Impact III",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:154",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6802,
+      "name": "ASUS ROG Harpe Wireless",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-harpe-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-harpe-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6811,
+      "name": "ASUSTeK TUF GAMING M3 GEN II",
+      "family": "asus",
+      "source_record": "libratbag:asus-tuf-gaming-m3-gen-ii",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-tuf-gaming-m3-gen-ii.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6811,
+      "name": "ASUS TUF Gaming M3 Gen II",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:162",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 2821,
+      "pid": 6862,
+      "name": "ASUS ROG Omni Receiver",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-omni-receiver",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-omni-receiver.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 6871,
+      "name": "ASUS ROG Strix Impact III Wireless",
+      "family": "asus",
+      "source_record": "libratbag:asus-rog-strix-impact3-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-rog-strix-impact3-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 7254,
+      "name": "ASUS TUF GAMING MINI WL MOUSE MIKU",
+      "family": "asus",
+      "source_record": "libratbag:asus-tuf-gaming-mini-wl-miku",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-tuf-gaming-mini-wl-miku.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 7255,
+      "name": "ASUS TUF GAMING MINI WL MOUSE MIKU",
+      "family": "asus",
+      "source_record": "libratbag:asus-tuf-gaming-mini-wl-miku",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/asus-tuf-gaming-mini-wl-miku.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 2821,
+      "pid": 7309,
+      "name": "ASUS ROG Gladius III Core",
+      "family": "rgb_only:Asus Aura Mouse",
+      "source_record": "OpenRGB:130",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 3141,
+      "pid": 32280,
+      "name": "Patriot Viper V550",
+      "family": "rgb_only:Patriot Viper V550",
+      "source_record": "OpenRGB:1812",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 4966,
+      "name": "SteelSeries Kinzu V2 Pro Edition",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-kinzu-v2-pro",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-kinzu-v2-pro.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 4969,
+      "name": "SteelSeries Sensei Raw",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-sensei-raw",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-sensei-raw.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 4984,
+      "name": "SteelSeries Kinzu V2",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-kinzu-v2",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-kinzu-v2.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 4996,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5000,
+      "name": "SteelSeries Kinzu V3",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-kinzu-v3",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-kinzu-v3.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5010,
+      "name": "SteelSeries Rival 300 Dota 2 Edition",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2435",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5010,
+      "name": "SteelSeries Rival 300 Dota 2 Edition",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2405",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5010,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5012,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5888,
+      "name": "SteelSeries Rival 700",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2442",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5890,
+      "name": "SteelSeries Rival 100",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2425",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5890,
+      "name": "SteelSeries Rival 100/105",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-100",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-100.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5898,
+      "name": "SteelSeries Rival 100/105",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-100",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-100.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5899,
+      "name": "SteelSeries Rival 100/105",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-100",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-100.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5900,
+      "name": "SteelSeries Rival 100 DotA 2 Edition",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2426",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5900,
+      "name": "SteelSeries Rival 100/105",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-100",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-100.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5904,
+      "name": "SteelSeries Rival 300",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2430",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5904,
+      "name": "SteelSeries Rival 300 Black Ops Edition",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2437",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5904,
+      "name": "SteelSeries Rival 300",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2400",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5904,
+      "name": "SteelSeries Rival 300 Black Ops Edition",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2407",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5904,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5906,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5908,
+      "name": "Acer Predator Gaming Mouse (Rival 300)",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2431",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5908,
+      "name": "Acer Predator Gaming Mouse (Rival 300)",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2401",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5908,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5910,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5912,
+      "name": "SteelSeries Rival 300 HP Omen Edition",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2436",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5912,
+      "name": "SteelSeries Rival 300 HP Omen Edition",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2406",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5912,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5914,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5916,
+      "name": "SteelSeries Rival",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5920,
+      "name": "SteelSeries Rival 310",
+      "family": "rgb_only:Steel Series Sensei",
+      "source_record": "OpenRGB:2444",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5920,
+      "name": "SteelSeries Rival 310",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-310",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-310.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5922,
+      "name": "SteelSeries Sensei 310",
+      "family": "rgb_only:Steel Series Sensei",
+      "source_record": "OpenRGB:2449",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5922,
+      "name": "SteelSeries Sensei 310",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-sensei-310",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-sensei-310.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5924,
+      "name": "SteelSeries Rival 600",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2438",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5924,
+      "name": "SteelSeries Rival 600",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-600",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-600.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5926,
+      "name": "SteelSeries Rival 650 Wireless",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2441",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5926,
+      "name": "SteelSeries Rival 650 Wireless",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-650-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-650-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5929,
+      "name": "SteelSeries Rival 110",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2429",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5931,
+      "name": "SteelSeries Rival 650",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2440",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5931,
+      "name": "SteelSeries Rival 650 Wireless",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-650-wireless",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-650-wireless.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 5934,
+      "name": "SteelSeries Rival 600 Dota 2 Edition",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2439",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5936,
+      "name": "SteelSeries Rival 710",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2443",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 5942,
+      "name": "SteelSeries Rival 310 PUBG Edition",
+      "family": "rgb_only:Steel Series Sensei",
+      "source_record": "OpenRGB:2446",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6164,
+      "name": "SteelSeries Rival 105",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2427",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6164,
+      "name": "SteelSeries Rival 100/105",
+      "family": "steelseries",
+      "source_record": "libratbag:steelseries-rival-100",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/steelseries-rival-100.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 4152,
+      "pid": 6166,
+      "name": "SteelSeries Rival 106",
+      "family": "rgb_only:Steel Series Rival",
+      "source_record": "OpenRGB:2428",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6180,
+      "name": "SteelSeries Rival 3 (Old Firmware)",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2408",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6194,
+      "name": "SteelSeries Sensei TEN",
+      "family": "rgb_only:Steel Series Sensei",
+      "source_record": "OpenRGB:2447",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6198,
+      "name": "SteelSeries Aerox 3 Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2415",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6200,
+      "name": "SteelSeries Aerox 3 Wireless",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2410",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6202,
+      "name": "SteelSeries Aerox 3 Wireless Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2411",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6220,
+      "name": "SteelSeries Rival 3",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2409",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6224,
+      "name": "SteelSeries Aerox 5 Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2422",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6226,
+      "name": "SteelSeries Aerox 5 Wireless",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2416",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6228,
+      "name": "SteelSeries Aerox 5 Wireless Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2417",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6232,
+      "name": "SteelSeries Aerox 9 Wireless",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2423",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6234,
+      "name": "SteelSeries Aerox 9 Wireless Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2424",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6236,
+      "name": "SteelSeries Aerox 5 Destiny 2 Edition Wireless",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2418",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6238,
+      "name": "SteelSeries Aerox 5 Destiny 2 Edition Wireless Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2419",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6240,
+      "name": "SteelSeries Aerox 5 Diablo IV Edition Wireless",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2420",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6242,
+      "name": "SteelSeries Aerox 5 Diablo IV Edition Wireless Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2421",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6264,
+      "name": "SteelSeries Aerox 3 CS2 Dragon Lore Edition Wireless",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2412",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6266,
+      "name": "SteelSeries Aerox 3 CS2 Dragon Lore Edition Wireless Wired",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2413",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4152,
+      "pid": 6288,
+      "name": "SteelSeries Aerox 3 Wireless Gen 2",
+      "family": "rgb_only:Steel Series Rival 3",
+      "source_record": "OpenRGB:2414",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4164,
+      "pid": 31296,
+      "name": "Gigabyte Aorus M2",
+      "family": "rgb_only:Gigabyte Aorus mouse",
+      "source_record": "OpenRGB:820",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 4815,
+      "pid": 1042,
+      "name": "Cougar Revenger ST",
+      "family": "rgb_only:Cougar Revenger ST",
+      "source_record": "OpenRGB:443",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5215,
+      "pid": 584,
+      "name": "Trust GXT 180",
+      "family": "rgb_only:Trust GXT 180",
+      "source_record": "OpenRGB:2514",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5215,
+      "pid": 621,
+      "name": "Trust GXT 114",
+      "family": "rgb_only:Trust GXT 114",
+      "source_record": "OpenRGB:2513",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 19,
+      "name": "Razer Orochi 2011",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerOrochi2011",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L741",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 21,
+      "name": "Razer Naga",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNaga",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L421",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 22,
+      "name": "Razer DeathAdder 3.5G",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdder3_5G",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L625",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 31,
+      "name": "Razer Naga Epic",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaEpic",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1523",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 32,
+      "name": "Razer Abyssus 1800",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerAbyssus1800",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L773",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 36,
+      "name": "Razer Mamba 2012 (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMamba2012Wired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L674",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 37,
+      "name": "Razer Mamba 2012 (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMamba2012Wireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L658",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 41,
+      "name": "Razer DeathAdder 3.5G Black",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdder3_5GBlack",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L642",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 46,
+      "name": "Razer Naga 2012",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNaga2012",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L438",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 47,
+      "name": "Razer Imperator 2012",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerImperator",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L269",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 50,
+      "name": "Razer Ouroboros",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerOuroboros",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L283",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 52,
+      "name": "Razer Taipan",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerTaipan",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L566",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 54,
+      "name": "Razer Naga Hex (Red)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaHexRed",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L549",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 55,
+      "name": "Razer DeathAdder 2013",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdder2013",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L363",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 56,
+      "name": "Razer DeathAdder 1800",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdder1800",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1046",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 57,
+      "name": "Razer Orochi 2013",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerOrochi2013",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L298",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 62,
+      "name": "Razer Naga Epic Chroma (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaEpicChromaWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1451",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 63,
+      "name": "Razer Naga Epic Chroma (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaEpicChromaWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1469",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 64,
+      "name": "Razer Naga 2014",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNaga2014",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L724",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 65,
+      "name": "Razer Naga Hex",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaHex",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L532",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 66,
+      "name": "Razer Abyssus",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerAbyssus",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L258",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 67,
+      "name": "Razer DeathAdder Chroma",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderChroma",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L331",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 68,
+      "name": "Razer Mamba Chroma (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMambaChromaWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L221",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 69,
+      "name": "Razer Mamba Chroma (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMambaChromaWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L201",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 70,
+      "name": "Razer Mamba Tournament Edition",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMambaTE",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L240",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 72,
+      "name": "Razer Orochi (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerOrochiWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L312",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 76,
+      "name": "Razer Diamondback Chroma",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDiamondbackChroma",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L607",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 79,
+      "name": "Razer DeathAdder 2000",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdder2000",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L347",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 80,
+      "name": "Razer Naga Hex V2",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaHexV2",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L378",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 83,
+      "name": "Razer Naga Chroma",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaChroma",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L455",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 84,
+      "name": "Razer DeathAdder 3500",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdder3500",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L801",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 89,
+      "name": "Razer Lancehead (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerLanceheadWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L71",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 90,
+      "name": "Razer Lancehead (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerLanceheadWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L102",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 91,
+      "name": "Razer Abyssus V2",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerAbyssusV2",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L757",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 92,
+      "name": "Razer DeathAdder Elite",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderElite",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L583",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 94,
+      "name": "Razer Abyssus 2000",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerAbyssus2000",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L787",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 96,
+      "name": "Razer Lancehead Tournament Edition",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerLanceheadTE",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L172",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 98,
+      "name": "Razer Atheris (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerAtherisReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1283",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 100,
+      "name": "Razer Basilisk",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasilisk",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1060",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 101,
+      "name": "Razer Basilisk Essential",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskEssential",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1084",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 103,
+      "name": "Razer Naga Trinity",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaTrinity",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L500",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 106,
+      "name": "Razer Abyssus Elite (D.Va Edition)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerAbyssusEliteDVaEdition",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L132",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 107,
+      "name": "Razer Abyssus Essential",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerAbyssusEssential",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L152",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 108,
+      "name": "Razer Mamba Elite",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMambaElite",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L908",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 110,
+      "name": "Razer DeathAdder Essential",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderEssential",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L873",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 111,
+      "name": "Razer Lancehead Wireless (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerLanceheadWirelessReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L63",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 112,
+      "name": "Razer Lancehead Wireless (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerLanceheadWirelessWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L32",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 113,
+      "name": "Razer DeathAdder Essential (White Edition)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderEssentialWhiteEdition",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L110",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 114,
+      "name": "Razer Mamba Wireless (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMambaWirelessReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L715",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 115,
+      "name": "Razer Mamba Wireless (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerMambaWirelessWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L691",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 119,
+      "name": "Razer Pro Click (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerProClickReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1478",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 120,
+      "name": "Razer Viper",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViper",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L851",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 122,
+      "name": "Razer Viper Ultimate (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperUltimateWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L817",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 123,
+      "name": "Razer Viper Ultimate (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperUltimateWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L841",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 124,
+      "name": "Razer DeathAdder V2 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV2ProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1249",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 125,
+      "name": "Razer DeathAdder V2 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV2ProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1273",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 128,
+      "name": "Razer Pro Click (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerProClickWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1499",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 131,
+      "name": "Razer Basilisk X HyperSpeed",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskXHyperSpeed",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1300",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 132,
+      "name": "Razer DeathAdder V2",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV2",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1226",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 133,
+      "name": "Razer Basilisk V2",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV2",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1168",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 134,
+      "name": "Razer Basilisk Ultimate",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskUltimateWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1106",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 136,
+      "name": "RazerBasiliskUltimateReceiver",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskUltimateReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1161",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 138,
+      "name": "Razer Viper Mini",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperMini",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L10",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 140,
+      "name": "Razer DeathAdder V2 Mini",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV2Mini",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1375",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 141,
+      "name": "Razer Naga Left Handed Edition 2020",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaLeftHanded2020",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L939",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 143,
+      "name": "Razer Naga Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L971",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 144,
+      "name": "Razer Naga Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1003",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 145,
+      "name": "Razer Viper 8KHz",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViper8KHz",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1399",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 148,
+      "name": "Razer Orochi V2 (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerOrochiV2Receiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1319",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 149,
+      "name": "Razer Orochi V2 (Bluetooth)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerOrochiV2Bluetooth",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1338",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 150,
+      "name": "Razer Naga X",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaX",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1345",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 152,
+      "name": "Razer DeathAdder Essential (2021)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderEssential2021",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L892",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 153,
+      "name": "Razer Basilisk V3",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1192",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 154,
+      "name": "Razer Pro Click Mini (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerProClickMiniReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1881",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 156,
+      "name": "Razer DeathAdder V2 X HyperSpeed",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV2XHyperSpeed",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1507",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 158,
+      "name": "Razer Viper Mini SE (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperMiniSEWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1420",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 159,
+      "name": "Razer Viper Mini SE (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperMiniSEWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1439",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 161,
+      "name": "Razer DeathAdder V2 Lite",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV2Lite",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1901",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 163,
+      "name": "Razer Cobra",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerCobra",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1925",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 165,
+      "name": "Razer Viper V2 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperV2ProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1541",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 166,
+      "name": "Razer Viper V2 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperV2ProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1558",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 167,
+      "name": "Razer Naga V2 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaV2ProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1011",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 168,
+      "name": "Razer Naga V2 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaV2ProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1038",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 170,
+      "name": "Razer Basilisk V3 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3ProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1694",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 171,
+      "name": "Razer Basilisk V3 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3ProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1730",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 175,
+      "name": "Razer Cobra Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerCobraProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1566",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 176,
+      "name": "Razer Cobra Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerCobraProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1595",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 178,
+      "name": "Razer DeathAdder V3",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV3",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1637",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 179,
+      "name": "Razer HyperPolling Wireless Dongle",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerHyperPollingWirelessDongle",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1856",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 180,
+      "name": "Razer Naga V2 HyperSpeed (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerNagaV2HyperSpeedReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1948",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 182,
+      "name": "Razer DeathAdder V3 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV3ProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1655",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 183,
+      "name": "Razer DeathAdder V3 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV3ProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1672",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 184,
+      "name": "Razer Viper V3 HyperSpeed",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperV3HyperSpeed",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1966",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 185,
+      "name": "Razer Basilisk V3 X HyperSpeed",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3XHyperSpeed",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1983",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 190,
+      "name": "Razer DeathAdder V4 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV4ProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2035",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 191,
+      "name": "Razer DeathAdder V4 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV4ProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2053",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 192,
+      "name": "Razer Viper V3 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperV3ProWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2064",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 193,
+      "name": "Razer Viper V3 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperV3ProWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2082",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 194,
+      "name": "Razer DeathAdder V3 Pro (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV3ProWired_Alternate",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1680",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 195,
+      "name": "Razer DeathAdder V3 Pro (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV3ProWireless_Alternate",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1687",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 196,
+      "name": "Razer DeathAdder V3 HyperSpeed (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV3HyperSpeedWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2119",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 197,
+      "name": "Razer DeathAdder V3 HyperSpeed (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerDeathAdderV3HyperSpeedWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2137",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 199,
+      "name": "Razer Pro Click V2 Vertical Edition (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerProClickV2VerticalEditionWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2145",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 200,
+      "name": "Razer Pro Click V2 Vertical Edition (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerProClickV2VerticalEditionWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2166",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 203,
+      "name": "Razer Basilisk V3 35K",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3_35K",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1821",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 204,
+      "name": "Razer Basilisk V3 Pro 35K (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3Pro35KWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1738",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 205,
+      "name": "Razer Basilisk V3 Pro 35K (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3Pro35KWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1774",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 208,
+      "name": "Razer Pro Click V2 (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerProClickV2Wired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2173",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 209,
+      "name": "Razer Pro Click V2 (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerProClickV2Wireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2194",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 211,
+      "name": "Razer Basilisk Mobile (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskMobileWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2005",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 212,
+      "name": "Razer Basilisk Mobile (Receiver)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskMobileReceiver",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2026",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 214,
+      "name": "Razer Basilisk V3 Pro 35K Phantom Green Edition (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3Pro35KPhantomGreenEditionWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1782",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 215,
+      "name": "Razer Basilisk V3 Pro 35K Phantom Green Edition (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerBasiliskV3Pro35KPhantomGreenEditionWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1813",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 218,
+      "name": "Razer Cobra HyperSpeed",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerCobraHyperSpeed",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1602",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 219,
+      "name": "Razer Cobra HyperSpeed Receiver",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerCobraHyperSpeedWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L1629",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 222,
+      "name": "Razer Viper V3 Pro SE (Wired)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperV3ProSEWired",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2094",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 5426,
+      "pid": 223,
+      "name": "Razer Viper V3 Pro SE (Wireless)",
+      "family": "razer_model_specific",
+      "source_record": "openrazer:RazerViperV3ProSEWireless",
+      "source_url": "https://github.com/openrazer/openrazer/blob/477f4d6d3ab7e9deb6310d5bd3742560c5cbe80d/daemon/openrazer_daemon/hardware/mouse.py#L2111",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6127,
+      "pid": 24804,
+      "name": "Lenovo Legion M300",
+      "family": "rgb_only:Lenovo Legion M300",
+      "source_record": "OpenRGB:1100",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6493,
+      "pid": 4118,
+      "name": "ASUS ROG Strix Claw",
+      "family": "rgb_only:Asus Strix Claw",
+      "source_record": "OpenRGB:211",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6918,
+      "name": "Corsair M95",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_M95",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6930,
+      "name": "Corsair M65",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_M65",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6932,
+      "name": "Corsair SABRE O",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SABRE_O",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6937,
+      "name": "Corsair SABRE L",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SABRE_L",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6942,
+      "name": "Corsair SCIMITAR",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SCIMITAR",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6946,
+      "name": "Corsair KATAR",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_KATAR",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6958,
+      "name": "Corsair M65 PRO",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_M65_PRO",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6959,
+      "name": "Corsair SABRE N",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SABRE_N",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6962,
+      "name": "Corsair SABRE O2",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SABRE_O2",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6964,
+      "name": "Corsair GLAIVE",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_GLAIVE",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6965,
+      "name": "Corsair DARK CORE",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6972,
+      "name": "Corsair HARPOON",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_HARPOON",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6974,
+      "name": "Corsair SCIMITAR PRO",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SCIMITAR_PRO",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6987,
+      "name": "Corsair DARK CORE SE",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE_SE",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6988,
+      "name": "Corsair IRONCLAW W U",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_IRONCLAW_W_U",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 6993,
+      "name": "Corsair DARK CORE SE WL",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE_SE_WL",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7002,
+      "name": "Corsair M65 RGB ELITE",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_M65_RGB_ELITE",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7004,
+      "name": "Corsair NIGHTSWORD",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_NIGHTSWORD",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7005,
+      "name": "Corsair IRONCLAW",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_IRONCLAW",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7006,
+      "name": "Corsair HARPOON WL U",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_HARPOON_WL_U",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7012,
+      "name": "Corsair DARK CORE WL",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE_WL",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7013,
+      "name": "Corsair HARPOON WL D",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_HARPOON_WL_D",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7014,
+      "name": "Corsair IRONCLAW W D",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_IRONCLAW_W_D",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7024,
+      "name": "Corsair M55 RGB PRO",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_M55_RGB_PRO",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7028,
+      "name": "Corsair GLAIVE PRO",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_GLAIVE_PRO",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7029,
+      "name": "Corsair HARPOON PRO",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_HARPOON_PRO",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7038,
+      "name": "Corsair DARK CORE RGB PRO SE",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE_RGB_PRO_SE",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7039,
+      "name": "Corsair DARK CORE RGB PRO SE WL",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE_RGB_PRO_SE_WL",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7040,
+      "name": "Corsair DARK CORE RGB PRO",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE_RGB_PRO",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7041,
+      "name": "Corsair DARK CORE RGB PRO WL",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_DARK_CORE_RGB_PRO_WL",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7051,
+      "name": "Corsair SCIMITAR ELITE",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SCIMITAR_ELITE",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7059,
+      "name": "Corsair KATAR PRO",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_KATAR_PRO",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7084,
+      "name": "Corsair KATAR PRO XT",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_KATAR_PRO_XT",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 6940,
+      "pid": 7139,
+      "name": "Corsair SCIMITAR ELITE BRAGI",
+      "family": "corsair_generation_specific",
+      "source_record": "ckb-next:P_SCIMITAR_ELITE_BRAGI",
+      "source_url": "https://github.com/ckb-next/ckb-next/blob/e22eaf2fba7f93764b4c6d4413bb83eeca75d10a/src/daemon/usb.c",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7504,
+      "pid": 24938,
+      "name": "openinput",
+      "family": "openinput",
+      "source_record": "libratbag:openinput",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/openinput.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 7793,
+      "pid": 8448,
+      "name": "NZXT Lift",
+      "family": "rgb_only:NZXT Mouse",
+      "source_record": "OpenRGB:1732",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11400,
+      "name": "Roccat Kone Pro",
+      "family": "rgb_only:Roccat Kone Pro Mouse",
+      "source_record": "OpenRGB:2283",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11403,
+      "name": "Roccat Kone XP",
+      "family": "rgb_only:Roccat Kone XP Mouse",
+      "source_record": "OpenRGB:2284",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11406,
+      "name": "Roccat Kone Pro Air",
+      "family": "rgb_only:Roccat Kone Pro Air Mouse",
+      "source_record": "OpenRGB:2281",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11410,
+      "name": "Roccat Kone Pro Air (Wired)",
+      "family": "rgb_only:Roccat Kone Pro Air Mouse",
+      "source_record": "OpenRGB:2282",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11710,
+      "name": "Roccat Kone Pure",
+      "family": "roccat-kone-pure",
+      "source_record": "libratbag:roccat-kone-pure",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/roccat-kone-pure.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 7805,
+      "pid": 11714,
+      "name": "Roccat Kone Pure",
+      "family": "roccat-kone-pure",
+      "source_record": "libratbag:roccat-kone-pure",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/roccat-kone-pure.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 7805,
+      "pid": 11723,
+      "name": "Roccat Kone Pure",
+      "family": "roccat-kone-pure",
+      "source_record": "libratbag:roccat-kone-pure",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/roccat-kone-pure.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 7805,
+      "pid": 11745,
+      "name": "Roccat Burst Pro",
+      "family": "rgb_only:Roccat Burst Mouse",
+      "source_record": "OpenRGB:2275",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11750,
+      "name": "Roccat Burst Core",
+      "family": "rgb_only:Roccat Burst Mouse",
+      "source_record": "OpenRGB:2274",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11810,
+      "name": "Roccat Kone XTD",
+      "family": "roccat",
+      "source_record": "libratbag:roccat-kone-xtd",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/roccat-kone-xtd.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 7805,
+      "pid": 11812,
+      "name": "Roccat Kone EMP",
+      "family": "roccat-kone-emp",
+      "source_record": "libratbag:roccat-kone-emp",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/roccat-kone-emp.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 7805,
+      "pid": 11815,
+      "name": "Roccat Kone Aimo",
+      "family": "rgb_only:Roccat Kone Aimo",
+      "source_record": "OpenRGB:2279",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7805,
+      "pid": 11820,
+      "name": "Roccat Kone Aimo 16K",
+      "family": "rgb_only:Roccat Kone Aimo",
+      "source_record": "OpenRGB:2280",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 7847,
+      "pid": 16401,
+      "name": "Etekcity Scroll Alpha",
+      "family": "etekcity",
+      "source_record": "libratbag:etekcity-scroll-alpha",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/etekcity-scroll-alpha.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 8916,
+      "pid": 5379,
+      "name": "Glorious Model I",
+      "family": "rgb_only:Laview Technology Mice",
+      "source_record": "OpenRGB:1089",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 101,
+      "name": "Cooler Master MM530",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:307",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 101,
+      "name": "Cooler Master MM530",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:315",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 101,
+      "name": "Cooler Master MM530",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:323",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 257,
+      "name": "Cooler Master MM711",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:308",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 257,
+      "name": "Cooler Master MM711",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:316",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 257,
+      "name": "Cooler Master MM711",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:324",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 261,
+      "name": "Cooler Master MP750 Medium",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:314",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 261,
+      "name": "Cooler Master MP750 Medium",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:322",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 261,
+      "name": "Cooler Master MP750 Medium",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:330",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 263,
+      "name": "Cooler Master MP750 Large",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:313",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 263,
+      "name": "Cooler Master MP750 Large",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:321",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 263,
+      "name": "Cooler Master MP750 Large",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:329",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 265,
+      "name": "Cooler Master MP750 XL",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:312",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 265,
+      "name": "Cooler Master MP750 XL",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:320",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 265,
+      "name": "Cooler Master MP750 XL",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:328",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 321,
+      "name": "Cooler Master MM720",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:310",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 321,
+      "name": "Cooler Master MM720",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:318",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 321,
+      "name": "Cooler Master MM720",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:326",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 357,
+      "name": "Cooler Master MM730",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:311",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 357,
+      "name": "Cooler Master MM730",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:319",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 357,
+      "name": "Cooler Master MM730",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:327",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 361,
+      "name": "Cooler Master MM712",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:309",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 361,
+      "name": "Cooler Master MM712",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:317",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9494,
+      "pid": 361,
+      "name": "Cooler Master MM712",
+      "family": "rgb_only:Coolermaster Master Mouse",
+      "source_record": "OpenRGB:325",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9610,
+      "pid": 18,
+      "name": "Nubwo x7 spectrum",
+      "family": "sinowealth_nubwo",
+      "source_record": "libratbag:nubwo-x7-spectrum",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/nubwo-x7-spectrum.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 9610,
+      "pid": 39,
+      "name": "SinoWealth Generic Mouse (0027)",
+      "family": "sinowealth",
+      "source_record": "libratbag:sinowealth-0027",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/sinowealth-0027.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 9610,
+      "pid": 41,
+      "name": "Everest GT-100 RGB",
+      "family": "rgb_only:Sinowealth 1007 Mouse",
+      "source_record": "OpenRGB:2347",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9610,
+      "pid": 41,
+      "name": "Everest GT-100 RGB",
+      "family": "rgb_only:Sinowealth Mice",
+      "source_record": "OpenRGB:2350",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9610,
+      "pid": 41,
+      "name": "SinoWealth Generic Mouse (0029)",
+      "family": "sinowealth",
+      "source_record": "libratbag:sinowealth-0029",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/sinowealth-0029.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 9610,
+      "pid": 51,
+      "name": "Glorious Model D / D-",
+      "family": "rgb_only:Sinowealth 1007 Mouse",
+      "source_record": "OpenRGB:2346",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9610,
+      "pid": 51,
+      "name": "Glorious Model D / D-",
+      "family": "rgb_only:Sinowealth Mice",
+      "source_record": "OpenRGB:2349",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9610,
+      "pid": 51,
+      "name": "Glorious Model D",
+      "family": "sinowealth",
+      "source_record": "libratbag:glorious-model-d",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/glorious-model-d.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 9610,
+      "pid": 54,
+      "name": "Glorious Model O / O-",
+      "family": "rgb_only:Sinowealth 1007 Mouse",
+      "source_record": "OpenRGB:2345",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9610,
+      "pid": 54,
+      "name": "Glorious Model O / O-",
+      "family": "rgb_only:Sinowealth Mice",
+      "source_record": "OpenRGB:2348",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9610,
+      "pid": 54,
+      "name": "Glorious Model O/O-",
+      "family": "sinowealth",
+      "source_record": "libratbag:glorious-model-o",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/glorious-model-o.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 9610,
+      "pid": 81,
+      "name": "Sinowealth Generic Mouse (0051)",
+      "family": "sinowealth",
+      "source_record": "libratbag:sinowealth-0051",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/sinowealth-0051.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 9610,
+      "pid": 4103,
+      "name": "SinoWealth Generic Mouse (1007)",
+      "family": "sinowealth",
+      "source_record": "libratbag:sinowealth-1007",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/sinowealth-1007.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 9639,
+      "pid": 64063,
+      "name": "ZET GAMING Edge Air Pro (Wireless)",
+      "family": "rgb_only:Areson",
+      "source_record": "OpenRGB:25",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9639,
+      "pid": 64064,
+      "name": "ZET GAMING Edge Air Pro",
+      "family": "rgb_only:Areson",
+      "source_record": "OpenRGB:26",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9639,
+      "pid": 64072,
+      "name": "ZET GAMING Edge Air Elit (Wireless)",
+      "family": "rgb_only:Areson",
+      "source_record": "OpenRGB:27",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9639,
+      "pid": 64073,
+      "name": "ZET GAMING Edge Air Elit",
+      "family": "rgb_only:Areson",
+      "source_record": "OpenRGB:28",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9639,
+      "pid": 64123,
+      "name": "Redragon M914 NIX",
+      "family": "rgb_only:Areson",
+      "source_record": "OpenRGB:30",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 9639,
+      "pid": 64124,
+      "name": "Redragon M914 NIX (Wireless)",
+      "family": "rgb_only:Areson",
+      "source_record": "OpenRGB:29",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 10458,
+      "pid": 12545,
+      "name": "G.Skill MX-780",
+      "family": "gskill",
+      "source_record": "libratbag:gskill-MX-780",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/gskill-MX-780.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 12538,
+      "pid": 4144,
+      "name": "Advanced GTA 250 USB Gaming Mouse",
+      "family": "rgb_only:Instant mouse",
+      "source_record": "OpenRGB:1074",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 12538,
+      "pid": 4160,
+      "name": "AntEsports GM600 USB Gaming Mouse",
+      "family": "rgb_only:Instant mouse",
+      "source_record": "OpenRGB:1077",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 12538,
+      "pid": 5184,
+      "name": "Anko KM43243952 USB Gaming Mouse",
+      "family": "rgb_only:Instant mouse",
+      "source_record": "OpenRGB:1075",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 12538,
+      "pid": 5440,
+      "name": "Anko KM43277483 USB Gaming Mouse",
+      "family": "rgb_only:Instant mouse",
+      "source_record": "OpenRGB:1076",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 14228,
+      "pid": 40960,
+      "name": "Glorious Model O Eternal",
+      "family": "sinowealth",
+      "source_record": "libratbag:glorious-model-o-eternal",
+      "source_url": "https://github.com/libratbag/libratbag/blob/8235b5bb6032dea15901ab58a8218956f4494d08/data/devices/glorious-model-o-eternal.device",
+      "identity_kind": "upstream_match_not_guaranteed_physical_usb_id"
+    },
+    {
+      "vid": 14402,
+      "pid": 9218,
+      "name": "EVGA X20 USB Receiver",
+      "family": "rgb_only:EVGA USB X20 Mouse",
+      "source_record": "OpenRGB:756",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 14402,
+      "pid": 9248,
+      "name": "EVGA X20 Gaming Mouse",
+      "family": "rgb_only:EVGA USB X20 Mouse",
+      "source_record": "OpenRGB:755",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 14648,
+      "pid": 4473,
+      "name": "AOC GM500",
+      "family": "rgb_only:AOC Mouse",
+      "source_record": "OpenRGB:7",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    },
+    {
+      "vid": 20051,
+      "pid": 21510,
+      "name": "N5312A USB Optical Mouse",
+      "family": "rgb_only:N5312A mouse",
+      "source_record": "OpenRGB:1698",
+      "source_url": "https://openrgb.org/devices_pipeline.html",
+      "identity_kind": "upstream_usb_declaration"
+    }
+  ]
+}

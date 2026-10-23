@@ -5,6 +5,14 @@ fn run(args: &[&str]) -> Output {
         .output()
         .unwrap()
 }
+#[test]
+fn protocol_inventory_does_not_report_inventory_as_probability() {
+    let output = run(&["protocols"]);
+    assert!(output.status.success());
+    let text = String::from_utf8_lossy(&output.stdout);
+    assert!(text.contains("\"market_coverage_probability\": null"));
+    assert!(text.contains("\"recognition_grants_write_permission\": false"));
+}
 
 #[test]
 fn demo_and_preview_are_available_without_hardware() {

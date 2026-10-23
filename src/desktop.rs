@@ -68,6 +68,7 @@ pub enum Command {
     Diagnostic(DeviceRow),
     SceneStart(Vec<SceneSelection>, crate::effects::Effect),
     SceneStop,
+    RestoreCheckpoint,
     Transfer {
         dpi: Option<u16>,
         rgb: Option<[u8; 3]>,
@@ -84,6 +85,7 @@ pub enum Event {
     Scene(Result<Vec<SceneStatus>>),
     SceneFrame(Vec<SceneStatus>),
     Transfer(Result<(Capabilities, Vec<String>)>),
+    Recovery(Option<crate::recovery::RecoveryInfo>),
 }
 
 #[derive(Clone)]
@@ -369,6 +371,11 @@ fn scan() -> Result<Vec<DeviceRow>> {
                 "Управление Corsair отключено: ещё не подтверждены безопасные команды этой модели."
                     .into();
         }
+        if !eligible {
+            if let Some(hint) = crate::protocols::hint(d.vendor_id(), d.product_id()) {
+                reason = hint;
+            }
+        }
         rows.push(DeviceRow {
             title,
             detail: format!(
@@ -427,8 +434,106 @@ enum Active {
 struct Backend {
     active: Option<Active>,
     animation: Option<(crate::effects::Effect, std::time::Instant, u8)>,
+    checkpoint: Option<Checkpoint>,
+}
+struct Checkpoint {
+    caps: Capabilities,
+    harpoon: Option<crate::corsair::State>,
+    file: Option<String>,
 }
 impl Backend {
+    fn recovery_info(&self) -> Option<crate::recovery::RecoveryInfo> {
+        let checkpoint = self.checkpoint.as_ref()?;
+        Some(crate::recovery::RecoveryInfo {
+            dpi: checkpoint.caps.current_dpi,
+            rgb: checkpoint.caps.rgb_control.then_some(checkpoint.caps.rgb),
+            file: checkpoint.file.clone(),
+            can_restore: self.active.is_some(),
+        })
+    }
+    fn ensure_checkpoint(&mut self) -> Result<()> {
+        let result = self.capture_checkpoint();
+        if result.is_err() {
+            self.active = None;
+            self.animation = None;
+        }
+        result
+    }
+    fn capture_checkpoint(&mut self) -> Result<()> {
+        if self.checkpoint.is_some() {
+            return Ok(());
+        }
+        let (caps, harpoon, portable_dpi) = match self.active.as_mut().ok_or(Error::NotFound)? {
+            Active::Harpoon { session, caps } => {
+                let state = session.state()?;
+                caps.current_dpi = state.x;
+                caps.rgb = state.rgb;
+                let dpi = (state.x == state.y && state.linked_axes()).then_some(state.x);
+                (caps.clone(), Some(state), dpi)
+            }
+            Active::Real { session, caps } => {
+                caps.current_dpi = session.read_dpi()?;
+                (caps.clone(), None, Some(caps.current_dpi))
+            }
+            Active::Demo(caps) => (caps.clone(), None, Some(caps.current_dpi)),
+        };
+        let file = if caps.demo {
+            None
+        } else {
+            Some(crate::recovery::save_settings(
+                portable_dpi,
+                caps.rgb_control.then_some(caps.rgb),
+            )?)
+        };
+        self.checkpoint = Some(Checkpoint {
+            caps,
+            harpoon,
+            file,
+        });
+        Ok(())
+    }
+    fn restore_checkpoint(&mut self) -> Result<Capabilities> {
+        self.animation = None;
+        let result = (|| {
+            let checkpoint = self.checkpoint.as_ref().ok_or(Error::NotFound)?;
+            match self
+                .active
+                .as_mut()
+                .ok_or(Error::Safety("session must still be active".into()))?
+            {
+                Active::Harpoon { session, caps } => {
+                    let state = checkpoint
+                        .harpoon
+                        .as_ref()
+                        .ok_or(Error::Safety("adapter changed".into()))?;
+                    if !caps.values.contains(&state.x) || !caps.values.contains(&state.y) {
+                        return Err(Error::Safety("checkpoint no longer inside policy".into()));
+                    }
+                    let restored = session.restore_live(state)?;
+                    caps.current_dpi = restored.x;
+                    caps.rgb = restored.rgb;
+                    Ok(caps.clone())
+                }
+                Active::Real { session, caps } => {
+                    if checkpoint.harpoon.is_some()
+                        || !caps.values.contains(&checkpoint.caps.current_dpi)
+                    {
+                        return Err(Error::Safety("checkpoint no longer inside policy".into()));
+                    }
+                    caps.current_dpi = session.set_dpi(checkpoint.caps.current_dpi)?;
+                    Ok(caps.clone())
+                }
+                Active::Demo(caps) => {
+                    *caps = checkpoint.caps.clone();
+                    Ok(caps.clone())
+                }
+            }
+        })();
+        if result.is_err() {
+            self.active = None;
+        }
+        result
+    }
     fn caps(&self) -> Option<&Capabilities> {
         match self.active.as_ref()? {
             Active::Harpoon { caps, .. } | Active::Real { caps, .. } | Active::Demo(caps) => {
@@ -444,6 +549,7 @@ impl Backend {
         if !effect.valid() {
             return Err(Error::Invalid("effect period must be 4..30 seconds".into()));
         }
+        self.ensure_checkpoint()?;
         let stage = match self.active.as_mut() {
             Some(Active::Harpoon { session, .. }) => session.state()?.stage,
             Some(Active::Demo(_)) => 0,
@@ -492,6 +598,8 @@ impl Backend {
 
     fn probe(&mut self, row: &DeviceRow) -> Result<Capabilities> {
         self.active = None;
+        self.checkpoint = None;
+        self.animation = None;
         if row.demo {
             let mut caps = Capabilities {
                 current_dpi: 800,
@@ -578,6 +686,7 @@ impl Backend {
 
     fn apply(&mut self, value: u16) -> Result<Capabilities> {
         let result = (|| {
+            self.ensure_checkpoint()?;
             let active = self.active.as_mut().ok_or(Error::Safety(
                 "refresh and check the device before applying".into(),
             ))?;
@@ -618,6 +727,7 @@ impl Backend {
     }
 
     fn rgb(&mut self, value: [u8; 3]) -> Result<Capabilities> {
+        self.ensure_checkpoint()?;
         let result = match self.active.as_mut() {
             Some(Active::Harpoon { session, caps }) => session.set_stage_rgb(value).map(|s| {
                 caps.current_dpi = s.x;
@@ -706,6 +816,12 @@ pub struct Worker {
 
 impl Worker {
     pub fn start(wake: Arc<dyn Fn() + Send + Sync>) -> Result<Self> {
+        Self::start_with_status(wake, false)
+    }
+    pub fn start_with_recovery(wake: Arc<dyn Fn() + Send + Sync>) -> Result<Self> {
+        Self::start_with_status(wake, true)
+    }
+    fn start_with_status(wake: Arc<dyn Fn() + Send + Sync>, recovery_events: bool) -> Result<Self> {
         let (commands, receiver) = mpsc::sync_channel(1);
         let (sender, events) = mpsc::channel();
         let thread = std::thread::Builder::new()
@@ -742,6 +858,17 @@ impl Worker {
                                 })
                                 .saturating_sub(started.elapsed())
                                 .max(std::time::Duration::from_millis(4));
+                                if recovery_events
+                                    && matches!(
+                                        &event,
+                                        Event::Effect(Err(_)) | Event::Scene(Err(_))
+                                    )
+                                    && sender
+                                        .send(Event::Recovery(backend.recovery_info()))
+                                        .is_err()
+                                {
+                                    break;
+                                }
                                 if sender.send(event).is_err() {
                                     break;
                                 }
@@ -791,17 +918,27 @@ impl Worker {
                         Command::Effect(effect) => Event::Effect(backend.effect(effect)),
                         Command::Scan => {
                             backend.active = None;
+                            backend.checkpoint = None;
                             Event::Devices(scan())
                         }
                         Command::Demo => {
                             backend.active = None;
+                            backend.checkpoint = None;
                             Event::Devices(Ok(demo_rows()))
                         }
                         Command::Probe(row) => Event::Ready(backend.probe(&row)),
                         Command::SetDpi(value) => Event::Applied(backend.apply(value)),
                         Command::SetRgb(value) => Event::Applied(backend.rgb(value)),
+                        Command::RestoreCheckpoint => Event::Applied(backend.restore_checkpoint()),
                         Command::Diagnostic(row) => Event::Diagnostic(save_diagnostic(&row)),
                     };
+                    if recovery_events
+                        && sender
+                            .send(Event::Recovery(backend.recovery_info()))
+                            .is_err()
+                    {
+                        break;
+                    }
                     if sender.send(event).is_err() {
                         break;
                     }
@@ -849,6 +986,30 @@ pub fn user_error(error: &Error) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn checkpoint_retains_baseline_and_cannot_cross_probe_or_fault() {
+        let rows = demo_rows();
+        let mut backend = Backend::default();
+        let original = backend.probe(&rows[0]).unwrap();
+        assert!(backend.recovery_info().is_none());
+        backend.apply(1600).unwrap();
+        backend.rgb([255, 0, 0]).unwrap();
+        let saved = backend.recovery_info().unwrap();
+        assert_eq!(saved.dpi, original.current_dpi);
+        assert_eq!(saved.rgb, Some(original.rgb));
+        assert!(saved.file.is_none());
+        let restored = backend.restore_checkpoint().unwrap();
+        assert_eq!(restored.current_dpi, original.current_dpi);
+        assert_eq!(restored.rgb, original.rgb);
+        backend.probe(&rows[1]).unwrap();
+        assert!(backend.recovery_info().is_none());
+        assert!(backend.restore_checkpoint().is_err());
+        backend.probe(&rows[0]).unwrap();
+        backend.apply(1600).unwrap();
+        assert!(backend.apply(801).is_err());
+        assert!(!backend.recovery_info().unwrap().can_restore);
+        assert!(backend.restore_checkpoint().is_err());
+    }
     #[test]
     fn scene_uses_one_clock_and_rejects_duplicate_targets_before_writes() {
         let rows = demo_rows();

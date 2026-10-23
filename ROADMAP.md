@@ -1,5 +1,11 @@
 # UniDevice Studio status
 
+0.3.1 adds baseline settings backups before modifying operations, explicit same-session
+restore, stage-bound Corsair recovery, and a recognition-only index for 414 VID/PID
+pairs. Recovery is not a firmware backup or a guarantee against hardware failure.
+The accepted next objective is 99% mouse coverage for DPI plus lighting where present;
+representative market coverage is unknown. See specs/coverage-goal.md and recovery.md.
+
 Implemented in 0.3: model-independent HID++2 discovery within its known protocol
 family; local compatibility metadata packs with revision backups and immutable
 hardware gates; portable DPI/RGB/effect/feel profiles with explicit compatibility

@@ -12,6 +12,8 @@ pub mod hidpp;
 pub mod passport;
 pub mod portable;
 pub mod profile;
+pub mod protocols;
+pub mod recovery;
 pub mod safety;
 pub mod sensitivity;
 pub mod storage;

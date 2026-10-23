@@ -12,7 +12,7 @@ foreach ($name in @("unidevice$suffix","unidevice-gui$suffix")) {
 foreach ($name in @('README.md','REPORT.md','ROADMAP.md','LICENSE','THIRD_PARTY.md','SECURITY_REVIEW.md')) {
     Copy-Item -LiteralPath (Join-Path $projectRoot $name) -Destination $Destination -Force
 }
-foreach ($name in @('profiles','effects','compatibility','reports','specs','licenses','assets')) {
+foreach ($name in @('profiles','effects','compatibility','reports','specs','licenses','assets','research')) {
     $sourceFolder=Join-Path $projectRoot $name
     if (-not (Test-Path -LiteralPath $sourceFolder)) {continue}
     foreach ($file in (Get-ChildItem -LiteralPath $sourceFolder -File -Recurse)) {

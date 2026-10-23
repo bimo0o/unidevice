@@ -16,7 +16,7 @@ pub fn run(demo: bool, capture: Option<PathBuf>) -> eframe::Result {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([1080.0, 760.0])
             .with_min_inner_size([900.0, 660.0])
-            .with_title("UniDevice 0.3 · Studio"),
+            .with_title("UniDevice 0.3.1 · Studio"),
         renderer: eframe::Renderer::Glow,
         persist_window: false,
         ..Default::default()
@@ -42,6 +42,7 @@ enum Action {
     Transfer,
     StartScene,
     StopScene,
+    RestoreCheckpoint,
 }
 
 pub struct DesktopApp {
@@ -63,6 +64,7 @@ pub struct DesktopApp {
     profile_name: String,
     capture: Option<PathBuf>,
     capture_requested: bool,
+    recovery: Option<crate::recovery::RecoveryInfo>,
 }
 
 impl DesktopApp {
@@ -93,7 +95,7 @@ impl DesktopApp {
         }
         ctx.set_style(style);
         let wake_ctx = ctx.clone();
-        let worker = Worker::start(Arc::new(move || wake_ctx.request_repaint()))?;
+        let worker = Worker::start_with_recovery(Arc::new(move || wake_ctx.request_repaint()))?;
         worker.send(if demo { Command::Demo } else { Command::Scan })?;
         let mut app = Self {
             tools: workbench::Workbench::default(),
@@ -114,6 +116,7 @@ impl DesktopApp {
             profile_name: "my-profile".into(),
             capture,
             capture_requested: false,
+            recovery: None,
         };
         if demo && app.capture.is_some() {
             let args: Vec<_> = std::env::args().collect();
@@ -157,10 +160,14 @@ impl DesktopApp {
 
     fn poll(&mut self) {
         while let Ok(event) = self.worker.events.try_recv() {
-            if !matches!(&event, Event::Frame(_) | Event::SceneFrame(_)) {
+            if !matches!(
+                &event,
+                Event::Frame(_) | Event::SceneFrame(_) | Event::Recovery(_)
+            ) {
                 self.busy = false;
             }
             match event {
+                Event::Recovery(info) => self.recovery = info,
                 Event::Scene(result) => {
                     self.effect_running = false;
                     self.caps = None;
@@ -375,6 +382,7 @@ impl DesktopApp {
             Action::Rgb => {
                 self.send(Command::SetRgb(self.color));
             }
+            Action::RestoreCheckpoint => self.send(Command::RestoreCheckpoint),
             Action::Diagnostic => {
                 if let Some(row) = self.selected.and_then(|i| self.rows.get(i)).cloned() {
                     self.send(Command::Diagnostic(row));
@@ -535,6 +543,13 @@ impl DesktopApp {
                 ui.label(RichText::new(&row.detail).size(11.0).color(MUTED));
                 if ui.add_enabled(!self.busy,egui::Button::new("Сохранить диагностику").small()).clicked(){action=Some(Action::Diagnostic);}
                 ui.add_space(16.0);
+                if let Some(checkpoint) = &self.recovery {
+                    ui.horizontal_wrapped(|ui| {
+                        ui.label(RichText::new(format!("Копия с начала сеанса: {} DPI", checkpoint.dpi)).small().color(MUTED));
+                        if ui.add_enabled(!self.busy && !self.tools.scene_running && checkpoint.can_restore, egui::Button::new("Восстановить настройки").small()).clicked() { action=Some(Action::RestoreCheckpoint); }
+                    });
+                    if let Some(file) = &checkpoint.file { ui.label(RichText::new(file).small().color(MUTED)); }
+                }
                 let caps=self.caps.clone();
                 ui.columns(2,|columns| {
                 let ui=&mut columns[0];
@@ -673,6 +688,19 @@ impl eframe::App for DesktopApp {
                 );
                 ctx.send_viewport_cmd(egui::ViewportCommand::Close);
             } else if !self.busy && !self.capture_requested {
+                if self.demo
+                    && self.recovery.is_none()
+                    && self.caps.is_some()
+                    && std::env::args()
+                        .collect::<Vec<_>>()
+                        .windows(2)
+                        .any(|a| a[0] == "--capture-page" && a[1] == "recovery")
+                {
+                    self.requested = 1600;
+                    self.action(Action::Dpi);
+                    ctx.request_repaint();
+                    return;
+                }
                 self.capture_requested = true;
                 ctx.send_viewport_cmd(egui::ViewportCommand::Screenshot(Default::default()));
             }
@@ -800,6 +828,25 @@ mod tests {
         assert_eq!(app.caps.as_ref().unwrap().current_dpi, 800);
         assert_eq!(app.caps.as_ref().unwrap().rgb, [1, 2, 3]);
         assert!(!app.effect_running);
+    }
+    #[test]
+    fn recovery_is_explicit_and_reprobe_invalidates_the_memory_snapshot() {
+        let ctx = egui::Context::default();
+        let mut app = DesktopApp::new(&ctx, true, None).unwrap();
+        ready(&mut app);
+        let original = app.caps.as_ref().unwrap().current_dpi;
+        app.requested = 1600;
+        app.action(Action::Dpi);
+        ready(&mut app);
+        assert!(app.recovery.as_ref().unwrap().can_restore);
+        let _ = ctx.run(egui::RawInput::default(), |ctx| app.ui(ctx));
+        assert_eq!(app.caps.as_ref().unwrap().current_dpi, 1600);
+        app.action(Action::RestoreCheckpoint);
+        ready(&mut app);
+        assert_eq!(app.caps.as_ref().unwrap().current_dpi, original);
+        app.action(Action::Probe(1));
+        ready(&mut app);
+        assert!(app.recovery.is_none());
     }
     #[test]
     fn animation_progress_does_not_unlock_a_pending_command() {

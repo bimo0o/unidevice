@@ -39,6 +39,13 @@ apply can be pending. Scene channels share a fail-stop flag and are joined befor
 manual control resumes. Local compatibility packs cannot extend the compiled
 command allowlists, VID families or firmware gates. Import/preview never applies.
 
+Settings recovery exception: persist a fresh supported baseline before the first live
+modification in Studio, or before a CLI DPI setter. Backup save failure blocks setters.
+Explicit same-session restoration may use the existing permitted DPI/live-stage command
+and readback; no automatic rollback, recovery on reconnect or firmware image writes.
+Corsair stage changes block restoration. See recovery.md for lifetime and partial-field
+limits. Recognition metadata never authorizes I/O.
+
 Tests must demonstrate that unknown, reset/bootloader-like, long, wrong-route, out-of-range,
 unadvertised and out-of-sequence packets never reach a fake device. Invalid readback must
 not be reported as success. Hardware verification remains unverified until captures exist.

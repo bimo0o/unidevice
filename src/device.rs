@@ -154,6 +154,9 @@ pub fn inspect(index: usize) -> Result<()> {
     } else if descriptor.usage_pages.contains(&0x59) {
         println!("Lighting usage detected; standard lighting adapter not implemented yet. Control disabled.");
     } else {
+        if let Some(hint) = crate::protocols::hint(d.vendor_id(), d.product_id()) {
+            println!("{hint}");
+        }
         println!(
             "No implemented control adapter. Descriptor alone does not specify vendor commands."
         );

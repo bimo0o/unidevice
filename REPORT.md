@@ -310,3 +310,32 @@ of runtime write permission. Studio source commit f496e06 passed Windows and Lin
 CI in run 39918491391 (tests, Clippy, release build and staging).
 Scope gaps: exhaustive retail SKUs/revisions, full parameter ranges per model,
 proprietary internals and physical protocol verification for new devices.
+
+## Change 19 — Protocol recognition foundation and settings checkpoints
+
+Accepted goal: 99% mouse coverage, success = DPI plus lighting where present, initial
+USB/USB-receiver Windows/Linux scope. No representative market probability asserted.
+Recognition-only source index: 489 identity declarations, 414 VID/PID pairs, provenance
+preserved. Desktop diagnostics can show known-family hints; no new protocol gains I/O.
+Offline CLI protocols command reports scope and unknown probability explicitly.
+
+User requested backup and failure checking. Studio 0.3.1 saves fresh supported DPI/RGB
+to a create-new/synced portable file before first session mutation; CLI DPI also saves
+the original value before its setter. Save failure suspends control without a setter.
+Demo is RAM-only. One baseline per session, no per-frame disk writes. Explicit restore
+uses the same live session and adapter readbacks; Corsair checks unchanged stage and
+restores with one existing live setter. Fault/reprobe invalidates restoration binding;
+files remain manually importable profile drafts. No automatic rollback, firmware/reset,
+new raw opcode or expanded firmware gate. Scenes save before writers start, with no
+group rollback. Independent X/Y is not silently flattened in portable backups.
+
+Source analysis found OpenRazer's shared XY DPI setter ignores its storage argument
+and assigns VARSTORE in the inspected commit. Persistence is unmeasured; do not label
+it volatile or enable an unverified setter based on its function signature.
+
+Checks before packaging: 59 library + 5 CLI tests, all-target GUI Clippy -D warnings,
+and release build. New restoration path is not physically validated: user currently
+has no devices available. This milestone does not achieve the 99% coverage goal.
+Own-window recovery demo preview captured and visually inspected: the baseline and
+Restore action are visible above the settings cards without clipping. No hardware
+was opened. CLI protocol summary exported to reports/protocol-coverage-v031.json.

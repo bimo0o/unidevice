@@ -99,6 +99,11 @@ pub struct State {
     pub rgb: [u8; 3],
     xy: u8,
 }
+impl State {
+    pub(crate) fn linked_axes(&self) -> bool {
+        self.xy == 0
+    }
+}
 
 pub struct Session<T> {
     io: T,
@@ -192,6 +197,21 @@ impl<T: FeatureIo> Session<T> {
 
     pub fn set_stage_rgb(&mut self, rgb: [u8; 3]) -> Result<State> {
         self.set_rgb_expected(rgb, None)
+    }
+    pub(crate) fn restore_live(&mut self, snapshot: &State) -> Result<State> {
+        let before = self.state()?;
+        if snapshot.stage != before.stage
+            || snapshot.xy > 1
+            || !(100..=12000).contains(&snapshot.x)
+            || !(100..=12000).contains(&snapshot.y)
+            || !snapshot.x.is_multiple_of(100)
+            || !snapshot.y.is_multiple_of(100)
+        {
+            return Err(Error::Safety(
+                "checkpoint stage or DPI policy mismatch".into(),
+            ));
+        }
+        self.update(before, snapshot.clone())
     }
     pub(crate) fn set_rgb_expected(&mut self, rgb: [u8; 3], stage: Option<u8>) -> Result<State> {
         let before = self.state()?;
@@ -310,6 +330,52 @@ mod tests {
             &[7, 0x13, 0xd1, 0, 0, 0x20, 3, 0x20, 3, 255, 0, 0]
         );
         assert!(sets[0][13..].iter().all(|b| *b == 0));
+    }
+    #[test]
+    fn checkpoint_restore_is_one_verified_setter_and_never_changes_stage() {
+        let snapshot = State {
+            stage: 1,
+            x: 1000,
+            y: 1000,
+            rgb: [255, 0, 0],
+            xy: 0,
+        };
+        let mut extra = state(800, [0, 0, 255]);
+        extra.extend(state(800, [0, 0, 255]));
+        extra.extend(state(1000, [255, 0, 0]));
+        let (mut session, sends) = setup(extra);
+        assert_eq!(session.restore_live(&snapshot).unwrap(), snapshot);
+        assert_eq!(
+            sends.lock().unwrap().iter().filter(|p| p[1] == 7).count(),
+            1
+        );
+        let mut other_stage = snapshot.clone();
+        other_stage.stage = 2;
+        let (mut session, sends) = setup(state(800, [0, 0, 255]));
+        assert!(session.restore_live(&other_stage).is_err());
+        assert!(!sends.lock().unwrap().iter().any(|p| p[1] == 7));
+    }
+    #[test]
+    fn checkpoint_readback_failure_never_triggers_automatic_retry() {
+        let snapshot = State {
+            stage: 1,
+            x: 1000,
+            y: 1000,
+            rgb: [255, 0, 0],
+            xy: 0,
+        };
+        let mut extra = state(800, [0, 0, 255]);
+        extra.extend(state(800, [0, 0, 255]));
+        extra.extend(state(800, [255, 0, 0]));
+        let (mut session, sends) = setup(extra);
+        assert!(session.restore_live(&snapshot).is_err());
+        let count = sends.lock().unwrap().len();
+        assert!(session.restore_live(&snapshot).is_err());
+        assert_eq!(sends.lock().unwrap().len(), count);
+        assert_eq!(
+            sends.lock().unwrap().iter().filter(|p| p[1] == 7).count(),
+            1
+        );
     }
     #[test]
     fn failed_readback_latches_session_and_never_retries() {
