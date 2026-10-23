@@ -1,0 +1,31 @@
+{
+  "checked_on": "2026-10-23",
+  "source_records": 1526,
+  "by_upstream": {
+    "OpenRGB": 1024,
+    "ckb-next": 89,
+    "libratbag": 124,
+    "manufacturer_docs": 15,
+    "openrazer": 274
+  },
+  "by_manufacturer": {
+    "A4Tech/Bloody": 1,
+    "ASUS": 111,
+    "Cooler Master": 46,
+    "Corsair": 158,
+    "Gembird": 1,
+    "Glorious": 9,
+    "HyperX": 34,
+    "Keychron": 259,
+    "Logitech": 147,
+    "MSI": 10,
+    "OEM/shared VID": 11,
+    "Other/unknown": 159,
+    "ROCCAT/Turtle Beach": 29,
+    "Razer": 463,
+    "SteelSeries": 87,
+    "Wooting": 1
+  },
+  "physical_tests_in_this_research": 0,
+  "runtime_permissions_added": 0
+}

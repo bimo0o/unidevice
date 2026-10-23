@@ -286,3 +286,27 @@ Final six-page demo previews passed visual inspection. Windows GUI idle demo
 measurement (10.144s after 3s warmup): 0.0578% whole-machine CPU, peak working
 set 106819584 bytes, private memory 53260288 bytes; executable 3750912 bytes.
 This measurement excludes active HID animation; report: gui-resources-windows-v03.json.
+
+## Change 18 — Offline manufacturer and capability research
+
+User has no devices available. No HID access or physical device operation in this
+phase. Reviewed manufacturer documentation and static source checkouts of
+libratbag, OpenRazer, ckb-next and OpenRGB; commit identifiers are pinned in the
+catalog. Archived and hashed the independent OpenRGB Pipeline device CSV; its
+revision is not falsely equated to the GitHub mirror checkout.
+
+Exports 1526 source records, not deduplicated retail models: 124 libratbag,
+274 OpenRazer, 89 ckb-next, 1024 named peripheral records from OpenRGB and 15
+manufacturer-documented model/variant groups. JSON, CSV and an offline searchable
+HTML catalog retain field-level declarations, limitations and primary references.
+OpenRazer inheritance is resolved with AST without importing upstream Python.
+Unspecified model limits remain unknown; RGB support does not imply DPI support.
+Every record denies runtime authorization. No adapter or hardware gate changed.
+Source attribution and upstream license texts retained in research/licenses.
+
+Validation: Check-Research-Catalog.py passed identifiers, inheritance, known limits,
+source table hash/flags, CSV/HTML agreement, unknown-limit preservation and absence
+of runtime write permission. Studio source commit f496e06 passed Windows and Linux
+CI in run 39918491391 (tests, Clippy, release build and staging).
+Scope gaps: exhaustive retail SKUs/revisions, full parameter ranges per model,
+proprietary internals and physical protocol verification for new devices.
