@@ -85,8 +85,11 @@ pub fn select(api: &HidApi, model: Model, index: Option<usize>) -> Result<&Devic
             "this model has no enabled hardware transport".into(),
         ));
     }
-    let eligible =
-        |d: &&DeviceInfo| model.matches(d.vendor_id(), d.product_id()) && d.usage_page() == 0xff00;
+    let eligible = |d: &&DeviceInfo| {
+        model.matches(d.vendor_id(), d.product_id())
+            && d.usage_page() == 0xff00
+            && matches!(d.bus_type(), hidapi::BusType::Usb)
+    };
     if let Some(index) = index {
         let d = api.device_list().nth(index).ok_or(Error::NotFound)?;
         if !eligible(&d) {
@@ -180,8 +183,9 @@ pub fn scan(experimental: bool) -> Result<()> {
                         "HID++ adapter candidate; use scan --experimental to query capabilities."
                     );
                 } else {
-                    let mut session =
-                        crate::hidpp::Session::connect(crate::transport::NativeTransport(device))?;
+                    let mut session = crate::hidpp::Session::connect(
+                        crate::transport::NativeTransport::new(device),
+                    )?;
                     let current = session.read_dpi()?;
                     let values = session.supported_dpi()?;
                     println!(

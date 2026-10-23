@@ -1,5 +1,8 @@
 # Engineering report
 
+Current work: GUI test build 0.2.0, guarded HID++ DPI, unknown protocols read-only.
+Later entries supersede earlier project-status statements. No target model is hardware-verified.
+
 ## Change 1 — scope and specifications (phase 0/1)
 
 - Files: `.gitignore`, `README.md`, `specs/*.md`: +174 lines.
@@ -144,3 +147,39 @@ Private source repository: https://github.com/bimo0o/unidevice . No release publ
   No protection settings changed and no sample was uploaded by the agent.
 - Commit: the commit containing this section. Distribution hold remains active.
 - Next: user inspects the exact artifact and supplies the external analysis result.
+
+## Change 10 — device safety specification
+
+- File: `specs/device-safety.md`: +31 lines, committed before implementation.
+- Check: `git diff --cached --stat` / `git commit`: document-only change.
+- Requirement: user's top priority is minimizing device-bricking risk.
+- Risk: no absolute zero-risk claim; target firmware/physical devices are not validated.
+- Commit: `a257934 docs: define restricted device-control policy before GUI implementation`.
+- Next: enforced packet allowlist and a native GUI.
+
+## Change 11 — native GUI and enforced control firewall
+
+- Files: `src/{gui,desktop,safety,transport,hidpp,device,main,error,lib}.rs`, GUI binary,
+  Cargo files, build/packaging/measurement scripts, notices/licenses, README and security history.
+- Check: `cargo test --offline --features gui`: 36 passed; no failed tests.
+- Check: `cargo clippy --offline --features gui --all-targets -- -D warnings`: pass.
+- Check: release GUI compiled; native demo screenshot captured through the application's
+  own screenshot command and visually inspected. UI drafts do not write until explicit Apply.
+- Check: guarded fake transport rejects unknown/wrong-route/long/reset/bootloader-like
+  commands, unsupported DPI and retries after timeout. End-to-end fixture passes the firewall.
+- Requirement: small native Rust GUI, adaptive DPI, profiles, explicit apply, bounded worker
+  operations, immutable selected handle, independent outgoing packet checks, no firmware APIs.
+- Resource sample: `reports/gui-resources-windows.json`, 3 s warmup + 10.15 s, demo,
+  startup Hidden: max working set 103,768,064 bytes (~98.96 MiB), private 53,526,528
+  (~51.05 MiB), 31.25 ms CPU = 0.0385% machine (8 CPUs), 0.3079% one core.
+  Sample binary 3,617,792 bytes; final package hashes are generated after final build.
+- Read-only native enumeration outside sandbox saw 18 HID collections. No target Logitech
+  or Corsair model appeared; no physical setting was changed. Sandbox enumeration alone had
+  previously shown zero; this is an access-context difference, not hardware compatibility.
+- Risk: real RGB remains disabled; unsupported/unknown devices export metadata only.
+  Superlight needs wired USB plus the expected descriptor and feature 2201. No device traffic
+  capture, cursor-count measurement, RGB verification or actual DPI write was performed.
+- User reports prior VirusTotal sample clean and authorized continued development. That
+  result is not independently checked and does not certify newly compiled binaries.
+- Commit: the commit containing this section (`git log --oneline -- src/gui.rs`).
+- Next: user connects a target mouse, tests discovered DPI, and exports diagnostics if blocked.

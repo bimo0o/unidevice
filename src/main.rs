@@ -10,7 +10,11 @@ use unidevice::hidpp::{demo_session, Session};
 use unidevice::profile::Profile;
 use unidevice::transport::NativeTransport;
 
-const BANNER: &str = "UniDevice 0.1.0 | Pet project, fully AI-written under author supervision";
+const BANNER: &str = concat!(
+    "UniDevice ",
+    env!("CARGO_PKG_VERSION"),
+    " | Pet project, fully AI-written under author supervision"
+);
 const HELP: &str = r#"
   unidevice                  Interactive console (no idle polling)
   unidevice demo             Simulated devices; no HID access
@@ -151,7 +155,7 @@ fn dpi(model: Model, value: u16, o: &Options) -> Result<()> {
         return Ok(());
     }
     require_hardware(o.flag("experimental"))?;
-    let mut controller = Logitech(Session::connect(NativeTransport(device::open(
+    let mut controller = Logitech(Session::connect(NativeTransport::new(device::open(
         model, index,
     )?))?);
     let actual = controller.set_dpi(value)?;
@@ -304,7 +308,7 @@ fn run(args: &[String]) -> Result<()> {
             let o = Options::parse(&args[1..], &["model", "device"], &["experimental"])?;
             require_hardware(o.flag("experimental"))?;
             let mut session =
-                Session::connect(NativeTransport(device::open(o.model()?, o.index()?)?))?;
+                Session::connect(NativeTransport::new(device::open(o.model()?, o.index()?)?))?;
             let dpi = session.read_dpi()?;
             let supported = session.supported_dpi()?;
             println!("HID++ 2201 discovered dynamically. Device reports {dpi} DPI.");

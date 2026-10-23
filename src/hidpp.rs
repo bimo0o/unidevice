@@ -17,7 +17,7 @@ pub fn short_request(feature: u8, function: u8, software: u8, params: [u8; 3]) -
     ]
 }
 
-fn normalized(report: &[u8]) -> Result<&[u8]> {
+pub(crate) fn normalized(report: &[u8]) -> Result<&[u8]> {
     let expected = match report.first() {
         Some(0x10) => 7,
         Some(0x11) => 20,
@@ -47,7 +47,7 @@ impl<T: Transport> Session<T> {
             return Err(Error::Protocol("HID++2 ping version or echo".into()));
         }
         let feature = session.exchange(0, 0, [0x22, 0x01, 0])?;
-        if feature[0] == 0 {
+        if feature[0] == 0 || feature[0] >= 0xf0 || feature[0] == 0x8f {
             return Err(Error::Unsupported(
                 "device has no Adjustable DPI (0x2201); no fallback writes".into(),
             ));
@@ -129,6 +129,9 @@ impl<T: Transport> Session<T> {
                 "requested DPI is not in device capabilities".into(),
             ));
         }
+        if self.read_dpi()? == dpi {
+            return Ok(dpi);
+        }
         let [hi, lo] = dpi.to_be_bytes();
         self.exchange(self.feature, 3, [0, hi, lo])?;
         let actual = self.read_dpi()?;
@@ -191,8 +194,9 @@ pub fn demo_session() -> Result<Session<crate::transport::ScriptedTransport>> {
         short_request(0, 0, 2, [0x22, 0x01, 0]),
         short_request(7, 0, 3, [0, 0, 0]),
         short_request(7, 1, 4, [0, 0, 0]),
-        short_request(7, 3, 5, [0, 3, 0x20]),
-        short_request(7, 2, 6, [0, 0, 0]),
+        short_request(7, 2, 5, [0, 0, 0]),
+        short_request(7, 3, 6, [0, 3, 0x20]),
+        short_request(7, 2, 7, [0, 0, 0]),
     ];
     let mut capabilities = vec![0x11, DEVICE, 7, 0x14, 0, 0x01, 0x90, 0xe0, 0x32, 0x64, 0];
     capabilities.resize(20, 0);
@@ -201,8 +205,9 @@ pub fn demo_session() -> Result<Session<crate::transport::ScriptedTransport>> {
         Ok(vec![0x10, DEVICE, 0, 2, 7, 0, 1]),
         Ok(vec![0x10, DEVICE, 7, 3, 1, 0, 0]),
         Ok(capabilities),
-        Ok(vec![0x10, DEVICE, 7, 0x35, 0, 3, 0x20]),
-        Ok(vec![0x10, DEVICE, 7, 0x26, 0, 3, 0x20]),
+        Ok(vec![0x10, DEVICE, 7, 0x25, 0, 1, 0x90]),
+        Ok(vec![0x10, DEVICE, 7, 0x36, 0, 3, 0x20]),
+        Ok(vec![0x10, DEVICE, 7, 0x27, 0, 3, 0x20]),
     ];
     Session::connect(ScriptedTransport {
         expected: requests.into(),
@@ -225,7 +230,7 @@ mod tests {
         assert!(transport.replies.is_empty());
         assert_eq!(
             transport.writes.last().unwrap(),
-            &[0x10, 0xff, 7, 0x26, 0, 0, 0]
+            &[0x10, 0xff, 7, 0x27, 0, 0, 0]
         );
     }
 
@@ -357,7 +362,7 @@ mod tests {
     fn failed_readback_is_not_success() {
         let mut session = demo_session().unwrap();
         *session.transport.replies.back_mut().unwrap() =
-            Ok(vec![0x10, DEVICE, 7, 0x26, 0, 6, 0x40]);
+            Ok(vec![0x10, DEVICE, 7, 0x27, 0, 6, 0x40]);
         assert!(matches!(session.set_dpi(800), Err(Error::Protocol(_))));
     }
 

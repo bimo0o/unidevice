@@ -14,6 +14,7 @@ pub enum Error {
     Rejected(u8),
     Unverified,
     Io(String),
+    Safety(String),
 }
 
 impl fmt::Display for Error {
@@ -40,6 +41,7 @@ impl fmt::Display for Error {
                 "hardware access is unverified; use --experimental with an explicit operation"
             ),
             Self::Io(s) => write!(f, "file error: {s}"),
+            Self::Safety(s) => write!(f, "device protection blocked operation: {s}"),
         }
     }
 }

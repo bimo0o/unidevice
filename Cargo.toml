@@ -1,17 +1,30 @@
 [package]
 name = "unidevice"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 rust-version = "1.82"
 description = "Experimental lightweight peripheral configurator"
 license = "MIT"
+default-run = "unidevice"
+
+[features]
+default = []
+gui = ["dep:eframe", "dep:image"]
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+eframe = { version = "=0.33.3", optional = true, default-features = false, features = ["default_fonts", "glow", "x11", "wayland"] }
+image = { version = "=0.25.10", optional = true, default-features = false, features = ["png"] }
+
+[[bin]]
+name = "unidevice-gui"
+path = "src/bin/unidevice-gui.rs"
+required-features = ["gui"]
 
 [target.'cfg(windows)'.dependencies]
 hidapi = { version = "=2.6.7", default-features = false }
+windows-sys = { version = "=0.61.2", features = ["Win32_UI_WindowsAndMessaging"] }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 hidapi = { version = "=2.6.7", default-features = false, features = ["linux-native-basic-udev"] }

@@ -1,0 +1,12 @@
+{
+  "mode": "native GUI demo; startup Hidden; no HID access or interaction",
+  "warmup_seconds": 3,
+  "duration_seconds": 10.15,
+  "logical_cpus": 8,
+  "cpu_milliseconds": 31.25,
+  "cpu_percent_one_core": 0.3079,
+  "cpu_percent_machine": 0.0385,
+  "working_set_max_bytes": 103768064.0,
+  "private_max_bytes": 53526528.0,
+  "binary_bytes": 3617792
+}

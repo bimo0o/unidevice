@@ -7,9 +7,26 @@ pub trait Transport {
     fn read(&mut self, timeout_ms: i32) -> Result<Vec<u8>>;
 }
 
-pub struct NativeTransport(pub HidDevice);
+pub struct NativeTransport(crate::safety::GuardedTransport<NativeIo>);
+
+impl NativeTransport {
+    pub fn new(device: HidDevice) -> Self {
+        Self(crate::safety::GuardedTransport::new(NativeIo(device)))
+    }
+}
 
 impl Transport for NativeTransport {
+    fn write(&mut self, report: &[u8]) -> Result<()> {
+        self.0.write(report)
+    }
+    fn read(&mut self, timeout_ms: i32) -> Result<Vec<u8>> {
+        self.0.read(timeout_ms)
+    }
+}
+
+struct NativeIo(HidDevice);
+
+impl Transport for NativeIo {
     fn write(&mut self, report: &[u8]) -> Result<()> {
         let len = self.0.write(report).map_err(|_| Error::Disconnected)?;
         if len != report.len() {

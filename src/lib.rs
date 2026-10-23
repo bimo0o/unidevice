@@ -1,7 +1,11 @@
 pub mod controller;
 pub mod descriptor;
+pub mod desktop;
 pub mod device;
 pub mod error;
+#[cfg(feature = "gui")]
+pub mod gui;
 pub mod hidpp;
 pub mod profile;
+pub mod safety;
 pub mod transport;

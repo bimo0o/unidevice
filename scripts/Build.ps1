@@ -1,4 +1,4 @@
-param([switch]$LinuxMusl)
+param([switch]$LinuxMusl, [switch]$Gui)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $projectRoot
@@ -17,6 +17,7 @@ if ($LinuxMusl) {
     }
     & cargo build --locked --release --target x86_64-unknown-linux-musl
 } else {
-    & cargo build --locked --release
+    if ($Gui) { & cargo build --locked --release --features gui --bins }
+    else { & cargo build --locked --release --bin unidevice }
 }
 if ($LASTEXITCODE -ne 0) { throw 'Cargo build failed' }

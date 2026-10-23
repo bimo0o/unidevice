@@ -1,6 +1,10 @@
 # Unresolved antivirus detection
 
-Date: 2026-10-23. State: **distribution hold; false positive NOT established**.
+Date: 2026-10-23. Historical incident record. The original vendor verdict was not independently
+resolved. The user subsequently reported no VirusTotal detections and explicitly authorized
+continued GUI development and test builds. The distribution hold was lifted for those requested
+test builds; no antivirus exclusions or protection changes were made. New builds have new hashes
+and have not automatically inherited the user's earlier scan result.
 
 User reported Kaspersky File Anti-Virus deleting a locally compiled object:
 
