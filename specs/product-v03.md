@@ -12,6 +12,10 @@ Never present metadata matching alone as control verification.
 per-device brightness/phase correction, RGB-capability checks. One-device errors
 stop the scene; no reconnect auto-resume. Real cross-device latency is not atomic;
 expose measured/application timing limits. Demo includes two independent devices.
+Scene device channels must run independently so adding a second mouse does not
+halve the first mouse's frame rate. Probe all channels before starting writers;
+each channel owns its handle and serializes its own verified packets. Share one
+epoch and fail-stop flag. Stop/join all channels before manual control resumes.
 3. Portable model-independent profiles: DPI/RGB/effect/feel reference, local JSON,
 strict schemas/size limits; loading only edits drafts. Show exact/nearest DPI and
 unsupported fields before explicit apply. Do not silently substitute a DPI.
