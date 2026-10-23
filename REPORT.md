@@ -218,3 +218,19 @@ still require Apply; unsupported values disable Apply and explain the restrictio
 Files: src/gui.rs. Hardware protocol and device settings unchanged by this fix.
 Checks: two GUI state/profile tests passed; all-target GUI Clippy -D warnings passed.
 No additional physical writes: user clarified this was a value-selection problem.
+
+## Change 14 — Explicit RGB effects
+
+Added temporal two-color gradient, breathing and rainbow; 4–30 second cycle,
+explicit start/stop. Shared pure color math prepares future device synchronization.
+No new HID command. Worker serializes frames using measured Harpoon stage-RGB
+setter, fresh DPI preservation and full readback. Wait 250ms after each completed
+frame; no catch-up loop. Physical stage change, error, manual apply or selection
+stops the effect. No animation auto-start/reconnect or flash/profile writes.
+Checks: 43 library + 4 CLI tests passed; all-target GUI Clippy -D warnings passed;
+release GUI build passed. Mock tests cover explicit start, stop/no future frames,
+error cancellation and physical-stage binding. Physical worker test: 12 gradient
+frames read back successfully; stopped with no frame for 700ms; original 1200 DPI
+and RGB [106,205,181] restored. This was the user's CURRENT state at test time.
+Limits: single-zone temporal gradient; conservative update rate (~2 frames/sec on
+this mouse), no spatial wave or cross-device sync. Other mice require their adapter.

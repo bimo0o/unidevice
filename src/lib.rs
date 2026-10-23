@@ -3,6 +3,7 @@ pub mod corsair;
 pub mod descriptor;
 pub mod desktop;
 pub mod device;
+pub mod effects;
 pub mod error;
 #[cfg(feature = "gui")]
 pub mod gui;

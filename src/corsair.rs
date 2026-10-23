@@ -191,7 +191,16 @@ impl<T: FeatureIo> Session<T> {
     }
 
     pub fn set_stage_rgb(&mut self, rgb: [u8; 3]) -> Result<State> {
+        self.set_rgb_expected(rgb, None)
+    }
+    pub(crate) fn set_rgb_expected(&mut self, rgb: [u8; 3], stage: Option<u8>) -> Result<State> {
         let before = self.state()?;
+        if stage.is_some_and(|stage| stage != before.stage) {
+            self.fault = true;
+            return Err(Error::Safety(
+                "DPI stage changed during RGB animation".into(),
+            ));
+        }
         let mut after = before.clone();
         after.rgb = rgb;
         self.update(before, after)
@@ -366,5 +375,18 @@ mod tests {
         p[4] = 0;
         p[64] = 1;
         assert!(!allowed_report(&p));
+    }
+    #[test]
+    fn effect_cannot_follow_a_different_physical_dpi_stage() {
+        let mut extra = state(1000, [255, 0, 0]);
+        extra[0] = reply(0x13, 2, &[2]);
+        extra[1] = reply(0x13, 5, &[7]);
+        extra[2] = reply(0x13, 0xd2, &[0, 0xe8, 3, 0xe8, 3, 255, 0, 0]);
+        let (mut session, sends) = setup(extra);
+        assert!(session.set_rgb_expected([0, 0, 255], Some(1)).is_err());
+        assert!(sends.lock().unwrap().iter().all(|p| p[1] != 7));
+        let count = sends.lock().unwrap().len();
+        assert!(session.state().is_err());
+        assert_eq!(count, sends.lock().unwrap().len());
     }
 }

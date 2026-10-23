@@ -27,7 +27,8 @@ Persistence across reconnect is not verified. See corsair-live-probe.md.
 Every apply validates fresh capabilities and reads current state before a single setter;
 the value must belong to the device's list and conservative application policy. Never write
 on slider movement, discovery, reconnect, profile load, startup or demo. No retry loop,
-automatic rollback, periodic setter or hardware save. After ambiguous write/read failure,
+automatic rollback or hardware save. Periodic RGB is allowed only under the explicit
+animation policy in rgb-effects.md; periodic DPI setters remain forbidden. After ambiguous write/read failure,
 close the handle and require an explicit refresh/probe before another apply.
 
 GUI uses opaque in-memory device paths to bind a selection; never persistent numeric indexes.

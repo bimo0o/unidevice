@@ -40,6 +40,7 @@ pub enum Command {
     Probe(DeviceRow),
     SetDpi(u16),
     SetRgb([u8; 3]),
+    Effect(Option<crate::effects::Effect>),
     Demo,
     Diagnostic(DeviceRow),
 }
@@ -49,6 +50,8 @@ pub enum Event {
     Ready(Result<Capabilities>),
     Applied(Result<Capabilities>),
     Diagnostic(Result<String>),
+    Effect(Result<bool>),
+    Frame([u8; 3]),
 }
 
 fn open_token(token: &DeviceToken) -> Result<NativeTransport> {
@@ -202,8 +205,54 @@ enum Active {
 #[derive(Default)]
 struct Backend {
     active: Option<Active>,
+    animation: Option<(crate::effects::Effect, std::time::Instant, u8)>,
 }
 impl Backend {
+    fn effect(&mut self, effect: Option<crate::effects::Effect>) -> Result<bool> {
+        self.animation = None;
+        let Some(effect) = effect else {
+            return Ok(false);
+        };
+        if !effect.valid() {
+            return Err(Error::Invalid("effect period must be 4..30 seconds".into()));
+        }
+        let stage = match self.active.as_mut() {
+            Some(Active::Harpoon { session, .. }) => session.state()?.stage,
+            Some(Active::Demo(_)) => 0,
+            _ => {
+                return Err(Error::Unsupported(
+                    "RGB animation requires a supported RGB device".into(),
+                ))
+            }
+        };
+        self.animation = Some((effect, std::time::Instant::now(), stage));
+        Ok(true)
+    }
+
+    fn frame(&mut self) -> Result<[u8; 3]> {
+        let (effect, start, stage) = self
+            .animation
+            .ok_or(Error::Safety("animation is stopped".into()))?;
+        let result = (|| {
+            let color = effect.color(start.elapsed());
+            match self.active.as_mut() {
+                Some(Active::Harpoon { session, caps }) => {
+                    let state = session.set_rgb_expected(color, Some(stage))?;
+                    caps.rgb = state.rgb;
+                    caps.current_dpi = state.x;
+                }
+                Some(Active::Demo(caps)) => caps.rgb = color,
+                _ => return Err(Error::Safety("RGB session unavailable".into())),
+            }
+            Ok(color)
+        })();
+        if result.is_err() {
+            self.animation = None;
+            self.active = None;
+        }
+        result
+    }
+
     fn probe(&mut self, row: &DeviceRow) -> Result<Capabilities> {
         self.active = None;
         if row.demo {
@@ -418,8 +467,34 @@ impl Worker {
             .name("unidevice-hid".into())
             .spawn(move || {
                 let mut backend = Backend::default();
-                while let Ok(command) = receiver.recv() {
+                loop {
+                    let command = if backend.animation.is_some() {
+                        match receiver.recv_timeout(std::time::Duration::from_millis(250)) {
+                            Ok(command) => command,
+                            Err(mpsc::RecvTimeoutError::Disconnected) => break,
+                            Err(mpsc::RecvTimeoutError::Timeout) => {
+                                let event = match backend.frame() {
+                                    Ok(color) => Event::Frame(color),
+                                    Err(e) => Event::Effect(Err(e)),
+                                };
+                                if sender.send(event).is_err() {
+                                    break;
+                                }
+                                wake();
+                                continue;
+                            }
+                        }
+                    } else {
+                        match receiver.recv() {
+                            Ok(command) => command,
+                            Err(_) => break,
+                        }
+                    };
+                    if !matches!(command, Command::Effect(_)) {
+                        backend.animation = None;
+                    }
                     let event = match command {
+                        Command::Effect(effect) => Event::Effect(backend.effect(effect)),
                         Command::Scan => {
                             backend.active = None;
                             Event::Devices(scan())
@@ -480,6 +555,66 @@ pub fn user_error(error: &Error) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn effects_require_start_stop_cancels_frames_and_fault_ends_animation() {
+        let mut b = Backend::default();
+        b.probe(&demo_rows()[0]).unwrap();
+        assert!(b.frame().is_err());
+        let effect = crate::effects::Effect {
+            pattern: crate::effects::Pattern::Gradient,
+            first: [255, 0, 0],
+            second: [0, 0, 255],
+            seconds: 4.0,
+        };
+        assert!(b.effect(Some(effect)).unwrap());
+        assert!(b.frame().is_ok());
+        assert!(!b.effect(None).unwrap());
+        assert!(b.frame().is_err());
+        assert_eq!(b.apply(1600).unwrap().current_dpi, 1600);
+        b.effect(Some(effect)).unwrap();
+        b.active = None;
+        assert!(b.frame().is_err());
+        assert!(b.animation.is_none());
+        assert!(b.active.is_none());
+    }
+    #[test]
+    fn worker_stop_prevents_more_frames() {
+        use std::time::Duration;
+        let w = Worker::start(Arc::new(|| {})).unwrap();
+        w.send(Command::Probe(demo_rows().remove(0))).unwrap();
+        assert!(matches!(
+            w.events.recv_timeout(Duration::from_secs(1)).unwrap(),
+            Event::Ready(Ok(_))
+        ));
+        w.send(Command::Effect(Some(crate::effects::Effect {
+            pattern: crate::effects::Pattern::Rainbow,
+            first: [0; 3],
+            second: [0; 3],
+            seconds: 6.0,
+        })))
+        .unwrap();
+        assert!(matches!(
+            w.events.recv_timeout(Duration::from_secs(1)).unwrap(),
+            Event::Effect(Ok(true))
+        ));
+        assert!(matches!(
+            w.events.recv_timeout(Duration::from_secs(1)).unwrap(),
+            Event::Frame(_)
+        ));
+        w.send(Command::Effect(None)).unwrap();
+        loop {
+            if matches!(
+                w.events.recv_timeout(Duration::from_secs(1)).unwrap(),
+                Event::Effect(Ok(false))
+            ) {
+                break;
+            }
+        }
+        assert!(matches!(
+            w.events.recv_timeout(Duration::from_millis(600)),
+            Err(mpsc::RecvTimeoutError::Timeout)
+        ));
+    }
     #[test]
     fn no_apply_without_probe_and_no_unknown_rgb_transport() {
         let mut backend = Backend::default();

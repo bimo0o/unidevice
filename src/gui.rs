@@ -37,6 +37,8 @@ enum Action {
     Save,
     Load,
     Diagnostic,
+    StartEffect,
+    StopEffect,
 }
 
 pub struct DesktopApp {
@@ -46,6 +48,10 @@ pub struct DesktopApp {
     caps: Option<Capabilities>,
     requested: u16,
     color: [u8; 3],
+    second_color: [u8; 3],
+    pattern: crate::effects::Pattern,
+    effect_seconds: f32,
+    effect_running: bool,
     busy: bool,
     demo: bool,
     notice: String,
@@ -92,6 +98,10 @@ impl DesktopApp {
             caps: None,
             requested: 800,
             color: [83, 129, 255],
+            second_color: [242, 153, 117],
+            pattern: crate::effects::Pattern::Gradient,
+            effect_seconds: 8.0,
+            effect_running: false,
             busy: true,
             demo,
             notice: "Ищем подключённые устройства…".into(),
@@ -124,6 +134,7 @@ impl DesktopApp {
             self.busy = false;
             match event {
                 Event::Devices(result) => {
+                    self.effect_running = false;
                     self.caps = None;
                     self.selected = None;
                     match result {
@@ -155,34 +166,65 @@ impl DesktopApp {
                         }
                     }
                 }
-                Event::Ready(result) | Event::Applied(result) => match result {
-                    Ok(caps) => {
-                        self.requested = caps.current_dpi;
-                        self.color = caps.rgb;
-                        self.notice = if caps.demo {
-                            "Демонстрация: физическое устройство не изменяется.".into()
-                        } else {
-                            format!("Устройство подтвердило {} DPI. Команды сохранения в аппаратную память не отправлялись.",caps.current_dpi)
-                        };
-                        self.caps = Some(caps);
-                        self.failed = false;
+                Event::Ready(result) | Event::Applied(result) => {
+                    self.effect_running = false;
+                    match result {
+                        Ok(caps) => {
+                            self.requested = caps.current_dpi;
+                            self.color = caps.rgb;
+                            self.notice = if caps.demo {
+                                "Демонстрация: физическое устройство не изменяется.".into()
+                            } else {
+                                format!("Устройство подтвердило {} DPI. Команды сохранения в аппаратную память не отправлялись.",caps.current_dpi)
+                            };
+                            self.caps = Some(caps);
+                            self.failed = false;
+                        }
+                        Err(e) => {
+                            self.caps = None;
+                            self.failed = true;
+                            self.notice = desktop::user_error(&e);
+                        }
                     }
-                    Err(e) => {
-                        self.caps = None;
-                        self.failed = true;
-                        self.notice = desktop::user_error(&e);
+                }
+                Event::Frame(color) => {
+                    if let Some(caps) = self.caps.as_mut() {
+                        caps.rgb = color;
                     }
-                },
-                Event::Diagnostic(result) => match result {
-                    Ok(name) => {
-                        self.failed = false;
-                        self.notice=format!("Диагностика сохранена рядом с приложением: {name}. Серийных номеров и ввода с клавиатуры в ней нет.");
+                }
+                Event::Effect(result) => {
+                    self.busy = false;
+                    match result {
+                        Ok(running) => {
+                            self.effect_running = running;
+                            self.failed = false;
+                            self.notice = if running {
+                                "Эффект запущен. Нажмите «Остановить», чтобы прекратить смену цвета.".into()
+                            } else {
+                                "Эффект остановлен. Последний цвет остаётся на мыши.".into()
+                            };
+                        }
+                        Err(e) => {
+                            self.effect_running = false;
+                            self.caps = None;
+                            self.failed = true;
+                            self.notice = desktop::user_error(&e);
+                        }
                     }
-                    Err(_) => {
-                        self.failed = true;
-                        self.notice="Не удалось сохранить диагностику. Проверьте подключение и права на папку приложения.".into();
+                }
+                Event::Diagnostic(result) => {
+                    self.effect_running = false;
+                    match result {
+                        Ok(name) => {
+                            self.failed = false;
+                            self.notice=format!("Диагностика сохранена рядом с приложением: {name}. Серийных номеров и ввода с клавиатуры в ней нет.");
+                        }
+                        Err(_) => {
+                            self.failed = true;
+                            self.notice="Не удалось сохранить диагностику. Проверьте подключение и права на папку приложения.".into();
+                        }
                     }
-                },
+                }
             }
         }
     }
@@ -192,6 +234,13 @@ impl DesktopApp {
             return;
         }
         match action {
+            Action::StartEffect => self.send(Command::Effect(Some(crate::effects::Effect {
+                pattern: self.pattern,
+                first: self.color,
+                second: self.second_color,
+                seconds: self.effect_seconds,
+            }))),
+            Action::StopEffect => self.send(Command::Effect(None)),
             Action::Scan => {
                 self.demo = false;
                 self.caps = None;
@@ -474,11 +523,24 @@ impl DesktopApp {
                             ui.add_space(8.0);
                             ui.label(RichText::new("Выберите цвет и нажмите «Применить»").size(12.0).color(MUTED));
                         });
-                        mouse_preview(ui,self.color);
+                        mouse_preview(ui,if self.effect_running {caps.as_ref().map_or(self.color,|c|c.rgb)}else{self.color});
                     });
                     let enabled=caps.as_ref().is_some_and(|c|c.rgb_control)&&!self.busy;
                     if ui.add_enabled(enabled,egui::Button::new("Применить подсветку")).clicked(){action=Some(Action::Rgb);}
                     ui.label(RichText::new(if caps.as_ref().is_some_and(|c|c.demo) {"Изменяется только демонстрационная мышь."} else if caps.as_ref().is_some_and(|c|c.rgb_control) {"Цвет активной ступени DPI. Без команды сохранения во встроенную память."} else {"Управление цветом для этого устройства недоступно."}).size(12.0).color(MUTED));
+                    ui.add_space(6.0);
+                    egui::ComboBox::from_id_salt("effect-pattern").selected_text(self.pattern.label()).show_ui(ui,|ui| {
+                        for pattern in [crate::effects::Pattern::Gradient,crate::effects::Pattern::Breathing,crate::effects::Pattern::Rainbow] {ui.selectable_value(&mut self.pattern,pattern,pattern.label());}
+                    });
+                    if self.pattern==crate::effects::Pattern::Gradient {
+                        ui.horizontal(|ui|{ui.label("Второй цвет:");ui.color_edit_button_srgb(&mut self.second_color);});
+                    }
+                    ui.add(egui::Slider::new(&mut self.effect_seconds,4.0..=30.0).suffix(" с / цикл"));
+                    ui.horizontal(|ui| {
+                        if ui.add_enabled(enabled&&!self.effect_running,egui::Button::new("Запустить эффект")).clicked(){action=Some(Action::StartEffect);}
+                        if ui.add_enabled(self.effect_running&&!self.busy,egui::Button::new("Остановить")).clicked(){action=Some(Action::StopEffect);}
+                    });
+                    if self.effect_running {ui.label(RichText::new("Эффект работает · ограниченная частота команд").size(11.0).color(ACCENT));}
                 });
                 });
                 ui.add_space(14.0);
